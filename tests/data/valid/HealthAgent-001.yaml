@@ -1,0 +1,9 @@
+# Minimal valid instance of a class ported from HealthDCAT-AP's SHACL:
+# HealthAgent (is_a Agent) requires a name and exactly one contact_point.
+# Agent has no identifier slot in dcat-ap-plus itself (checked, not assumed).
+---
+name:
+  - "Health Data Access Body (example)"
+contact_point:
+  email:
+    - "contact@example.org"

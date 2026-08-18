@@ -105,6 +105,9 @@ PREFIXES = {
     "cv": "http://data.europa.eu/m8g/",
     "dqv": "http://www.w3.org/ns/dqv#",
     "dpv": "https://w3id.org/dpv#",
+    "csvw": "http://www.w3.org/ns/csvw#",
+    "time": "http://www.w3.org/2006/time#",
+    "geodcatap": "http://data.europa.eu/930/",
 }
 
 
@@ -202,6 +205,12 @@ def parse_shapes(graph, uri_to_slot, uri_to_class):
     parents: dict[str, str] = {}
     skipped: list[str] = []
     name_cache: dict = {}
+    # sh:class ranges point straight at an external class URI, not at a shape
+    # node -- if that class has no NodeShape of its own among the files we
+    # parsed (e.g. dpv:Purpose, only ever referenced, never shaped here), it
+    # would otherwise end up as a dangling range with no class definition.
+    # Keep the raw URI so build_linkml can stub in a minimal class for it.
+    class_like_range_uris: dict[str, str] = {}
 
     for shape in graph.subjects(RDF.type, SH.NodeShape):
         if not isinstance(shape, URIRef):
@@ -236,6 +245,7 @@ def parse_shapes(graph, uri_to_slot, uri_to_class):
                 if sh_class is not None:
                     fact.range_name = class_name_for(sh_class, uri_to_class)
                     fact.is_class_like = True
+                    class_like_range_uris.setdefault(fact.range_name, str(sh_class))
                 elif sh_node is not None:
                     fact.range_name = resolve_shape_class_name(sh_node, graph, uri_to_class, name_cache)
                     fact.is_class_like = True
@@ -251,7 +261,7 @@ def parse_shapes(graph, uri_to_slot, uri_to_class):
             if max_count is not None and fact.max_count is None:
                 fact.max_count = int(max_count)
 
-    return facts, shape_target, parents, skipped
+    return facts, shape_target, parents, skipped, class_like_range_uris
 
 
 def build_rename_map(facts, shape_target, base_class_names: set[str]) -> dict[str, str]:
@@ -387,11 +397,48 @@ def main() -> None:
         graph.parse(shacl_dir / fname, format="turtle")
 
     base_sv, uri_to_slot, uri_to_class = load_base_schema(args.base_schema)
-    facts, shape_target, shape_parents, skipped = parse_shapes(graph, uri_to_slot, uri_to_class)
+    facts, shape_target, shape_parents, skipped, class_like_range_uris = parse_shapes(graph, uri_to_slot, uri_to_class)
 
     base_class_names = set(base_sv.all_classes(imports=True))
     rename = build_rename_map(facts, shape_target, base_class_names)
     classes, slots = build_linkml(base_sv, facts, shape_target, shape_parents, rename)
+
+    # Closure pass: a range can point at a class (via sh:class) that has no
+    # sh:NodeShape of its own in the files parsed here -- e.g. dpv:Purpose is
+    # referenced as a range but only ever shaped (if at all) in
+    # mdr-vocabularies.shape.ttl, which is deliberately not parsed (see module
+    # docstring). Left alone this is a dangling range name with no class
+    # definition, which fails schema compilation. Stub in a minimal class
+    # (just its real class_uri) rather than silently dropping the reference or
+    # crashing -- the honest mechanical-port answer when the source shapes
+    # don't fully define something they still point at.
+    referenced_ranges: set[str] = set()
+    for slot_def in slots.values():
+        if "range" in slot_def:
+            referenced_ranges.add(slot_def["range"])
+    for cls in classes.values():
+        for usage in cls.get("slot_usage", {}).values():
+            if "range" in usage:
+                referenced_ranges.add(usage["range"])
+
+    base_type_names = set(base_sv.all_types(imports=True)) | set(XSD_TYPE_NAME.values())
+    stubbed = []
+    for name in sorted(referenced_ranges):
+        if name in classes or name in base_class_names or name in base_type_names:
+            continue
+        stub: dict = {
+            "description": (
+                "External vocabulary term referenced by a HealthDCAT-AP shape "
+                "but not itself defined by a sh:NodeShape in the parsed files "
+                "(likely shaped only in mdr-vocabularies.shape.ttl, which this "
+                "port deliberately does not parse -- see script docstring)."
+            )
+        }
+        uri = class_like_range_uris.get(name)
+        if uri:
+            stub["class_uri"] = to_curie(uri)
+        classes[name] = stub
+        stubbed.append(name)
 
     source_commit = None
     if args.healthdcat_ap_repo:
@@ -440,6 +487,8 @@ def main() -> None:
     print(f"HealthDCAT-AP {args.tier}: {len(facts)} shape-derived (class, property) facts")
     print(f"-> {len(classes)} classes ({n_profile} profile subclasses of dcat-ap-plus, {len(classes) - n_profile} new)")
     print(f"-> {len(slots)} new top-level slots")
+    if stubbed:
+        print(f"-> {len(stubbed)} stub class(es) for externally-referenced-but-unshaped ranges: {', '.join(stubbed)}")
     print(f"Written to {out_path}")
     if skipped:
         print(f"\nSkipped {len(skipped)} composite constraint(s), not representable as a single property:")

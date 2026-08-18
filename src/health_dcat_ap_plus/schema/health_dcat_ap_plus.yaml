@@ -11,88 +11,44 @@ see_also:
 prefixes:
   health_dcat_ap_plus: https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/
   linkml: https://w3id.org/linkml/
-  biolink: https://w3id.org/biolink/vocab/
-  schema: http://schema.org/
-  PATO: http://purl.obolibrary.org/obo/PATO_
-  example: http://www.example.org/rdf#
+  dcatapplus: https://w3id.org/nfdi-de/dcat-ap-plus/
+  healthdcatap: http://healthdataportal.eu/ns/health#
+  # The prefixes below are already declared in dcatapplus's/healthdcat_ap_non_public's
+  # own prefixes: block, but LinkML's gen-shacl/gen-owl don't propagate an
+  # imported schema's prefixes into the generated Turtle -- confirmed on
+  # HealthStudy-DCAT-AP by testing, not assumed. Without these, every
+  # dcterms:/dcat:/prov:/skos:/adms:/foaf:/vcard:/locn:/odrl:/spdx: property
+  # renders as an undeclared CURIE in the generated SHACL/OWL instead of its
+  # real IRI. Redeclared here for the same reason.
+  dcterms: http://purl.org/dc/terms/
+  dcat: http://www.w3.org/ns/dcat#
+  prov: http://www.w3.org/ns/prov#
+  skos: http://www.w3.org/2004/02/skos/core#
+  adms: http://www.w3.org/ns/adms#
+  foaf: http://xmlns.com/foaf/0.1/
+  vcard: http://www.w3.org/2006/vcard/ns#
+  locn: http://www.w3.org/ns/locn#
+  odrl: http://www.w3.org/ns/odrl/2/
+  spdx: http://spdx.org/rdf/terms#
+  cv: http://data.europa.eu/m8g/
+  dqv: http://www.w3.org/ns/dqv#
+  dpv: https://w3id.org/dpv#
+  csvw: http://www.w3.org/ns/csvw#
+  time: http://www.w3.org/2006/time#
+  geodcatap: http://data.europa.eu/930/
+  rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
 default_prefix: health_dcat_ap_plus
 default_range: string
 
 imports:
   - linkml:types
+  - dcatapplus:latest/schema/dcat_ap_plus
+  # Mechanically ported from HealthDCAT-AP's SHACL shapes by
+  # scripts/port_healthdcat_ap_shacl_to_linkml.py -- see that file for the
+  # method (same targetClass/sh:property-walking approach NFDI4Chem used for
+  # plain DCAT-AP when building chem-dcat-ap). Regenerate after HealthDCAT-AP
+  # publishes a new release; do not hand-edit the generated file itself.
+  - healthdcat_ap_non_public
 
-classes:
-
-  NamedThing:
-    description: >-
-      A generic grouping for any identifiable entity
-    slots:
-      - id
-      - name
-      - description
-    class_uri: schema:Thing
-
-  Person:
-    is_a: NamedThing
-    description: >-
-      Represents a Person
-    slots:
-      - primary_email
-      - birth_date
-      - age_in_years
-      - vital_status
-    slot_usage:
-      primary_email:
-        pattern: "^\\S+@[\\S+\\.]+\\S+"
-
-  PersonCollection:
-    tree_root: true
-    description: >-
-      A holder for Person objects
-    attributes:
-      people:
-        range: Person
-        multivalued: true
-        inlined_as_list: true
-
-slots:
-  id:
-    identifier: true
-    slot_uri: schema:identifier
-    range: uriorcurie
-    description: A unique identifier for a thing
-  name:
-    slot_uri: schema:name
-    description: A human-readable name for a thing
-  description:
-    slot_uri: schema:description
-    description: A human-readable description for a thing
-  primary_email:
-    slot_uri: schema:email
-    description: The main email address of a person
-  birth_date:
-    slot_uri: schema:birthDate
-    range: date
-    description: Date on which a person is born
-  age_in_years:
-    range: integer
-    description: Number of years since birth
-  vital_status:
-    range: PersonStatus
-    description: living or dead status
-
-enums:
-  PersonStatus:
-    description:
-      The vital status of a person
-    permissible_values:
-      ALIVE:
-        description: the person is living
-        meaning: PATO:0001421
-      DEAD:
-        description: the person is deceased
-        meaning: PATO:0001422
-      UNKNOWN:
-        description: the vital status is not known
-        todos:
-          - map this to an ontology
+classes: {}
+slots: {}

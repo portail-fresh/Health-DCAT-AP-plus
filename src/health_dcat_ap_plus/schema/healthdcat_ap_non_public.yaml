@@ -1,0 +1,378 @@
+# GENERATED FILE -- do not hand-edit.
+# Ported from HealthDCAT-AP's non-public SHACL shapes by
+# scripts/port_healthdcat_ap_shacl_to_linkml.py -- re-run that script to
+# regenerate after editing it or after HealthDCAT-AP publishes a new release.
+# Source: repos\healthdcat-ap\public\releases\release-7\html\shacl
+# healthdcat-ap commit: e90053e73b3c5252706efa16afd4da424875e1b1
+# Generated: 2026-08-18
+id: https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public
+name: healthdcat_ap_non_public
+title: HealthDCAT-AP (non-public tier), ported from SHACL
+description: LinkML port of HealthDCAT-AP's non-public-tier SHACL shapes, generated mechanically (not
+  hand-modeled) by scripts/port_healthdcat_ap_shacl_to_linkml.py, the same targetClass/sh:property-walking
+  method NFDI4Chem used to port plain DCAT-AP's SHACL when building chem-dcat-ap.
+license: MIT
+prefixes:
+  health_dcat_ap_plus: https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/
+  linkml: https://w3id.org/linkml/
+  dcatapplus: https://w3id.org/nfdi-de/dcat-ap-plus/
+  healthdcatap: http://healthdataportal.eu/ns/health#
+  dcterms: http://purl.org/dc/terms/
+  dcat: http://www.w3.org/ns/dcat#
+  prov: http://www.w3.org/ns/prov#
+  skos: http://www.w3.org/2004/02/skos/core#
+  adms: http://www.w3.org/ns/adms#
+  foaf: http://xmlns.com/foaf/0.1/
+  vcard: http://www.w3.org/2006/vcard/ns#
+  locn: http://www.w3.org/ns/locn#
+  odrl: http://www.w3.org/ns/odrl/2/
+  spdx: http://spdx.org/rdf/terms#
+  cv: http://data.europa.eu/m8g/
+  dqv: http://www.w3.org/ns/dqv#
+  dpv: https://w3id.org/dpv#
+  csvw: http://www.w3.org/ns/csvw#
+  time: http://www.w3.org/2006/time#
+  geodcatap: http://data.europa.eu/930/
+default_prefix: health_dcat_ap_plus
+default_range: string
+imports:
+- linkml:types
+- dcatapplus:latest/schema/dcat_ap_plus
+classes:
+  HealthCatalogue:
+    is_a: Catalogue
+    class_uri: dcat:Catalog
+    slot_usage:
+      applicable_legislation:
+        required: true
+        multivalued: true
+  Column:
+    class_uri: csvw:Column
+    slots:
+    - datatype
+    - description
+    - name
+    - property_url
+    - titles
+    slot_usage:
+      name:
+        required: true
+        multivalued: true
+      description:
+        required: true
+        multivalued: true
+  ContactPoint:
+    class_uri: cv:ContactPoint
+    slots:
+    - contact_page
+    - email
+    - opening_hours
+    - special_opening_hours_specification
+    - telephone
+  HealthDataset:
+    is_a: Dataset
+    class_uri: dcat:Dataset
+    slots:
+    - alternative
+    - analytics
+    - custodian
+    - has_code_values
+    - has_coding_system
+    - has_legal_basis
+    - has_personal_data
+    - has_purpose
+    - has_quality_annotation
+    - has_structured_data
+    - has_variables
+    - hdab
+    - health_category
+    - health_theme
+    - linked_schemas
+    - max_typical_age
+    - min_typical_age
+    - number_of_records
+    - number_of_unique_individuals
+    - population_coverage
+    - relation
+    - retention_period
+    - source_metadata
+    slot_usage:
+      access_rights:
+        required: true
+      applicable_legislation:
+        required: true
+        multivalued: true
+      dataset_distribution:
+        range: HealthDistribution
+        required: true
+        multivalued: true
+      identifier:
+        required: true
+        multivalued: true
+      publisher:
+        range: HealthPublisherAgent
+      sample:
+        range: HealthDistribution
+        required: true
+        multivalued: true
+      theme:
+        required: true
+        multivalued: true
+      contact_point:
+        required: true
+        multivalued: true
+      keyword:
+        required: true
+        multivalued: true
+      type:
+        required: true
+        multivalued: true
+      provenance:
+        required: true
+        multivalued: true
+      linked_schemas:
+        required: true
+        multivalued: true
+      documentation:
+        required: true
+        multivalued: true
+      frequency:
+        required: true
+        multivalued: true
+      is_referenced_by:
+        required: true
+        multivalued: true
+      language:
+        required: true
+        multivalued: true
+      source_metadata:
+        required: true
+        multivalued: true
+      temporal_coverage:
+        required: true
+        multivalued: true
+      temporal_resolution:
+        required: true
+        multivalued: true
+      landing_page:
+        required: true
+        multivalued: true
+      relation:
+        required: true
+        multivalued: true
+  HealthDatasetSeries:
+    is_a: DatasetSeries
+    class_uri: dcat:DatasetSeries
+    slot_usage:
+      applicable_legislation:
+        required: true
+        multivalued: true
+  HealthDistribution:
+    is_a: Distribution
+    class_uri: dcat:Distribution
+    slot_usage:
+      applicable_legislation:
+        required: true
+        multivalued: true
+  HealthAgent:
+    is_a: Agent
+    slots:
+    - contact_point
+    slot_usage:
+      contact_point:
+        range: ContactPoint
+        required: true
+  HealthPublisherAgent:
+    is_a: Agent
+    slots:
+    - contact_point
+    - description
+    slot_usage:
+      contact_point:
+        range: ContactPoint
+        required: true
+  HealthKind:
+    is_a: Kind
+    class_uri: vcard:Kind
+    slots:
+    - has_email
+    - has_url
+  Table:
+    class_uri: csvw:Table
+    slots:
+    - column
+    - keyword
+    - title
+    - url
+    slot_usage:
+      title:
+        required: true
+        multivalued: true
+      keyword:
+        multivalued: true
+  TableGroup:
+    class_uri: csvw:TableGroup
+    slots:
+    - table
+  TemporalEntity:
+    class_uri: time:TemporalEntity
+    slots:
+    - description
+    - frequency
+    slot_usage:
+      description:
+        required: true
+        multivalued: true
+      frequency:
+        range: Frequency
+        multivalued: true
+  LegalBasis:
+    description: External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by
+      a sh:NodeShape in the parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this
+      port deliberately does not parse -- see script docstring).
+    class_uri: dpv:LegalBasis
+  PersonalData:
+    description: External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by
+      a sh:NodeShape in the parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this
+      port deliberately does not parse -- see script docstring).
+    class_uri: dpv:PersonalData
+  Purpose:
+    description: External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by
+      a sh:NodeShape in the parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this
+      port deliberately does not parse -- see script docstring).
+    class_uri: dpv:Purpose
+  QualityCertificate:
+    description: External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by
+      a sh:NodeShape in the parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this
+      port deliberately does not parse -- see script docstring).
+    class_uri: dqv:QualityCertificate
+slots:
+  titles:
+    slot_uri: csvw:titles
+    required: true
+    multivalued: true
+  datatype:
+    slot_uri: csvw:datatype
+    required: true
+  property_url:
+    slot_uri: csvw:propertyUrl
+  email:
+    slot_uri: cv:email
+    multivalued: true
+  contact_page:
+    slot_uri: cv:contactPage
+    multivalued: true
+  telephone:
+    slot_uri: cv:telephone
+    multivalued: true
+  opening_hours:
+    slot_uri: cv:openingHours
+    range: TemporalEntity
+    multivalued: true
+  special_opening_hours_specification:
+    slot_uri: cv:specialOpeningHoursSpecification
+    range: TemporalEntity
+    multivalued: true
+  has_purpose:
+    slot_uri: dpv:hasPurpose
+    range: Purpose
+    required: true
+    multivalued: true
+  hdab:
+    slot_uri: healthdcatap:hdab
+    range: HealthAgent
+    required: true
+  custodian:
+    slot_uri: geodcatap:custodian
+    range: HealthAgent
+    required: true
+  health_category:
+    slot_uri: healthdcatap:healthCategory
+    range: Concept
+    required: true
+    multivalued: true
+  health_theme:
+    slot_uri: healthdcatap:healthTheme
+    range: Concept
+    required: true
+    multivalued: true
+  has_legal_basis:
+    slot_uri: dpv:hasLegalBasis
+    range: LegalBasis
+    required: true
+    multivalued: true
+  has_personal_data:
+    slot_uri: dpv:hasPersonalData
+    range: PersonalData
+    required: true
+    multivalued: true
+  has_quality_annotation:
+    slot_uri: dqv:hasQualityAnnotation
+    range: QualityCertificate
+    required: true
+    multivalued: true
+  has_structured_data:
+    slot_uri: healthdcatap:hasStructuredData
+    range: boolean
+    required: true
+  has_variables:
+    slot_uri: healthdcatap:hasVariables
+    range: TableGroup
+    multivalued: true
+  analytics:
+    slot_uri: healthdcatap:analytics
+    range: HealthDistribution
+    required: true
+    multivalued: true
+  has_code_values:
+    slot_uri: healthdcatap:hasCodeValues
+    required: true
+    multivalued: true
+  has_coding_system:
+    slot_uri: healthdcatap:hasCodingSystem
+    range: Standard
+    required: true
+    multivalued: true
+  min_typical_age:
+    slot_uri: healthdcatap:minTypicalAge
+    range: nonNegativeInteger
+    required: true
+  max_typical_age:
+    slot_uri: healthdcatap:maxTypicalAge
+    range: nonNegativeInteger
+    required: true
+  number_of_records:
+    slot_uri: healthdcatap:numberOfRecords
+    range: nonNegativeInteger
+    required: true
+  number_of_unique_individuals:
+    slot_uri: healthdcatap:numberOfUniqueIndividuals
+    range: nonNegativeInteger
+    required: true
+  population_coverage:
+    slot_uri: healthdcatap:populationCoverage
+    required: true
+    multivalued: true
+  alternative:
+    slot_uri: dcterms:alternative
+    multivalued: true
+  retention_period:
+    slot_uri: healthdcatap:retentionPeriod
+    range: PeriodOfTime
+    required: true
+  has_url:
+    slot_uri: vcard:hasURL
+  has_email:
+    slot_uri: vcard:hasEmail
+  url:
+    slot_uri: csvw:url
+  column:
+    slot_uri: csvw:column
+    range: Column
+    required: true
+    multivalued: true
+  table:
+    slot_uri: csvw:table
+    range: Table
+    required: true
+    multivalued: true
