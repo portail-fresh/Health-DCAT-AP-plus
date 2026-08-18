@@ -1,0 +1,18 @@
+# Changes here will be overwritten by Copier
+_commit: v0.5.0
+_src_path: https://github.com/linkml/linkml-project-copier
+add_example: true
+copyright_year: '2026'
+email: remy.benmessaoud@gmail.com
+existing_license_file: ''
+full_name: Remy Ben Messaoud
+gh_action_docs_preview: true
+gh_action_pypi: true
+github_org: portail-fresh
+license: MIT
+project_description: A schema combining HealthDCAT-AP's health-dataset metadata tiers
+    with DCAT-AP+'s PROV-O provenance extensions (DataGeneratingActivity, Entity,
+    AgenticEntity, Plan).
+project_name: Health-DCAT-AP-Plus
+project_slug: health_dcat_ap_plus
+
