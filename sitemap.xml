@@ -13,11 +13,99 @@
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Activity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Agent/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/AgenticEntity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/AnalysisDataset/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/AnalysisSourceData/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Any/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Attribution/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Boolean/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Catalogue/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/CatalogueRecord/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Checksum/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/ChecksumAlgorithm/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/ClassifierMixin/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Column/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Concept/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/ConceptScheme/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/ContactPoint/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Curie/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/DataAnalysis/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/DataGeneratingActivity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/DataService/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Dataset/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/DatasetSeries/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/DatasetThemes/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
@@ -37,7 +125,43 @@
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/DefinedTerm/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Device/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Distribution/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Document/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/DomainAgnosticCore/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Double/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Duration/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Entity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/EvaluatedActivity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/EvaluatedEntity/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
@@ -45,7 +169,51 @@
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Frequency/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Geometry/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Health-DCAT-AP-Plus/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/HealthAgent/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/HealthCatalogue/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/HealthDataset/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/HealthDatasetSeries/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/HealthDistribution/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/HealthKind/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/HealthPublisherAgent/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/HexBinary/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Identifier/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
@@ -61,7 +229,35 @@
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
-         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/NamedThing/</loc>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Kind/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/LegalBasis/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/LegalResource/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/LicenseDocument/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/LinguisticSystem/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Location/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/MediaType/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/MediaTypeOrExtent/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
@@ -73,19 +269,75 @@
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/NonNegativeInteger/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Objectidentifier/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
-         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Person/</loc>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/PeriodOfTime/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
-         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/PersonCollection/</loc>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/PersonalData/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
-         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/PersonStatus/</loc>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Plan/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Policy/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/ProvenanceStatement/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Purpose/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/QUDTQuantityKindEnum/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/QUDTUnitEnum/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/QualitativeAttribute/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/QualityCertificate/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/QuantitativeAttribute/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Relationship/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Resource/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/RightsStatement/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Role/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Software/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
@@ -93,11 +345,43 @@
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Standard/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/String/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/SupportiveEntity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Surrounding/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Table/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/TableGroup/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/TemporalEntity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/Time/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/TimeInstant/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/TopLevelMediaTypes/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
@@ -109,11 +393,111 @@
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
-         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/age_in_years/</loc>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/access_URL/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
-         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/birth_date/</loc>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/access_rights/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/access_service/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/algorithm/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/alternative/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/analytics/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/applicable_legislation/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/application_profile/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/availability/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/bbox/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/beginning/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/byte_size/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/carried_out_by/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/catalogue/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/centroid/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/change_type/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/checksum/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/checksum_value/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/column/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/compression_format/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/conforms_to/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/contact_page/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/contact_point/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/creator/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/custodian/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/dataset_distribution/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/datatype/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
@@ -121,7 +505,223 @@
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/documentation/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/download_URL/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/email/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/end/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/end_date/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/endpoint_URL/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/endpoint_description/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/evaluated_activity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/evaluated_entity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/format/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/frequency/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/from_CV/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/geographical_coverage/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/geometry/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/had_input_activity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/had_input_entity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/had_output_entity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/had_role/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_code_values/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_coding_system/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_dataset/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_email/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_legal_basis/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_part/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_personal_data/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_policy/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_purpose/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_qualitative_attribute/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_quality_annotation/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_quantitative_attribute/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_quantity_type/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_structured_data/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_url/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_variables/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/has_version/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/hdab/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/health_category/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/health_theme/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/homepage/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/id/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/identifier/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/in_series/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/is_about_activity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/is_about_entity/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/is_referenced_by/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/keyword/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/landing_page/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/language/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/licence/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/linked_schemas/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/listing_date/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/max_typical_age/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/media_type/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/min_typical_age/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/modification_date/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
@@ -129,15 +729,195 @@
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
-         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/people/</loc>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/notation/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
-         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/primary_email/</loc>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/number_of_records/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
-         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/vital_status/</loc>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/number_of_unique_individuals/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/occurred_in/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/opening_hours/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/other_identifier/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/packaging_format/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/part_of/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/population_coverage/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/preferred_label/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/primary_topic/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/property_url/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/provenance/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/publisher/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/qualified_attribution/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/qualified_relation/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/rdf_type/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/realized_plan/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/record/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/related_resource/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/relation/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/release_date/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/retention_period/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/rights/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/sample/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/serves_dataset/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/service/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/source/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/source_metadata/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/spatial_resolution/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/special_opening_hours_specification/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/start_date/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/status/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/table/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/telephone/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/temporal_coverage/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/temporal_resolution/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/theme/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/themes/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/title/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/titles/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/type/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/unit/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/url/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/value/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/version/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/version_notes/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/was_generated_by/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
 </urlset>

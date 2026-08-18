@@ -486,9 +486,9 @@
 
 
 <h1 id="slot-name">Slot: name</h1>
-<p><em>A human-readable name for a thing</em></p>
+<p><em>This slot is described in more detail within the class in which it is used.</em></p>
 <div>
-<p>URI: <a href="http://schema.org/name">schema:name</a></p>
+<p>URI: <a href="http://xmlns.com/foaf/0.1/name">foaf:name</a></p>
 <!-- no inheritance hierarchy -->
 <h2 id="applicable-classes">Applicable Classes</h2>
 <table>
@@ -501,13 +501,23 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="../NamedThing/">NamedThing</a></td>
-<td>A generic grouping for any identifiable entity</td>
+<td><a href="../Agent/">Agent</a></td>
+<td>See [DCAT-AP specs:Agent](<a href="https://semiceu">https://semiceu</a></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../Column/">Column</a></td>
+<td></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../HealthAgent/">HealthAgent</a></td>
+<td></td>
 <td>no</td>
 </tr>
 <tr>
-<td><a href="../Person/">Person</a></td>
-<td>Represents a Person</td>
+<td><a href="../HealthPublisherAgent/">HealthPublisherAgent</a></td>
+<td></td>
 <td>no</td>
 </tr>
 </tbody>
@@ -528,11 +538,11 @@
 </tr>
 <tr>
 <td>Domain Of</td>
-<td><a href="../NamedThing/">NamedThing</a></td>
+<td><a href="../Agent/">Agent</a>, <a href="../Column/">Column</a></td>
 </tr>
 <tr>
 <td>Slot URI</td>
-<td><a href="http://schema.org/name">schema:name</a></td>
+<td><a href="http://xmlns.com/foaf/0.1/name">foaf:name</a></td>
 </tr>
 </tbody>
 </table>
@@ -567,7 +577,7 @@
 <tbody>
 <tr>
 <td>self</td>
-<td>schema:name</td>
+<td>foaf:name</td>
 </tr>
 <tr>
 <td>native</td>
@@ -578,12 +588,14 @@
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A human-readable name for a thing</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This slot is described in more detail within the class in which it is</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">used.</span>
 <span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/portail-fresh/Health-DCAT-AP-Plus</span>
 <span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schema:name</span>
+<span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foaf:name</span>
 <span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NamedThing</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Agent</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Column</span>
 <span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
 </code></pre></div>
 </details>

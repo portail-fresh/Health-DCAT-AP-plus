@@ -486,9 +486,9 @@
 
 
 <h1 id="slot-description">Slot: description</h1>
-<p><em>A human-readable description for a thing</em></p>
+<p><em>This slot is described in more detail within the class in which it is used.</em></p>
 <div>
-<p>URI: <a href="http://schema.org/description">schema:description</a></p>
+<p>URI: <a href="http://purl.org/dc/terms/description">dcterms:description</a></p>
 <!-- no inheritance hierarchy -->
 <h2 id="applicable-classes">Applicable Classes</h2>
 <table>
@@ -501,13 +501,258 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="../NamedThing/">NamedThing</a></td>
-<td>A generic grouping for any identifiable entity</td>
+<td><a href="../Activity/">Activity</a></td>
+<td>See [DCAT-AP specs:Activity](<a href="https://semiceu">https://semiceu</a></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../AgenticEntity/">AgenticEntity</a></td>
+<td>An entity that is somehow responsible for an Activity to take place</td>
 <td>no</td>
 </tr>
 <tr>
-<td><a href="../Person/">Person</a></td>
-<td>Represents a Person</td>
+<td><a href="../Any/">Any</a></td>
+<td>This abstract class is needed to create the union of Dataset, DatasetSeries, ...</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Attribution/">Attribution</a></td>
+<td>See [DCAT-AP specs:Attribution](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Catalogue/">Catalogue</a></td>
+<td>See [DCAT-AP specs:Catalogue](<a href="https://semiceu">https://semiceu</a></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../CatalogueRecord/">CatalogueRecord</a></td>
+<td>See [DCAT-AP specs:CatalogueRecord](<a href="https://semiceu">https://semiceu</a></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../ChecksumAlgorithm/">ChecksumAlgorithm</a></td>
+<td>See [DCAT-AP specs:ChecksumAlgorithm](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Concept/">Concept</a></td>
+<td>See [DCAT-AP specs:Concept](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../ConceptScheme/">ConceptScheme</a></td>
+<td>See [DCAT-AP specs:ConceptScheme](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../DataService/">DataService</a></td>
+<td>See [DCAT-AP specs:DataService](<a href="https://semiceu">https://semiceu</a></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../Dataset/">Dataset</a></td>
+<td>A collection of data, published or curated by a single agent, and available f...</td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../DatasetSeries/">DatasetSeries</a></td>
+<td>See [DCAT-AP specs:DatasetSeries](<a href="https://semiceu">https://semiceu</a></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../Distribution/">Distribution</a></td>
+<td>See [DCAT-AP specs:Distribution](<a href="https://semiceu">https://semiceu</a></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../Document/">Document</a></td>
+<td>See [DCAT-AP specs:Document](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Entity/">Entity</a></td>
+<td>A physical, digital, conceptual, or other kind of thing with some fixed aspec...</td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../Frequency/">Frequency</a></td>
+<td>See [DCAT-AP specs:Frequency](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Geometry/">Geometry</a></td>
+<td>See [DCAT-AP specs:Geometry](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Identifier/">Identifier</a></td>
+<td>See [DCAT-AP specs:Identifier](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../LegalResource/">LegalResource</a></td>
+<td>See [DCAT-AP specs:LegalResource](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../LicenseDocument/">LicenseDocument</a></td>
+<td>See [DCAT-AP specs:LicenseDocument](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../LinguisticSystem/">LinguisticSystem</a></td>
+<td>See [DCAT-AP specs:LinguisticSystem](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../MediaType/">MediaType</a></td>
+<td>See [DCAT-AP specs:MediaType](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../MediaTypeOrExtent/">MediaTypeOrExtent</a></td>
+<td>See [DCAT-AP specs:MediaTypeOrExtent](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../PeriodOfTime/">PeriodOfTime</a></td>
+<td>See [DCAT-AP specs:PeriodOfTime](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Plan/">Plan</a></td>
+<td>A piece of information that specifies how an activity has to be carried out b...</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Policy/">Policy</a></td>
+<td>See [DCAT-AP specs:Policy](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../ProvenanceStatement/">ProvenanceStatement</a></td>
+<td>See [DCAT-AP specs:ProvenanceStatement](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../QualitativeAttribute/">QualitativeAttribute</a></td>
+<td>A piece of information that is attributed to an Entity, Activity or AgenticEn...</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../QuantitativeAttribute/">QuantitativeAttribute</a></td>
+<td>A quantifiable piece of information that is attributed to an Entity, Activity...</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Resource/">Resource</a></td>
+<td>See [DCAT-AP specs:Resource](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../RightsStatement/">RightsStatement</a></td>
+<td>See [DCAT-AP specs:RightsStatement](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Role/">Role</a></td>
+<td>See [DCAT-AP specs:Role](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Standard/">Standard</a></td>
+<td>See [DCAT-AP specs:Standard](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../SupportiveEntity/">SupportiveEntity</a></td>
+<td>The supportive entities are supporting the main entities in the Application P...</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Surrounding/">Surrounding</a></td>
+<td>The surrounding in which the dataset creating activity took place (e</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../TimeInstant/">TimeInstant</a></td>
+<td>See [DCAT-AP specs:TimeInstant](<a href="https://semiceu">https://semiceu</a></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Column/">Column</a></td>
+<td></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../HealthPublisherAgent/">HealthPublisherAgent</a></td>
+<td></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../TemporalEntity/">TemporalEntity</a></td>
+<td></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../AnalysisDataset/">AnalysisDataset</a></td>
+<td>A Dataset that was generated by an analysis of some previously generated data</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../AnalysisSourceData/">AnalysisSourceData</a></td>
+<td>Information that was evaluated within a DataAnalysis</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../DataAnalysis/">DataAnalysis</a></td>
+<td>An Activity that evaluates the data produced by another Activity</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../DataGeneratingActivity/">DataGeneratingActivity</a></td>
+<td>An Activity (process) that has the objective to produce information (in form ...</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../Device/">Device</a></td>
+<td>A material instrument that is designed to perform a function primarily by mea...</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../EvaluatedActivity/">EvaluatedActivity</a></td>
+<td>An activity or process that is being evaluated in a DataGeneratingActivity</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../EvaluatedEntity/">EvaluatedEntity</a></td>
+<td>An Entity that is being evaluated in a DataGeneratingActivity</td>
+<td>yes</td>
+</tr>
+<tr>
+<td><a href="../Software/">Software</a></td>
+<td>An instrument composed of a series of instructions that can be interpreted by...</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../HealthCatalogue/">HealthCatalogue</a></td>
+<td></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../HealthDataset/">HealthDataset</a></td>
+<td></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../HealthDatasetSeries/">HealthDatasetSeries</a></td>
+<td></td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="../HealthDistribution/">HealthDistribution</a></td>
+<td></td>
 <td>no</td>
 </tr>
 </tbody>
@@ -528,11 +773,11 @@
 </tr>
 <tr>
 <td>Domain Of</td>
-<td><a href="../NamedThing/">NamedThing</a></td>
+<td><a href="../Activity/">Activity</a>, <a href="../AgenticEntity/">AgenticEntity</a>, <a href="../Any/">Any</a>, <a href="../Attribution/">Attribution</a>, <a href="../Catalogue/">Catalogue</a>, <a href="../CatalogueRecord/">CatalogueRecord</a>, <a href="../ChecksumAlgorithm/">ChecksumAlgorithm</a>, <a href="../Concept/">Concept</a>, <a href="../ConceptScheme/">ConceptScheme</a>, <a href="../DataService/">DataService</a>, <a href="../Dataset/">Dataset</a>, <a href="../DatasetSeries/">DatasetSeries</a>, <a href="../Distribution/">Distribution</a>, <a href="../Document/">Document</a>, <a href="../Entity/">Entity</a>, <a href="../Frequency/">Frequency</a>, <a href="../Geometry/">Geometry</a>, <a href="../Identifier/">Identifier</a>, <a href="../LegalResource/">LegalResource</a>, <a href="../LicenseDocument/">LicenseDocument</a>, <a href="../LinguisticSystem/">LinguisticSystem</a>, <a href="../MediaType/">MediaType</a>, <a href="../MediaTypeOrExtent/">MediaTypeOrExtent</a>, <a href="../PeriodOfTime/">PeriodOfTime</a>, <a href="../Plan/">Plan</a>, <a href="../Policy/">Policy</a>, <a href="../ProvenanceStatement/">ProvenanceStatement</a>, <a href="../QualitativeAttribute/">QualitativeAttribute</a>, <a href="../QuantitativeAttribute/">QuantitativeAttribute</a>, <a href="../Resource/">Resource</a>, <a href="../RightsStatement/">RightsStatement</a>, <a href="../Role/">Role</a>, <a href="../Standard/">Standard</a>, <a href="../SupportiveEntity/">SupportiveEntity</a>, <a href="../Surrounding/">Surrounding</a>, <a href="../TimeInstant/">TimeInstant</a>, <a href="../Column/">Column</a>, <a href="../HealthPublisherAgent/">HealthPublisherAgent</a>, <a href="../TemporalEntity/">TemporalEntity</a></td>
 </tr>
 <tr>
 <td>Slot URI</td>
-<td><a href="http://schema.org/description">schema:description</a></td>
+<td><a href="http://purl.org/dc/terms/description">dcterms:description</a></td>
 </tr>
 </tbody>
 </table>
@@ -567,7 +812,7 @@
 <tbody>
 <tr>
 <td>self</td>
-<td>schema:description</td>
+<td>dcterms:description</td>
 </tr>
 <tr>
 <td>native</td>
@@ -578,12 +823,51 @@
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">description</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A human-readable description for a thing</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This slot is described in more detail within the class in which it is</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">used.</span>
 <span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/portail-fresh/Health-DCAT-AP-Plus</span>
 <span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schema:description</span>
+<span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dcterms:description</span>
 <span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NamedThing</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Activity</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AgenticEntity</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Any</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Attribution</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Catalogue</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CatalogueRecord</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ChecksumAlgorithm</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Concept</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConceptScheme</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataService</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dataset</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DatasetSeries</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Distribution</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Document</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Entity</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Frequency</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Geometry</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Identifier</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LegalResource</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LicenseDocument</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LinguisticSystem</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MediaType</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MediaTypeOrExtent</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PeriodOfTime</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Plan</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Policy</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProvenanceStatement</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">QualitativeAttribute</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">QuantitativeAttribute</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Resource</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RightsStatement</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Role</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Standard</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SupportiveEntity</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Surrounding</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TimeInstant</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Column</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HealthPublisherAgent</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TemporalEntity</span>
 <span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
 </code></pre></div>
 </details>
