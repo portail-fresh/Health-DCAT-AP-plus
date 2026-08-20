@@ -37,6 +37,14 @@ prefixes:
   time: http://www.w3.org/2006/time#
   geodcatap: http://data.europa.eu/930/
   rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+  # Missed when the others above were added -- found by actually running
+  # the dumper directly and seeing `@prefix ns1: <dcatap:> .` (the CURIE
+  # prefix string itself used as a literal namespace) in real output, not
+  # predicted. Namespace confirmed http://data.europa.eu/r5r/ (with trailing
+  # slash, matching dcat-ap-plus's own declaration) during the dcatap:
+  # prefix typo investigation earlier -- see the port script's
+  # _KNOWN_UPSTREAM_PREFIX_FIXES.
+  dcatap: http://data.europa.eu/r5r/
 default_prefix: health_dcat_ap_plus
 default_range: string
 

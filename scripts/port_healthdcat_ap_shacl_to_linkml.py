@@ -124,6 +124,12 @@ PREFIXES = {
     "csvw": "http://www.w3.org/ns/csvw#",
     "time": "http://www.w3.org/2006/time#",
     "geodcatap": "http://data.europa.eu/930/",
+    # Missed until an ad-hoc rdflib_dumper run on real data showed
+    # `@prefix ns1: <dcatap:> .` (the CURIE prefix string used as a literal
+    # namespace) -- same gen-shacl/gen-owl-and-friends prefix-propagation
+    # gap as every other entry here, just not noticed until real output was
+    # actually inspected.
+    "dcatap": "http://data.europa.eu/r5r/",
 }
 
 

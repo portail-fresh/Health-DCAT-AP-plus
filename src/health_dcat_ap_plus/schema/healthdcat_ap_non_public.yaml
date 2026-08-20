@@ -33,6 +33,7 @@ prefixes:
   csvw: http://www.w3.org/ns/csvw#
   time: http://www.w3.org/2006/time#
   geodcatap: http://data.europa.eu/930/
+  dcatap: http://data.europa.eu/r5r/
 default_prefix: health_dcat_ap_plus
 default_range: string
 imports:

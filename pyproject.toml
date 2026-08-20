@@ -30,6 +30,10 @@ dev = [
     # HealthDCAT-AP's SHACL shapes and write the generated LinkML fragment.
     "rdflib>=7.0.0",
     "pyyaml>=6.0.0",
+    # Real SHACL validation (not just LinkML's own JSON-schema-derived
+    # checks) -- against both our own generated SHACL and HealthDCAT-AP's
+    # real upstream shapes directly, see docs/architecture-verification.md.
+    "pyshacl>=0.30.0",
 ]
 
 # See https://hatch.pypa.io/latest/config/build/#file-selection for how to
