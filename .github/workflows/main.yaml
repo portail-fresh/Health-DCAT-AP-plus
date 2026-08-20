@@ -17,6 +17,11 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
+    # This is a private repository, so the checkout step needs explicit read
+    # access — the workflow-level `permissions: {}` above only works as-is
+    # on public repos, where anonymous read is always available.
+    permissions:
+      contents: read
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
