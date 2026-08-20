@@ -31,6 +31,14 @@ config_yaml := if env_var_or_default("LINKML_GENERATORS_CONFIG_YAML", "") != "" 
 }
 gen_doc_args := env_var_or_default("LINKML_GENERATORS_DOC_ARGS", "")
 gen_java_args := env_var_or_default("LINKML_GENERATORS_JAVA_ARGS", "")
+# Classes to include in the PlantUML diagram, as repeated -c flags (one per
+# class, not comma-joined) -- matches HealthStudy-DCAT-AP's own
+# diagram_classes convention. The dcat-ap-plus base classes are included
+# alongside their Health<X> profile subclasses so the diagram actually shows
+# the "mix": which classes were ported from HealthDCAT-AP's SHACL, is_a which
+# base class, and share its class_uri. Add new ones as the port grows (e.g.
+# once public/restricted tiers are added).
+diagram_classes := "-c Dataset -c HealthDataset -c Catalogue -c HealthCatalogue -c DatasetSeries -c HealthDatasetSeries -c Distribution -c HealthDistribution -c Agent -c HealthAgent -c HealthPublisherAgent -c Kind -c HealthKind -c ContactPoint -c Table -c TableGroup -c Column -c TemporalEntity -c Purpose -c LegalBasis -c PersonalData -c QualityCertificate"
 gen_owl_args := env_var_or_default("LINKML_GENERATORS_OWL_ARGS", "")
 gen_pydantic_args := env_var_or_default("LINKML_GENERATORS_PYDANTIC_ARGS", "")
 gen_ts_args := env_var_or_default("LINKML_GENERATORS_TYPESCRIPT_ARGS", "")
@@ -128,6 +136,24 @@ gen-doc: _gen-yaml && _add-artifacts
 # Build docs and run test server
 [group('model development')]
 testdoc: gen-doc _serve
+
+# Regenerate the PlantUML class diagram source (commit this). Add new class
+# names to the diagram_classes variable above as the schema grows. Note: this
+# environment's linkml no longer installs a standalone gen-plantuml script --
+# use the consolidated `linkml generate plantuml` CLI instead.
+[group('model development')]
+gen-diagram:
+  uv run linkml generate plantuml {{diagram_classes}} --no-mergeimports {{source_schema_path}} > docs/diagrams/model.puml
+
+# Render the diagram to SVG via the public Kroki service (needs network).
+# View-only convenience output — docs/diagrams/model.puml stays the source
+# of truth. Posts the .puml source directly to Kroki's POST endpoint rather
+# than using the generator's own -k flag (which GETs a URL-encoded diagram --
+# once the schema grows past a few dozen fields that URL can exceed Kroki's
+# length limit and fail with "URI Too Long"; POST has no such limit).
+[group('model development')]
+gen-diagram-svg: gen-diagram
+  curl -s -X POST -H "Content-Type: text/plain" --data-binary @docs/diagrams/model.puml https://kroki.io/plantuml/svg -o docs/diagrams/model.svg
 
 # Generate the Python data models (dataclasses & pydantic)
 gen-python:

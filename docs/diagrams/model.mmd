@@ -1,0 +1,266 @@
+erDiagram
+Agent {
+    stringList name  
+}
+Catalogue {
+    stringList description  
+    date modification_date  
+    date release_date  
+    stringList title  
+}
+Column {
+    stringList name  
+    stringList description  
+    string datatype  
+    string property_url  
+    stringList titles  
+}
+ContactPoint {
+    stringList contact_page  
+    stringList email  
+    stringList telephone  
+}
+Dataset {
+    uriorcurie id  
+    stringList description  
+    stringList identifier  
+    stringList keyword  
+    date modification_date  
+    date release_date  
+    decimal spatial_resolution  
+    duration temporal_resolution  
+    stringList title  
+    string version  
+    stringList version_notes  
+}
+DatasetSeries {
+    stringList description  
+    date modification_date  
+    date release_date  
+    stringList title  
+}
+Distribution {
+    stringList description  
+    nonNegativeInteger byte_size  
+    date modification_date  
+    date release_date  
+    decimal spatial_resolution  
+    duration temporal_resolution  
+    stringList title  
+}
+HealthAgent {
+    stringList name  
+}
+HealthCatalogue {
+    stringList description  
+    date modification_date  
+    date release_date  
+    stringList title  
+}
+HealthDataset {
+    stringList alternative  
+    stringList has_code_values  
+    boolean has_structured_data  
+    stringList identifier  
+    stringList keyword  
+    stringList linked_schemas  
+    nonNegativeInteger max_typical_age  
+    nonNegativeInteger min_typical_age  
+    nonNegativeInteger number_of_records  
+    nonNegativeInteger number_of_unique_individuals  
+    stringList population_coverage  
+    stringList relation  
+    stringList source_metadata  
+    durationList temporal_resolution  
+    uriorcurie id  
+    stringList description  
+    date modification_date  
+    date release_date  
+    decimal spatial_resolution  
+    stringList title  
+    string version  
+    stringList version_notes  
+}
+HealthDatasetSeries {
+    stringList description  
+    date modification_date  
+    date release_date  
+    stringList title  
+}
+HealthDistribution {
+    stringList description  
+    nonNegativeInteger byte_size  
+    date modification_date  
+    date release_date  
+    decimal spatial_resolution  
+    duration temporal_resolution  
+    stringList title  
+}
+HealthKind {
+    string has_email  
+    string has_url  
+}
+HealthPublisherAgent {
+    string description  
+    stringList name  
+}
+Kind {
+
+}
+LegalBasis {
+
+}
+PersonalData {
+
+}
+Purpose {
+
+}
+QualityCertificate {
+
+}
+Table {
+    stringList keyword  
+    stringList title  
+    string url  
+}
+TableGroup {
+
+}
+TemporalEntity {
+    stringList description  
+}
+
+Agent ||--|o Concept : "type"
+Catalogue ||--|o Agent : "creator"
+Catalogue ||--|o Document : "homepage"
+Catalogue ||--|o LicenseDocument : "licence"
+Catalogue ||--|o RightsStatement : "rights"
+Catalogue ||--|| Agent : "publisher"
+Catalogue ||--}o Catalogue : "catalogue, has_part"
+Catalogue ||--}o CatalogueRecord : "record"
+Catalogue ||--}o ConceptScheme : "themes"
+Catalogue ||--}o DataService : "service"
+Catalogue ||--}o Dataset : "has_dataset"
+Catalogue ||--}o LegalResource : "applicable_legislation"
+Catalogue ||--}o LinguisticSystem : "language"
+Catalogue ||--}o Location : "geographical_coverage"
+Catalogue ||--}o PeriodOfTime : "temporal_coverage"
+ContactPoint ||--}o TemporalEntity : "opening_hours, special_opening_hours_specification"
+Dataset ||--|o Agent : "publisher"
+Dataset ||--|o Frequency : "frequency"
+Dataset ||--|o RightsStatement : "access_rights"
+Dataset ||--}o Agent : "creator"
+Dataset ||--}o Attribution : "qualified_attribution"
+Dataset ||--}o Concept : "theme, type"
+Dataset ||--}o Dataset : "has_version, source"
+Dataset ||--}o DatasetSeries : "in_series"
+Dataset ||--}o Distribution : "dataset_distribution, sample"
+Dataset ||--}o Document : "documentation, landing_page"
+Dataset ||--}o EvaluatedActivity : "is_about_activity"
+Dataset ||--}o EvaluatedEntity : "is_about_entity"
+Dataset ||--}o Identifier : "other_identifier"
+Dataset ||--}o Kind : "contact_point"
+Dataset ||--}o LegalResource : "applicable_legislation"
+Dataset ||--}o LinguisticSystem : "language"
+Dataset ||--}o Location : "geographical_coverage"
+Dataset ||--}o PeriodOfTime : "temporal_coverage"
+Dataset ||--}o ProvenanceStatement : "provenance"
+Dataset ||--}o Relationship : "qualified_relation"
+Dataset ||--}o Resource : "is_referenced_by, related_resource"
+Dataset ||--}o Standard : "conforms_to"
+Dataset ||--}| DataGeneratingActivity : "was_generated_by"
+DatasetSeries ||--|o Agent : "publisher"
+DatasetSeries ||--|o Frequency : "frequency"
+DatasetSeries ||--}o Kind : "contact_point"
+DatasetSeries ||--}o LegalResource : "applicable_legislation"
+DatasetSeries ||--}o Location : "geographical_coverage"
+DatasetSeries ||--}o PeriodOfTime : "temporal_coverage"
+Distribution ||--|o Checksum : "checksum"
+Distribution ||--|o Concept : "availability, status"
+Distribution ||--|o LicenseDocument : "licence"
+Distribution ||--|o MediaType : "compression_format, media_type, packaging_format"
+Distribution ||--|o MediaTypeOrExtent : "format"
+Distribution ||--|o Policy : "has_policy"
+Distribution ||--|o RightsStatement : "rights"
+Distribution ||--}o DataService : "access_service"
+Distribution ||--}o Document : "documentation"
+Distribution ||--}o LegalResource : "applicable_legislation"
+Distribution ||--}o LinguisticSystem : "language"
+Distribution ||--}o Resource : "download_URL"
+Distribution ||--}o Standard : "linked_schemas"
+Distribution ||--}| Resource : "access_URL"
+HealthAgent ||--|o Concept : "type"
+HealthAgent ||--|| ContactPoint : "contact_point"
+HealthCatalogue ||--|o Agent : "creator"
+HealthCatalogue ||--|o Document : "homepage"
+HealthCatalogue ||--|o LicenseDocument : "licence"
+HealthCatalogue ||--|o RightsStatement : "rights"
+HealthCatalogue ||--|| Agent : "publisher"
+HealthCatalogue ||--}o Catalogue : "catalogue, has_part"
+HealthCatalogue ||--}o CatalogueRecord : "record"
+HealthCatalogue ||--}o ConceptScheme : "themes"
+HealthCatalogue ||--}o DataService : "service"
+HealthCatalogue ||--}o Dataset : "has_dataset"
+HealthCatalogue ||--}o LinguisticSystem : "language"
+HealthCatalogue ||--}o Location : "geographical_coverage"
+HealthCatalogue ||--}o PeriodOfTime : "temporal_coverage"
+HealthCatalogue ||--}| LegalResource : "applicable_legislation"
+HealthDataset ||--|o HealthPublisherAgent : "publisher"
+HealthDataset ||--|| HealthAgent : "custodian, hdab"
+HealthDataset ||--|| PeriodOfTime : "retention_period"
+HealthDataset ||--|| RightsStatement : "access_rights"
+HealthDataset ||--}o Agent : "creator"
+HealthDataset ||--}o Attribution : "qualified_attribution"
+HealthDataset ||--}o Dataset : "has_version, source"
+HealthDataset ||--}o DatasetSeries : "in_series"
+HealthDataset ||--}o EvaluatedActivity : "is_about_activity"
+HealthDataset ||--}o EvaluatedEntity : "is_about_entity"
+HealthDataset ||--}o Identifier : "other_identifier"
+HealthDataset ||--}o Location : "geographical_coverage"
+HealthDataset ||--}o Relationship : "qualified_relation"
+HealthDataset ||--}o Resource : "related_resource"
+HealthDataset ||--}o Standard : "conforms_to"
+HealthDataset ||--}o TableGroup : "has_variables"
+HealthDataset ||--}| Concept : "health_category, health_theme, theme, type"
+HealthDataset ||--}| DataGeneratingActivity : "was_generated_by"
+HealthDataset ||--}| Document : "documentation, landing_page"
+HealthDataset ||--}| Frequency : "frequency"
+HealthDataset ||--}| HealthDistribution : "analytics, dataset_distribution, sample"
+HealthDataset ||--}| Kind : "contact_point"
+HealthDataset ||--}| LegalBasis : "has_legal_basis"
+HealthDataset ||--}| LegalResource : "applicable_legislation"
+HealthDataset ||--}| LinguisticSystem : "language"
+HealthDataset ||--}| PeriodOfTime : "temporal_coverage"
+HealthDataset ||--}| PersonalData : "has_personal_data"
+HealthDataset ||--}| ProvenanceStatement : "provenance"
+HealthDataset ||--}| Purpose : "has_purpose"
+HealthDataset ||--}| QualityCertificate : "has_quality_annotation"
+HealthDataset ||--}| Resource : "is_referenced_by"
+HealthDataset ||--}| Standard : "has_coding_system"
+HealthDatasetSeries ||--|o Agent : "publisher"
+HealthDatasetSeries ||--|o Frequency : "frequency"
+HealthDatasetSeries ||--}o Kind : "contact_point"
+HealthDatasetSeries ||--}o Location : "geographical_coverage"
+HealthDatasetSeries ||--}o PeriodOfTime : "temporal_coverage"
+HealthDatasetSeries ||--}| LegalResource : "applicable_legislation"
+HealthDistribution ||--|o Checksum : "checksum"
+HealthDistribution ||--|o Concept : "availability, status"
+HealthDistribution ||--|o LicenseDocument : "licence"
+HealthDistribution ||--|o MediaType : "compression_format, media_type, packaging_format"
+HealthDistribution ||--|o MediaTypeOrExtent : "format"
+HealthDistribution ||--|o Policy : "has_policy"
+HealthDistribution ||--|o RightsStatement : "rights"
+HealthDistribution ||--}o DataService : "access_service"
+HealthDistribution ||--}o Document : "documentation"
+HealthDistribution ||--}o LinguisticSystem : "language"
+HealthDistribution ||--}o Resource : "download_URL"
+HealthDistribution ||--}o Standard : "linked_schemas"
+HealthDistribution ||--}| LegalResource : "applicable_legislation"
+HealthDistribution ||--}| Resource : "access_URL"
+HealthPublisherAgent ||--|o Concept : "type"
+HealthPublisherAgent ||--|| ContactPoint : "contact_point"
+Table ||--}| Column : "column"
+TableGroup ||--}| Table : "table"
+TemporalEntity ||--}o Frequency : "frequency"
+
