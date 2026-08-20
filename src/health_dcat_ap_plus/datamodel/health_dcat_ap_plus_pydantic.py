@@ -855,7 +855,11 @@ class Activity(ClassifierMixin):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     title: Optional[list[str]] = Field(default=None, description="""The slot to provide a title for the Activity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -1028,7 +1032,11 @@ class AgenticEntity(ClassifierMixin):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -1166,7 +1174,11 @@ class DataGeneratingActivity(Activity):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     title: Optional[list[str]] = Field(default=None, description="""The slot to provide a title for the Activity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -1339,7 +1351,11 @@ class DataAnalysis(DataGeneratingActivity):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     title: Optional[list[str]] = Field(default=None, description="""The slot to provide a title for the Activity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -2224,7 +2240,11 @@ class Dataset(ConfiguredBaseModel):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     is_about_entity: Optional[list[EvaluatedEntity]] = Field(default=None, description="""A slot to provide the EvaluatedEntity a Dataset is about.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'],
          'exact_mappings': ['IAO:0000136'],
@@ -2404,7 +2424,11 @@ class AnalysisDataset(Dataset):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     is_about_entity: Optional[list[EvaluatedEntity]] = Field(default=None, description="""A slot to provide the EvaluatedEntity a Dataset is about.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'],
          'exact_mappings': ['IAO:0000136'],
@@ -2639,7 +2663,11 @@ class DefinedTerm(ConfiguredBaseModel):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -2721,7 +2749,11 @@ class Device(AgenticEntity):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -3304,7 +3336,11 @@ class Entity(ClassifierMixin):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     other_identifier: Optional[list[Identifier]] = Field(default=None, description="""A slot to provide a secondary identifier of the Entity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity', 'AgenticEntity', 'Dataset', 'Entity'],
          'slot_uri': 'adms:identifier'} })
@@ -3355,7 +3391,11 @@ class EvaluatedActivity(Activity):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     title: Optional[list[str]] = Field(default=None, description="""The slot to provide a title for the Activity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -3605,7 +3645,11 @@ class EvaluatedEntity(Entity):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     other_identifier: Optional[list[Identifier]] = Field(default=None, description="""A slot to provide a secondary identifier of the EvaluatedEntity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity', 'AgenticEntity', 'Dataset', 'Entity'],
          'slot_uri': 'adms:identifier'} })
@@ -3735,7 +3779,11 @@ class AnalysisSourceData(EvaluatedEntity):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     other_identifier: Optional[list[Identifier]] = Field(default=None, description="""A slot to provide a secondary identifier of the EvaluatedEntity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity', 'AgenticEntity', 'Dataset', 'Entity'],
          'slot_uri': 'adms:identifier'} })
@@ -4196,7 +4244,11 @@ class Software(AgenticEntity):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4772,7 +4824,11 @@ class Document(SupportiveEntity):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5145,7 +5201,11 @@ class LegalResource(SupportiveEntity):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5256,7 +5316,11 @@ class LicenseDocument(SupportiveEntity):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5919,7 +5983,11 @@ class Resource(SupportiveEntity):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6453,9 +6521,27 @@ class TimeInstant(SupportiveEntity):
 class HealthCatalogue(Catalogue):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Catalog',
          'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
-         'slot_usage': {'applicable_legislation': {'multivalued': True,
-                                                   'name': 'applicable_legislation',
-                                                   'required': True}}})
+         'slot_usage': {'applicable_legislation': {'name': 'applicable_legislation',
+                                                   'required': True},
+                        'geographical_coverage': {'comments': ['Recommended alignment '
+                                                               "(HealthDCAT-AP's own "
+                                                               'SHACL marks this '
+                                                               'sh:Warning, not '
+                                                               'sh:Violation) -- not '
+                                                               'strictly enforced.'],
+                                                  'name': 'geographical_coverage',
+                                                  'values_from': ['http://publications.europa.eu/resource/authority/country',
+                                                                  'http://publications.europa.eu/resource/authority/place',
+                                                                  'http://publications.europa.eu/resource/authority/continent',
+                                                                  'http://sws.geonames.org']},
+                        'language': {'name': 'language',
+                                     'values_from': ['http://publications.europa.eu/resource/authority/language']},
+                        'publisher': {'comments': ['Recommended alignment '
+                                                   "(HealthDCAT-AP's own SHACL marks "
+                                                   'this sh:Warning, not sh:Violation) '
+                                                   '-- not strictly enforced.'],
+                                      'name': 'publisher',
+                                      'values_from': ['http://publications.europa.eu/resource/authority/corporate-body']}}})
 
     applicable_legislation: list[LegalResource] = Field(default=..., description="""The legislation that mandates the creation or management of the Catalog.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
                        'DataService',
@@ -6505,15 +6591,22 @@ class HealthCatalogue(Catalogue):
                        'HealthPublisherAgent',
                        'TemporalEntity'],
          'slot_uri': 'dcterms:description'} })
-    geographical_coverage: Optional[list[Location]] = Field(default=None, description="""A geographical area covered by the Catalogue.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries'],
-         'slot_uri': 'dcterms:spatial'} })
+    geographical_coverage: Optional[list[Location]] = Field(default=None, description="""A geographical area covered by the Catalogue.""", json_schema_extra = { "linkml_meta": {'comments': ["Recommended alignment (HealthDCAT-AP's own SHACL marks this "
+                      'sh:Warning, not sh:Violation) -- not strictly enforced.'],
+         'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries'],
+         'slot_uri': 'dcterms:spatial',
+         'values_from': ['http://publications.europa.eu/resource/authority/country',
+                         'http://publications.europa.eu/resource/authority/place',
+                         'http://publications.europa.eu/resource/authority/continent',
+                         'http://sws.geonames.org']} })
     has_dataset: Optional[list[Dataset]] = Field(default=None, description="""A Dataset that is part of the Catalogue.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue'], 'slot_uri': 'dcat:dataset'} })
     has_part: Optional[list[Catalogue]] = Field(default=None, description="""A related Catalogue that is part of the described Catalogue.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity', 'AgenticEntity', 'Catalogue', 'Entity'],
          'slot_uri': 'dcterms:hasPart'} })
     homepage: Optional[Document] = Field(default=None, description="""A web page that acts as the main page for the Catalogue.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue'], 'recommended': True, 'slot_uri': 'foaf:homepage'} })
     language: Optional[list[LinguisticSystem]] = Field(default=None, description="""A language used in the textual metadata describing titles, descriptions, etc. of the Datasets in the Catalogue.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'CatalogueRecord', 'Dataset', 'Distribution'],
          'recommended': True,
-         'slot_uri': 'dcterms:language'} })
+         'slot_uri': 'dcterms:language',
+         'values_from': ['http://publications.europa.eu/resource/authority/language']} })
     licence: Optional[LicenseDocument] = Field(default=None, description="""A licence under which the Catalogue can be used or reused.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'DataService', 'Distribution'],
          'slot_uri': 'dcterms:license'} })
     modification_date: Optional[date] = Field(default=None, description="""The most recent date on which the Catalogue was modified.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
@@ -6523,8 +6616,11 @@ class HealthCatalogue(Catalogue):
                        'Distribution'],
          'recommended': True,
          'slot_uri': 'dcterms:modified'} })
-    publisher: Agent = Field(default=..., description="""An entity (organisation) responsible for making the Catalogue available.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'DataService', 'Dataset', 'DatasetSeries'],
-         'slot_uri': 'dcterms:publisher'} })
+    publisher: Agent = Field(default=..., description="""An entity (organisation) responsible for making the Catalogue available.""", json_schema_extra = { "linkml_meta": {'comments': ["Recommended alignment (HealthDCAT-AP's own SHACL marks this "
+                      'sh:Warning, not sh:Violation) -- not strictly enforced.'],
+         'domain_of': ['Catalogue', 'DataService', 'Dataset', 'DatasetSeries'],
+         'slot_uri': 'dcterms:publisher',
+         'values_from': ['http://publications.europa.eu/resource/authority/corporate-body']} })
     record: Optional[list[CatalogueRecord]] = Field(default=None, description="""A Catalogue Record that is part of the Catalogue.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue'], 'slot_uri': 'dcat:record'} })
     release_date: Optional[date] = Field(default=None, description="""The date of formal issuance (e.g., publication) of the Catalogue.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries', 'Distribution'],
          'recommended': True,
@@ -6648,85 +6744,102 @@ class ContactPoint(ConfiguredBaseModel):
 class HealthDataset(Dataset):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Dataset',
          'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
-         'slot_usage': {'access_rights': {'name': 'access_rights', 'required': True},
-                        'applicable_legislation': {'multivalued': True,
-                                                   'name': 'applicable_legislation',
+         'slot_usage': {'access_rights': {'name': 'access_rights',
+                                          'required': True,
+                                          'values_from': ['http://publications.europa.eu/resource/authority/access-right']},
+                        'applicable_legislation': {'name': 'applicable_legislation',
                                                    'required': True},
-                        'contact_point': {'multivalued': True,
-                                          'name': 'contact_point',
+                        'contact_point': {'name': 'contact_point',
+                                          'range': 'HealthKind',
                                           'required': True},
-                        'dataset_distribution': {'multivalued': True,
-                                                 'name': 'dataset_distribution',
+                        'dataset_distribution': {'name': 'dataset_distribution',
                                                  'range': 'HealthDistribution',
                                                  'required': True},
-                        'documentation': {'multivalued': True,
-                                          'name': 'documentation',
-                                          'required': True},
+                        'documentation': {'name': 'documentation', 'required': True},
                         'frequency': {'multivalued': True,
                                       'name': 'frequency',
-                                      'required': True},
-                        'identifier': {'multivalued': True,
-                                       'name': 'identifier',
-                                       'required': True},
-                        'is_referenced_by': {'multivalued': True,
-                                             'name': 'is_referenced_by',
+                                      'required': True,
+                                      'values_from': ['http://publications.europa.eu/resource/authority/frequency']},
+                        'geographical_coverage': {'comments': ['Recommended alignment '
+                                                               "(HealthDCAT-AP's own "
+                                                               'SHACL marks this '
+                                                               'sh:Warning, not '
+                                                               'sh:Violation) -- not '
+                                                               'strictly enforced.'],
+                                                  'name': 'geographical_coverage',
+                                                  'values_from': ['http://publications.europa.eu/resource/authority/country',
+                                                                  'http://publications.europa.eu/resource/authority/place',
+                                                                  'http://publications.europa.eu/resource/authority/continent',
+                                                                  'http://sws.geonames.org']},
+                        'has_coding_system': {'name': 'has_coding_system',
+                                              'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system']},
+                        'health_category': {'name': 'health_category',
+                                            'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories']},
+                        'health_theme': {'name': 'health_theme',
+                                         'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme']},
+                        'identifier': {'name': 'identifier', 'required': True},
+                        'is_referenced_by': {'name': 'is_referenced_by',
                                              'required': True},
-                        'keyword': {'multivalued': True,
-                                    'name': 'keyword',
-                                    'required': True},
-                        'landing_page': {'multivalued': True,
-                                         'name': 'landing_page',
-                                         'required': True},
-                        'language': {'multivalued': True,
-                                     'name': 'language',
-                                     'required': True},
+                        'keyword': {'name': 'keyword', 'required': True},
+                        'landing_page': {'name': 'landing_page', 'required': True},
+                        'language': {'name': 'language',
+                                     'required': True,
+                                     'values_from': ['http://publications.europa.eu/resource/authority/language']},
                         'linked_schemas': {'multivalued': True,
                                            'name': 'linked_schemas',
-                                           'required': True},
-                        'provenance': {'multivalued': True,
-                                       'name': 'provenance',
-                                       'required': True},
+                                           'required': True,
+                                           'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard']},
+                        'provenance': {'name': 'provenance', 'required': True},
                         'publisher': {'name': 'publisher',
                                       'range': 'HealthPublisherAgent'},
                         'relation': {'multivalued': True,
                                      'name': 'relation',
                                      'required': True},
-                        'sample': {'multivalued': True,
-                                   'name': 'sample',
+                        'sample': {'name': 'sample',
                                    'range': 'HealthDistribution',
                                    'required': True},
                         'source_metadata': {'multivalued': True,
                                             'name': 'source_metadata',
                                             'required': True},
-                        'temporal_coverage': {'multivalued': True,
-                                              'name': 'temporal_coverage',
+                        'temporal_coverage': {'name': 'temporal_coverage',
                                               'required': True},
                         'temporal_resolution': {'multivalued': True,
                                                 'name': 'temporal_resolution',
                                                 'required': True},
-                        'theme': {'multivalued': True,
-                                  'name': 'theme',
-                                  'required': True},
-                        'type': {'multivalued': True,
+                        'theme': {'name': 'theme',
+                                  'required': True,
+                                  'values_from': ['http://publications.europa.eu/resource/authority/data-theme']},
+                        'type': {'comments': ["Recommended alignment (HealthDCAT-AP's "
+                                              'own SHACL marks this sh:Warning, not '
+                                              'sh:Violation) -- not strictly '
+                                              'enforced.'],
                                  'name': 'type',
-                                 'required': True}}})
+                                 'required': True,
+                                 'values_from': ['http://publications.europa.eu/resource/authority/dataset-type']}}})
 
     alternative: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dcterms:alternative'} })
     analytics: list[HealthDistribution] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:analytics'} })
     custodian: HealthAgent = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'geodcatap:custodian'} })
     has_code_values: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasCodeValues'} })
-    has_coding_system: list[Standard] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasCodingSystem'} })
-    has_legal_basis: list[LegalBasis] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasLegalBasis'} })
-    has_personal_data: list[PersonalData] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasPersonalData'} })
-    has_purpose: list[Purpose] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasPurpose'} })
-    has_quality_annotation: list[QualityCertificate] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dqv:hasQualityAnnotation'} })
+    has_coding_system: list[Standard] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
+         'slot_uri': 'healthdcatap:hasCodingSystem',
+         'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system']} })
+    has_legal_basis: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasLegalBasis'} })
+    has_personal_data: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasPersonalData'} })
+    has_purpose: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasPurpose'} })
+    has_quality_annotation: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dqv:hasQualityAnnotation'} })
     has_structured_data: bool = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasStructuredData'} })
     has_variables: Optional[list[TableGroup]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasVariables'} })
     hdab: HealthAgent = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hdab'} })
-    health_category: list[Concept] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:healthCategory'} })
-    health_theme: list[Concept] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:healthTheme'} })
+    health_category: list[Concept] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
+         'slot_uri': 'healthdcatap:healthCategory',
+         'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories']} })
+    health_theme: list[Concept] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
+         'slot_uri': 'healthdcatap:healthTheme',
+         'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme']} })
     linked_schemas: list[str] = Field(default=..., description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution', 'HealthDataset'],
-         'slot_uri': 'dcterms:conformsTo'} })
+         'slot_uri': 'dcterms:conformsTo',
+         'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard']} })
     max_typical_age: int = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:maxTypicalAge'} })
     min_typical_age: int = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:minTypicalAge'} })
     number_of_records: int = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:numberOfRecords'} })
@@ -6737,7 +6850,9 @@ class HealthDataset(Dataset):
     retention_period: PeriodOfTime = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:retentionPeriod'} })
     source_metadata: list[str] = Field(default=..., description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['CatalogueRecord', 'HealthDataset'],
          'slot_uri': 'dcterms:source'} })
-    access_rights: RightsStatement = Field(default=..., description="""Information that indicates whether the Dataset is publicly accessible, has access restrictions or is not public.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'], 'slot_uri': 'dcterms:accessRights'} })
+    access_rights: RightsStatement = Field(default=..., description="""Information that indicates whether the Dataset is publicly accessible, has access restrictions or is not public.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'],
+         'slot_uri': 'dcterms:accessRights',
+         'values_from': ['http://publications.europa.eu/resource/authority/access-right']} })
     applicable_legislation: list[LegalResource] = Field(default=..., description="""The legislation that mandates the creation or management of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
                        'DataService',
                        'Dataset',
@@ -6745,7 +6860,7 @@ class HealthDataset(Dataset):
                        'Distribution'],
          'slot_uri': 'dcatap:applicableLegislation'} })
     conforms_to: Optional[list[Standard]] = Field(default=None, description="""An implementing rule or other specification.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'], 'slot_uri': 'dcterms:conformsTo'} })
-    contact_point: list[Kind] = Field(default=..., description="""Contact information that can be used for sending comments about the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService',
+    contact_point: list[HealthKind] = Field(default=..., description="""Contact information that can be used for sending comments about the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService',
                        'Dataset',
                        'DatasetSeries',
                        'HealthAgent',
@@ -6797,9 +6912,16 @@ class HealthDataset(Dataset):
     documentation: list[Document] = Field(default=..., description="""A page or document about this Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset', 'Distribution'],
          'slot_uri': 'foaf:page'} })
     frequency: list[Frequency] = Field(default=..., description="""The frequency at which the Dataset is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries', 'TemporalEntity'],
-         'slot_uri': 'dcterms:accrualPeriodicity'} })
-    geographical_coverage: Optional[list[Location]] = Field(default=None, description="""A geographic region that is covered by the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries'],
-         'slot_uri': 'dcterms:spatial'} })
+         'slot_uri': 'dcterms:accrualPeriodicity',
+         'values_from': ['http://publications.europa.eu/resource/authority/frequency']} })
+    geographical_coverage: Optional[list[Location]] = Field(default=None, description="""A geographic region that is covered by the Dataset.""", json_schema_extra = { "linkml_meta": {'comments': ["Recommended alignment (HealthDCAT-AP's own SHACL marks this "
+                      'sh:Warning, not sh:Violation) -- not strictly enforced.'],
+         'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries'],
+         'slot_uri': 'dcterms:spatial',
+         'values_from': ['http://publications.europa.eu/resource/authority/country',
+                         'http://publications.europa.eu/resource/authority/place',
+                         'http://publications.europa.eu/resource/authority/continent',
+                         'http://sws.geonames.org']} })
     has_version: Optional[list[Dataset]] = Field(default=None, description="""A related Dataset that is a version, edition, or adaptation of the described Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcat:hasVersion'} })
     identifier: list[str] = Field(default=..., description="""The main identifier for the Dataset, e.g. the URI or other unique identifier in the context of the Catalogue.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcterms:identifier'} })
     in_series: Optional[list[DatasetSeries]] = Field(default=None, description="""A dataset series of which the dataset is part.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcat:inSeries'} })
@@ -6809,7 +6931,8 @@ class HealthDataset(Dataset):
          'slot_uri': 'dcat:keyword'} })
     landing_page: list[Document] = Field(default=..., description="""A web page that provides access to the Dataset, its Distributions and/or additional information.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'], 'slot_uri': 'dcat:landingPage'} })
     language: list[LinguisticSystem] = Field(default=..., description="""A language of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'CatalogueRecord', 'Dataset', 'Distribution'],
-         'slot_uri': 'dcterms:language'} })
+         'slot_uri': 'dcterms:language',
+         'values_from': ['http://publications.europa.eu/resource/authority/language']} })
     modification_date: Optional[date] = Field(default=None, description="""The most recent date on which the Dataset was changed or modified.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
                        'CatalogueRecord',
                        'Dataset',
@@ -6836,7 +6959,8 @@ class HealthDataset(Dataset):
          'slot_uri': 'dcat:temporalResolution'} })
     theme: list[Concept] = Field(default=..., description="""A category of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'],
          'recommended': True,
-         'slot_uri': 'dcat:theme'} })
+         'slot_uri': 'dcat:theme',
+         'values_from': ['http://publications.europa.eu/resource/authority/data-theme']} })
     title: list[str] = Field(default=..., description="""A name given to the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
                        'Any',
@@ -6876,8 +7000,11 @@ class HealthDataset(Dataset):
                        'TimeInstant',
                        'Table'],
          'slot_uri': 'dcterms:title'} })
-    type: list[Concept] = Field(default=..., description="""A type of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent', 'ClassifierMixin', 'Dataset', 'LicenseDocument'],
-         'slot_uri': 'dcterms:type'} })
+    type: list[Concept] = Field(default=..., description="""A type of the Dataset.""", json_schema_extra = { "linkml_meta": {'comments': ["Recommended alignment (HealthDCAT-AP's own SHACL marks this "
+                      'sh:Warning, not sh:Violation) -- not strictly enforced.'],
+         'domain_of': ['Agent', 'ClassifierMixin', 'Dataset', 'LicenseDocument'],
+         'slot_uri': 'dcterms:type',
+         'values_from': ['http://publications.europa.eu/resource/authority/dataset-type']} })
     version: Optional[str] = Field(default=None, description="""The version indicator (name or identifier) of a resource.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcat:version'} })
     version_notes: Optional[list[str]] = Field(default=None, description="""A description of the differences between this version and a previous version of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'adms:versionNotes'} })
     was_generated_by: list[DataGeneratingActivity] = Field(default=..., description="""An activity that generated, or provides the business context for, the creation of the dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'EvaluatedEntity'],
@@ -6891,7 +7018,11 @@ class HealthDataset(Dataset):
                        'Entity',
                        'LegalResource',
                        'LicenseDocument',
-                       'Resource'],
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
          'in_subset': ['domain_agnostic_core']} })
     is_about_entity: Optional[list[EvaluatedEntity]] = Field(default=None, description="""A slot to provide the EvaluatedEntity a Dataset is about.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'],
          'exact_mappings': ['IAO:0000136'],
@@ -6908,8 +7039,7 @@ class HealthDataset(Dataset):
 class HealthDatasetSeries(DatasetSeries):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:DatasetSeries',
          'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
-         'slot_usage': {'applicable_legislation': {'multivalued': True,
-                                                   'name': 'applicable_legislation',
+         'slot_usage': {'applicable_legislation': {'name': 'applicable_legislation',
                                                    'required': True}}})
 
     applicable_legislation: list[LegalResource] = Field(default=..., description="""The legislation that mandates the creation or management of the Dataset Series.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
@@ -7024,9 +7154,16 @@ class HealthDatasetSeries(DatasetSeries):
 class HealthDistribution(Distribution):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Distribution',
          'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
-         'slot_usage': {'applicable_legislation': {'multivalued': True,
-                                                   'name': 'applicable_legislation',
-                                                   'required': True}}})
+         'slot_usage': {'applicable_legislation': {'name': 'applicable_legislation',
+                                                   'required': True},
+                        'availability': {'name': 'availability',
+                                         'values_from': ['http://publications.europa.eu/resource/authority/planned-availability']},
+                        'format': {'name': 'format',
+                                   'values_from': ['http://publications.europa.eu/resource/authority/file-type']},
+                        'language': {'name': 'language',
+                                     'values_from': ['http://publications.europa.eu/resource/authority/language']},
+                        'status': {'name': 'status',
+                                   'values_from': ['http://publications.europa.eu/resource/authority/distribution-status']}}})
 
     access_URL: list[Resource] = Field(default=..., description="""A URL that gives access to a Distribution of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'dcat:accessURL'} })
     access_service: Optional[list[DataService]] = Field(default=None, description="""A data service that gives access to the distribution of the dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'dcat:accessService'} })
@@ -7038,7 +7175,8 @@ class HealthDistribution(Distribution):
          'slot_uri': 'dcatap:applicableLegislation'} })
     availability: Optional[Concept] = Field(default=None, description="""An indication how long it is planned to keep the Distribution of the Dataset available.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'],
          'recommended': True,
-         'slot_uri': 'dcatap:availability'} })
+         'slot_uri': 'dcatap:availability',
+         'values_from': ['http://publications.europa.eu/resource/authority/planned-availability']} })
     byte_size: Optional[int] = Field(default=None, description="""The size of a Distribution in bytes.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'dcat:byteSize'} })
     checksum: Optional[Checksum] = Field(default=None, description="""A mechanism that can be used to verify that the contents of a distribution have not changed.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'spdx:checksum'} })
     compression_format: Optional[MediaType] = Field(default=None, description="""The format of the file in which the data is contained in a compressed form, e.g. to reduce the size of the downloadable file.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'dcat:compressFormat'} })
@@ -7088,10 +7226,12 @@ class HealthDistribution(Distribution):
     download_URL: Optional[list[Resource]] = Field(default=None, description="""A URL that is a direct link to a downloadable file in a given format.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'dcat:downloadURL'} })
     format: Optional[MediaTypeOrExtent] = Field(default=None, description="""The file format of the Distribution.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Distribution'],
          'recommended': True,
-         'slot_uri': 'dcterms:format'} })
+         'slot_uri': 'dcterms:format',
+         'values_from': ['http://publications.europa.eu/resource/authority/file-type']} })
     has_policy: Optional[Policy] = Field(default=None, description="""The policy expressing the rights associated with the distribution if using the [[ODRL]] vocabulary.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'odrl:hasPolicy'} })
     language: Optional[list[LinguisticSystem]] = Field(default=None, description="""A language used in the Distribution.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'CatalogueRecord', 'Dataset', 'Distribution'],
-         'slot_uri': 'dcterms:language'} })
+         'slot_uri': 'dcterms:language',
+         'values_from': ['http://publications.europa.eu/resource/authority/language']} })
     licence: Optional[LicenseDocument] = Field(default=None, description="""A licence under which the Distribution is made available.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'DataService', 'Distribution'],
          'slot_uri': 'dcterms:license'} })
     linked_schemas: Optional[list[Standard]] = Field(default=None, description="""An established schema to which the described Distribution conforms.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution', 'HealthDataset'],
@@ -7109,7 +7249,9 @@ class HealthDistribution(Distribution):
     rights: Optional[RightsStatement] = Field(default=None, description="""A statement that specifies rights associated with the Distribution.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Distribution'], 'slot_uri': 'dcterms:rights'} })
     spatial_resolution: Optional[Decimal] = Field(default=None, description="""The minimum spatial separation resolvable in a dataset distribution, measured in meters.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'Distribution'],
          'slot_uri': 'dcat:spatialResolutionInMeters'} })
-    status: Optional[Concept] = Field(default=None, description="""The status of the distribution in the context of maturity lifecycle.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'adms:status'} })
+    status: Optional[Concept] = Field(default=None, description="""The status of the distribution in the context of maturity lifecycle.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'],
+         'slot_uri': 'adms:status',
+         'values_from': ['http://publications.europa.eu/resource/authority/distribution-status']} })
     temporal_resolution: Optional[str] = Field(default=None, description="""The minimum time period resolvable in the dataset distribution.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'Distribution'],
          'slot_uri': 'dcat:temporalResolution'} })
     title: Optional[list[str]] = Field(default=None, description="""A name given to the Distribution.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
@@ -7304,7 +7446,8 @@ class TemporalEntity(ConfiguredBaseModel):
                                         'required': True},
                         'frequency': {'multivalued': True,
                                       'name': 'frequency',
-                                      'range': 'Frequency'}}})
+                                      'range': 'Frequency',
+                                      'values_from': ['http://publications.europa.eu/resource/authority/frequency']}}})
 
     description: list[str] = Field(default=..., description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -7347,47 +7490,334 @@ class TemporalEntity(ConfiguredBaseModel):
                        'TemporalEntity'],
          'slot_uri': 'dcterms:description'} })
     frequency: Optional[list[Frequency]] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries', 'TemporalEntity'],
-         'slot_uri': 'dcterms:accrualPeriodicity'} })
+         'slot_uri': 'dcterms:accrualPeriodicity',
+         'values_from': ['http://publications.europa.eu/resource/authority/frequency']} })
+
+
+class HealthLicenseDocument(LicenseDocument):
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcterms:LicenseDocument',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
+         'slot_usage': {'type': {'name': 'type',
+                                 'values_from': ['http://purl.org/adms/licencetype/1.0']}}})
+
+    type: Optional[list[Concept]] = Field(default=None, description="""A type of licence, e.g. indicating 'public domain' or 'royalties required'.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent', 'ClassifierMixin', 'Dataset', 'LicenseDocument'],
+         'recommended': True,
+         'slot_uri': 'dcterms:type',
+         'values_from': ['http://purl.org/adms/licencetype/1.0']} })
+    id: str = Field(default=..., description="""A slot to provide an URI for an entity within this schema.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Dataset',
+                       'DefinedTerm',
+                       'Document',
+                       'Entity',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
+         'in_subset': ['domain_agnostic_core']} })
+    title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Any',
+                       'Attribution',
+                       'Catalogue',
+                       'CatalogueRecord',
+                       'ChecksumAlgorithm',
+                       'Concept',
+                       'ConceptScheme',
+                       'DataService',
+                       'Dataset',
+                       'DatasetSeries',
+                       'DefinedTerm',
+                       'Distribution',
+                       'Document',
+                       'Entity',
+                       'Frequency',
+                       'Geometry',
+                       'Identifier',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'LinguisticSystem',
+                       'MediaType',
+                       'MediaTypeOrExtent',
+                       'PeriodOfTime',
+                       'Plan',
+                       'Policy',
+                       'ProvenanceStatement',
+                       'QualitativeAttribute',
+                       'QuantitativeAttribute',
+                       'Resource',
+                       'RightsStatement',
+                       'Role',
+                       'Standard',
+                       'SupportiveEntity',
+                       'Surrounding',
+                       'TimeInstant',
+                       'Table'],
+         'slot_uri': 'dcterms:title'} })
+    description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Any',
+                       'Attribution',
+                       'Catalogue',
+                       'CatalogueRecord',
+                       'ChecksumAlgorithm',
+                       'Concept',
+                       'ConceptScheme',
+                       'DataService',
+                       'Dataset',
+                       'DatasetSeries',
+                       'Distribution',
+                       'Document',
+                       'Entity',
+                       'Frequency',
+                       'Geometry',
+                       'Identifier',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'LinguisticSystem',
+                       'MediaType',
+                       'MediaTypeOrExtent',
+                       'PeriodOfTime',
+                       'Plan',
+                       'Policy',
+                       'ProvenanceStatement',
+                       'QualitativeAttribute',
+                       'QuantitativeAttribute',
+                       'Resource',
+                       'RightsStatement',
+                       'Role',
+                       'Standard',
+                       'SupportiveEntity',
+                       'Surrounding',
+                       'TimeInstant',
+                       'Column',
+                       'HealthPublisherAgent',
+                       'TemporalEntity'],
+         'slot_uri': 'dcterms:description'} })
+
+
+class HealthDataService(DataService):
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:DataService',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
+         'slot_usage': {'access_rights': {'name': 'access_rights',
+                                          'values_from': ['http://publications.europa.eu/resource/authority/access-right']},
+                        'format': {'name': 'format',
+                                   'values_from': ['http://publications.europa.eu/resource/authority/file-type']}}})
+
+    access_rights: Optional[RightsStatement] = Field(default=None, description="""Information regarding access or restrictions based on privacy, security, or other policies.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'],
+         'slot_uri': 'dcterms:accessRights',
+         'values_from': ['http://publications.europa.eu/resource/authority/access-right']} })
+    applicable_legislation: Optional[list[LegalResource]] = Field(default=None, description="""The legislation that mandates the creation or management of the Data Service.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
+                       'DataService',
+                       'Dataset',
+                       'DatasetSeries',
+                       'Distribution'],
+         'slot_uri': 'dcatap:applicableLegislation'} })
+    conforms_to: Optional[list[Standard]] = Field(default=None, description="""An established (technical) standard to which the Data Service conforms.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'],
+         'recommended': True,
+         'slot_uri': 'dcterms:conformsTo'} })
+    contact_point: Optional[list[Kind]] = Field(default=None, description="""Contact information that can be used for sending comments about the Data Service.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService',
+                       'Dataset',
+                       'DatasetSeries',
+                       'HealthAgent',
+                       'HealthPublisherAgent'],
+         'recommended': True,
+         'slot_uri': 'dcat:contactPoint'} })
+    description: Optional[list[str]] = Field(default=None, description="""A free-text account of the Data Service.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Any',
+                       'Attribution',
+                       'Catalogue',
+                       'CatalogueRecord',
+                       'ChecksumAlgorithm',
+                       'Concept',
+                       'ConceptScheme',
+                       'DataService',
+                       'Dataset',
+                       'DatasetSeries',
+                       'Distribution',
+                       'Document',
+                       'Entity',
+                       'Frequency',
+                       'Geometry',
+                       'Identifier',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'LinguisticSystem',
+                       'MediaType',
+                       'MediaTypeOrExtent',
+                       'PeriodOfTime',
+                       'Plan',
+                       'Policy',
+                       'ProvenanceStatement',
+                       'QualitativeAttribute',
+                       'QuantitativeAttribute',
+                       'Resource',
+                       'RightsStatement',
+                       'Role',
+                       'Standard',
+                       'SupportiveEntity',
+                       'Surrounding',
+                       'TimeInstant',
+                       'Column',
+                       'HealthPublisherAgent',
+                       'TemporalEntity'],
+         'slot_uri': 'dcterms:description'} })
+    documentation: Optional[list[Document]] = Field(default=None, description="""A page or document about this Data Service""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset', 'Distribution'],
+         'slot_uri': 'foaf:page'} })
+    endpoint_URL: list[Resource] = Field(default=..., description="""The root location or primary endpoint of the service (an IRI).""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService'], 'slot_uri': 'dcat:endpointURL'} })
+    endpoint_description: Optional[list[Resource]] = Field(default=None, description="""A description of the services available via the end-points, including their operations, parameters etc.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService'],
+         'recommended': True,
+         'slot_uri': 'dcat:endpointDescription'} })
+    format: Optional[list[MediaTypeOrExtent]] = Field(default=None, description="""The structure that can be returned by querying the endpointURL.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Distribution'],
+         'slot_uri': 'dcterms:format',
+         'values_from': ['http://publications.europa.eu/resource/authority/file-type']} })
+    keyword: Optional[list[str]] = Field(default=None, description="""A keyword or tag describing the Data Service.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset', 'Table'],
+         'recommended': True,
+         'slot_uri': 'dcat:keyword'} })
+    landing_page: Optional[list[Document]] = Field(default=None, description="""A web page that provides access to the Data Service and/or additional information.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'], 'slot_uri': 'dcat:landingPage'} })
+    licence: Optional[LicenseDocument] = Field(default=None, description="""A licence under which the Data service is made available.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'DataService', 'Distribution'],
+         'slot_uri': 'dcterms:license'} })
+    publisher: Optional[Agent] = Field(default=None, description="""An entity (organisation) responsible for making the Data Service available.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'DataService', 'Dataset', 'DatasetSeries'],
+         'slot_uri': 'dcterms:publisher'} })
+    serves_dataset: Optional[list[Dataset]] = Field(default=None, description="""This property refers to a collection of data that this data service can distribute.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService'], 'slot_uri': 'dcat:servesDataset'} })
+    theme: Optional[list[Concept]] = Field(default=None, description="""A category of the Data Service.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'],
+         'recommended': True,
+         'slot_uri': 'dcat:theme'} })
+    title: list[str] = Field(default=..., description="""A name given to the Data Service.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Any',
+                       'Attribution',
+                       'Catalogue',
+                       'CatalogueRecord',
+                       'ChecksumAlgorithm',
+                       'Concept',
+                       'ConceptScheme',
+                       'DataService',
+                       'Dataset',
+                       'DatasetSeries',
+                       'DefinedTerm',
+                       'Distribution',
+                       'Document',
+                       'Entity',
+                       'Frequency',
+                       'Geometry',
+                       'Identifier',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'LinguisticSystem',
+                       'MediaType',
+                       'MediaTypeOrExtent',
+                       'PeriodOfTime',
+                       'Plan',
+                       'Policy',
+                       'ProvenanceStatement',
+                       'QualitativeAttribute',
+                       'QuantitativeAttribute',
+                       'Resource',
+                       'RightsStatement',
+                       'Role',
+                       'Standard',
+                       'SupportiveEntity',
+                       'Surrounding',
+                       'TimeInstant',
+                       'Table'],
+         'slot_uri': 'dcterms:title'} })
 
 
 class LegalBasis(ConfiguredBaseModel):
     """
-    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape in the parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this port deliberately does not parse -- see script docstring).
+    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape anywhere in HealthDCAT-AP's own release -- confirmed, not assumed: it doesn't appear in the tier shapes files or in mdr-vocabularies.shape.ttl (which this port does parse, for controlled-vocabulary bindings on other properties -- see script docstring); it's a pointer into an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just id: real usage is a reference to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a locally-described object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime's own YAML loader rejects outright ('Empty list elements are not allowed'), making a slotless required range unusable in practice, not just thin.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dpv:LegalBasis',
          'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
 
-    pass
+    id: str = Field(default=..., description="""A slot to provide an URI for an entity within this schema.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Dataset',
+                       'DefinedTerm',
+                       'Document',
+                       'Entity',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
+         'in_subset': ['domain_agnostic_core']} })
 
 
 class PersonalData(ConfiguredBaseModel):
     """
-    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape in the parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this port deliberately does not parse -- see script docstring).
+    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape anywhere in HealthDCAT-AP's own release -- confirmed, not assumed: it doesn't appear in the tier shapes files or in mdr-vocabularies.shape.ttl (which this port does parse, for controlled-vocabulary bindings on other properties -- see script docstring); it's a pointer into an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just id: real usage is a reference to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a locally-described object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime's own YAML loader rejects outright ('Empty list elements are not allowed'), making a slotless required range unusable in practice, not just thin.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dpv:PersonalData',
          'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
 
-    pass
+    id: str = Field(default=..., description="""A slot to provide an URI for an entity within this schema.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Dataset',
+                       'DefinedTerm',
+                       'Document',
+                       'Entity',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
+         'in_subset': ['domain_agnostic_core']} })
 
 
 class Purpose(ConfiguredBaseModel):
     """
-    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape in the parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this port deliberately does not parse -- see script docstring).
+    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape anywhere in HealthDCAT-AP's own release -- confirmed, not assumed: it doesn't appear in the tier shapes files or in mdr-vocabularies.shape.ttl (which this port does parse, for controlled-vocabulary bindings on other properties -- see script docstring); it's a pointer into an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just id: real usage is a reference to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a locally-described object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime's own YAML loader rejects outright ('Empty list elements are not allowed'), making a slotless required range unusable in practice, not just thin.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dpv:Purpose',
          'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
 
-    pass
+    id: str = Field(default=..., description="""A slot to provide an URI for an entity within this schema.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Dataset',
+                       'DefinedTerm',
+                       'Document',
+                       'Entity',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
+         'in_subset': ['domain_agnostic_core']} })
 
 
 class QualityCertificate(ConfiguredBaseModel):
     """
-    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape in the parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this port deliberately does not parse -- see script docstring).
+    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape anywhere in HealthDCAT-AP's own release -- confirmed, not assumed: it doesn't appear in the tier shapes files or in mdr-vocabularies.shape.ttl (which this port does parse, for controlled-vocabulary bindings on other properties -- see script docstring); it's a pointer into an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just id: real usage is a reference to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a locally-described object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime's own YAML loader rejects outright ('Empty list elements are not allowed'), making a slotless required range unusable in practice, not just thin.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dqv:QualityCertificate',
          'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
 
-    pass
+    id: str = Field(default=..., description="""A slot to provide an URI for an entity within this schema.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Dataset',
+                       'DefinedTerm',
+                       'Document',
+                       'Entity',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'Resource',
+                       'LegalBasis',
+                       'PersonalData',
+                       'Purpose',
+                       'QualityCertificate'],
+         'in_subset': ['domain_agnostic_core']} })
 
 
 # Model rebuild
@@ -7454,6 +7884,8 @@ HealthKind.model_rebuild()
 Table.model_rebuild()
 TableGroup.model_rebuild()
 TemporalEntity.model_rebuild()
+HealthLicenseDocument.model_rebuild()
+HealthDataService.model_rebuild()
 LegalBasis.model_rebuild()
 PersonalData.model_rebuild()
 Purpose.model_rebuild()

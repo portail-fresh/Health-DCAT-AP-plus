@@ -31,6 +31,22 @@ lands in one of three buckets:
   4. A property whose path URI has no base match -> a genuinely new slot,
      defined once at the top level and referenced from its owning class.
 
+Also parsed, separately from the three tier files above: mdr-vocabularies.shape.ttl,
+HealthDCAT-AP's controlled-vocabulary-membership constraints (35 NodeShapes,
+all named *Restriction/*ShapeCV). These don't add classes or properties of
+their own -- confirmed by checking, not assumed: none of the four
+externally-referenced classes this port stubs (Purpose, LegalBasis,
+PersonalData, QualityCertificate; see the stub-generation code below) or
+their predicates appear anywhere in this file either. What it does add is
+value-set metadata on properties already ported: "dct:language's value must
+be skos:inScheme <the EU language NAL>," etc. Recorded via LinkML's own
+values_from slot metaslot (a value-set reference, not an expanded enum --
+see its own docstring in the LinkML metamodel) rather than fetching and
+inlining the actual external vocabularies, which would be a much larger,
+separate undertaking. Not parsed at all: imports.ttl/mdr_imports.ttl (pure
+owl:imports manifests, no shapes -- confirmed empty of sh:NodeShape content)
+and deprecateduris.ttl (a URI redirect table, not shape-relevant).
+
 Source version (record this on every re-run -- HealthDCAT-AP has no stable
 "latest" pointer the way dcat-ap-plus has a w3id permalink, so the shapes
 this schema was ported from need to be pinned by commit, not just by name):
@@ -46,7 +62,7 @@ from pathlib import Path
 
 import rdflib
 from rdflib import URIRef
-from rdflib.namespace import RDF, SH, XSD
+from rdflib.namespace import RDF, SH, SKOS, XSD
 
 # sh:extends isn't part of the SHACL vocabulary rdflib's SH namespace knows
 # about (it's a non-standard term some SHACL authors use informally for
@@ -123,6 +139,31 @@ def local_name(uri: str) -> str:
         if sep in uri:
             return uri.rsplit(sep, 1)[-1]
     return uri
+
+
+# range.ttl and mdr-vocabularies.shape.ttl declare `@prefix dcatap:
+# <http://data.europa.eu/r5r>` -- missing the trailing slash that
+# non-public-shapes.ttl/non-public-shapes_recommended.ttl (and dcat-ap-plus's
+# own schema: `dcatap: http://data.europa.eu/r5r/`) both have. Confirmed by
+# reading all four files' own @prefix lines, not assumed -- a real
+# inconsistency within HealthDCAT-AP's own release, not something this port
+# introduces. Per the Turtle spec this makes every dcatap:X term in those two
+# files expand to a malformed, concatenated URI (e.g. dcatap:availability ->
+# .../r5ravailability instead of .../r5r/availability), silently failing to
+# match any real dcat-ap-plus slot. The correct namespace is unambiguous (3
+# of 4 sources agree), so this is corrected before parsing rather than left
+# to silently produce garbage slot names -- worth reporting upstream, but
+# also safe to fix locally since it's not a judgment call.
+_KNOWN_UPSTREAM_PREFIX_FIXES = {
+    "@prefix dcatap: <http://data.europa.eu/r5r> .": "@prefix dcatap: <http://data.europa.eu/r5r/> .",
+}
+
+
+def parse_turtle_with_known_fixes(g: rdflib.Graph, path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    for bad, good in _KNOWN_UPSTREAM_PREFIX_FIXES.items():
+        text = text.replace(bad, good)
+    g.parse(data=text, format="turtle")
 
 
 def to_snake_case(name: str) -> str:
@@ -264,6 +305,71 @@ def parse_shapes(graph, uri_to_slot, uri_to_class):
     return facts, shape_target, parents, skipped, class_like_range_uris
 
 
+def parse_vocabulary_restrictions(vocab_graph):
+    """Parse mdr-vocabularies.shape.ttl's controlled-vocabulary-membership
+    shapes into {(target_class_uri, predicate_uri): (vocab_uris, recommended_only)}.
+
+    Two shape patterns, both confirmed by reading the file rather than
+    guessed: (1) simple "X_Restriction" shapes are just
+    `sh:property [sh:path skos:inScheme; sh:hasValue <vocab-uri>]` -- "a
+    valid value has this skos:inScheme". (2) "X_ShapeCV" shapes carry
+    `sh:targetClass <class>` and a list of `sh:property [sh:path <predicate>;
+    sh:node <RestrictionShape-or-sh:or-list-of-them>]` entries -- these are
+    what actually connects a property to the vocabulary(ies) its values must
+    come from. A property entry with a bare `sh:hasValue` and no
+    skos:inScheme node (e.g. "Dataset must include theme .../HEAL") is a
+    different kind of constraint -- a fixed required value, not "must be
+    from vocabulary V" -- and isn't representable via values_from, so it's
+    reported as skipped rather than silently dropped or misrepresented.
+    """
+    restriction_vocabs: dict = {}
+    for shape in vocab_graph.subjects(RDF.type, SH.NodeShape):
+        for prop in vocab_graph.objects(shape, SH.property):
+            if vocab_graph.value(prop, SH.path) == SKOS.inScheme:
+                val = vocab_graph.value(prop, SH.hasValue)
+                if val is not None:
+                    restriction_vocabs.setdefault(shape, []).append(str(val))
+
+    def vocabs_for(node) -> list[str]:
+        if node in restriction_vocabs:
+            return list(restriction_vocabs[node])
+        or_list = vocab_graph.value(node, SH["or"])
+        if or_list is not None:
+            out: list[str] = []
+            for item in vocab_graph.items(or_list):
+                out.extend(restriction_vocabs.get(item, []))
+            return out
+        return []
+
+    bindings: dict[tuple[str, str], tuple[list[str], bool]] = {}
+    skipped: list[str] = []
+    for shape in vocab_graph.subjects(RDF.type, SH.NodeShape):
+        target = vocab_graph.value(shape, SH.targetClass)
+        if target is None:
+            continue
+        for prop in vocab_graph.objects(shape, SH.property):
+            path = vocab_graph.value(prop, SH.path)
+            if path is None or not isinstance(path, URIRef):
+                continue
+            node = vocab_graph.value(prop, SH.node)
+            vocabs = vocabs_for(node) if node is not None else []
+            if not vocabs:
+                skipped.append(
+                    f"{local_name(str(target))} {local_name(str(path))}: no resolvable "
+                    "vocabulary (direct sh:hasValue constraint or unhandled composite)"
+                )
+                continue
+            severity = vocab_graph.value(prop, SH.severity)
+            recommended_only = severity is not None and str(severity).endswith("Warning")
+            key = (str(target), str(path))
+            if key in bindings:
+                prev_vocabs, prev_recommended = bindings[key]
+                vocabs = sorted(set(prev_vocabs) | set(vocabs))
+                recommended_only = prev_recommended and recommended_only
+            bindings[key] = (vocabs, recommended_only)
+    return bindings, skipped
+
+
 def build_rename_map(facts, shape_target, base_class_names: set[str]) -> dict[str, str]:
     """Classes whose resolved name already matches a base (dcat-ap-plus) class
     are HealthDCAT-AP *profiles* of that class (same RDF type, tighter shape)
@@ -291,7 +397,25 @@ def build_linkml(
     def resolve_range(name: str) -> str:
         return rename.get(name, name)
 
-    def base_slot(name: str):
+    def base_slot(name: str, cls_name: str | None = None):
+        # Try the class-specific induced slot first -- several base
+        # dcat-ap-plus slots (contact_point, had_role, ...) declare no range
+        # of their own at the top level (defaulting to "string") and are
+        # only ever given a real range via per-class slot_usage (e.g.
+        # Dataset.contact_point -> Kind). Calling induced_slot(name) alone,
+        # with no class context, silently returns that generic "string"
+        # fallback instead of the class's real range -- found by testing,
+        # not assumed, when a contact_point range-recovery fix appeared to
+        # have zero effect on the generated output. Falls back to the
+        # classless lookup when cls_name isn't a class base_sv knows about
+        # (a synthetic HealthDCAT-AP class, e.g. HealthAgent reusing
+        # contact_point) -- still needed there to recognize the slot NAME
+        # already exists globally, so it gets reused rather than duplicated.
+        if cls_name:
+            try:
+                return base_sv.induced_slot(name, cls_name)
+            except Exception:
+                pass
         try:
             return base_sv.induced_slot(name)
         except Exception:
@@ -337,9 +461,24 @@ def build_linkml(
             required = bool(fact.min_count and fact.min_count >= 1)
             multivalued = fact.max_count is None or fact.max_count > 1
 
-            existing = base_slot(prop_name)
+            existing = base_slot(prop_name, class_name)
             if existing is not None:
                 usage: dict = {}
+                if range_name is None and existing.range in rename:
+                    # This property's own shape never explicitly narrowed its
+                    # range (no sh:class/sh:node on THIS property) -- but its
+                    # base-declared range class was independently shaped
+                    # elsewhere in the same graph (e.g. :Kind_Shape,
+                    # sh:targetClass vcard:Kind, required by dcat:contactPoint's
+                    # value without ever being sh:node-referenced from
+                    # contactPoint's own property shape). In real SHACL
+                    # semantics a sh:targetClass-based shape applies to every
+                    # node of that type regardless of which property pointed to
+                    # it, so recovering this narrowing is restating a
+                    # constraint the source SHACL actually imposes, not
+                    # inventing one the mechanical per-property walk above
+                    # can't see on its own.
+                    range_name = rename[existing.range]
                 if range_name and range_name != (existing.range or "string"):
                     usage["range"] = range_name
                 if required and not existing.required:
@@ -394,7 +533,17 @@ def main() -> None:
     shacl_dir = Path(args.shacl_dir)
     graph = rdflib.Graph()
     for fname in TIER_FILES[args.tier]:
-        graph.parse(shacl_dir / fname, format="turtle")
+        parse_turtle_with_known_fixes(graph, shacl_dir / fname)
+
+    # Parsed into its own graph, not merged into `graph` above: its
+    # *Restriction/*ShapeCV shapes would otherwise also get walked by
+    # parse_shapes() below (which matches on rdf:type sh:NodeShape, not on
+    # source file) and misread as ordinary classes/properties -- they have a
+    # structurally different shape (sh:node pointing at a restriction or
+    # sh:or list, not sh:datatype/sh:class) that parse_shapes() isn't built
+    # to interpret.
+    vocab_graph = rdflib.Graph()
+    parse_turtle_with_known_fixes(vocab_graph, shacl_dir / "mdr-vocabularies.shape.ttl")
 
     base_sv, uri_to_slot, uri_to_class = load_base_schema(args.base_schema)
     facts, shape_target, shape_parents, skipped, class_like_range_uris = parse_shapes(graph, uri_to_slot, uri_to_class)
@@ -402,6 +551,52 @@ def main() -> None:
     base_class_names = set(base_sv.all_classes(imports=True))
     rename = build_rename_map(facts, shape_target, base_class_names)
     classes, slots = build_linkml(base_sv, facts, shape_target, shape_parents, rename)
+
+    # Apply controlled-vocabulary-membership bindings (mdr-vocabularies.shape.ttl)
+    # onto the classes/slots build_linkml just produced.
+    vocab_bindings, vocab_skipped = parse_vocabulary_restrictions(vocab_graph)
+    for (target_class_uri, predicate_uri), (vocab_uris, recommended_only) in vocab_bindings.items():
+        class_name = class_name_for(URIRef(target_class_uri), uri_to_class)
+        final_class_name = rename.get(class_name, class_name)
+        if final_class_name not in classes:
+            if class_name not in base_class_names:
+                vocab_skipped.append(f"{class_name}: target class not resolvable, skipping binding")
+                continue
+            # The tier shapes never touched this class directly, but a
+            # controlled-vocabulary binding is still a real HealthDCAT-AP
+            # constraint on it -- give it the same Health<X> profile
+            # treatment any other touched class gets (e.g. DataService,
+            # constrained here via dct:language/prov:wasGeneratedBy but not
+            # by non-public-shapes.ttl itself).
+            final_class_name = f"Health{class_name}"
+            rename[class_name] = final_class_name
+            classes[final_class_name] = {
+                "is_a": class_name,
+                "class_uri": base_sv.get_uri(class_name, expand=False),
+            }
+
+        slot_name = property_name_for(URIRef(predicate_uri), uri_to_slot)
+        cls = classes[final_class_name]
+        parent_name = cls.get("is_a")
+        try:
+            inherited_names = (
+                {s.name for s in base_sv.class_induced_slots(parent_name, imports=True)} if parent_name else set()
+            )
+        except ValueError:
+            inherited_names = set()
+        already_applicable = slot_name in inherited_names or slot_name in cls.get("slots", [])
+        if not already_applicable:
+            vocab_skipped.append(
+                f"{final_class_name}.{slot_name}: not an existing slot on this class, skipping values_from binding"
+            )
+            continue
+
+        usage = cls.setdefault("slot_usage", {}).setdefault(slot_name, {})
+        usage["values_from"] = vocab_uris
+        if recommended_only:
+            usage.setdefault("comments", []).append(
+                "Recommended alignment (HealthDCAT-AP's own SHACL marks this sh:Warning, not sh:Violation) -- not strictly enforced."
+            )
 
     # Closure pass: a range can point at a class (via sh:class) that has no
     # sh:NodeShape of its own in the files parsed here -- e.g. dpv:Purpose is
@@ -429,10 +624,23 @@ def main() -> None:
         stub: dict = {
             "description": (
                 "External vocabulary term referenced by a HealthDCAT-AP shape "
-                "but not itself defined by a sh:NodeShape in the parsed files "
-                "(likely shaped only in mdr-vocabularies.shape.ttl, which this "
-                "port deliberately does not parse -- see script docstring)."
-            )
+                "but not itself defined by a sh:NodeShape anywhere in HealthDCAT-AP's "
+                "own release -- confirmed, not assumed: it doesn't appear in the tier "
+                "shapes files or in mdr-vocabularies.shape.ttl (which this port does "
+                "parse, for controlled-vocabulary bindings on other properties -- see "
+                "script docstring); it's a pointer into an external ontology (DPV/DQV) "
+                "HealthDCAT-AP never embeds. Carries just id: real usage is a reference "
+                "to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis "
+                "URI), not a locally-described object -- and a slotless class "
+                "can only ever be instantiated as {}, which linkml_runtime's "
+                "own YAML loader rejects outright ('Empty list elements are "
+                "not allowed'), making a slotless required range unusable in "
+                "practice, not just thin."
+            ),
+            # Every class here is a bare external-term reference, so "id" is
+            # the one slot that makes it real without inventing a shape
+            # HealthDCAT-AP itself never gave it.
+            "slots": ["id"],
         }
         uri = class_like_range_uris.get(name)
         if uri:
@@ -489,10 +697,16 @@ def main() -> None:
     print(f"-> {len(slots)} new top-level slots")
     if stubbed:
         print(f"-> {len(stubbed)} stub class(es) for externally-referenced-but-unshaped ranges: {', '.join(stubbed)}")
+    n_applied_bindings = sum(1 for c in classes.values() for u in c.get("slot_usage", {}).values() if "values_from" in u)
+    print(f"-> {n_applied_bindings} controlled-vocabulary (values_from) binding(s) applied from mdr-vocabularies.shape.ttl")
     print(f"Written to {out_path}")
     if skipped:
         print(f"\nSkipped {len(skipped)} composite constraint(s), not representable as a single property:")
         for s in skipped:
+            print(f"  - {s}")
+    if vocab_skipped:
+        print(f"\nSkipped {len(vocab_skipped)} vocabulary binding(s) from mdr-vocabularies.shape.ttl:")
+        for s in vocab_skipped:
             print(f"  - {s}")
 
 

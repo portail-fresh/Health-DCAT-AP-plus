@@ -1,5 +1,5 @@
 # Auto generated from health_dcat_ap_plus.yaml by pythongen.py version: 0.0.1
-# Generation date: 2026-08-18T15:24:52
+# Generation date: 2026-08-20T16:09:20
 # Schema: Health-DCAT-AP-Plus
 #
 # id: https://w3id.org/portail-fresh/Health-DCAT-AP-Plus
@@ -194,6 +194,26 @@ class ResourceId(URIorCURIE):
 
 
 class HealthDatasetId(DatasetId):
+    pass
+
+
+class HealthLicenseDocumentId(LicenseDocumentId):
+    pass
+
+
+class LegalBasisId(URIorCURIE):
+    pass
+
+
+class PersonalDataId(URIorCURIE):
+    pass
+
+
+class PurposeId(URIorCURIE):
+    pass
+
+
+class QualityCertificateId(URIorCURIE):
     pass
 
 
@@ -2174,14 +2194,29 @@ class HealthCatalogue(Catalogue):
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.HealthCatalogue
 
     description: Union[str, list[str]] = None
-    publisher: Union[dict, Agent] = None
     title: Union[str, list[str]] = None
     applicable_legislation: Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]] = empty_dict()
+    publisher: Union[dict, Agent] = None
+    language: Optional[Union[Union[dict, LinguisticSystem], list[Union[dict, LinguisticSystem]]]] = empty_list()
+    geographical_coverage: Optional[Union[Union[dict, Location], list[Union[dict, Location]]]] = empty_list()
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.applicable_legislation):
             self.MissingRequiredField("applicable_legislation")
         self._normalize_inlined_as_list(slot_name="applicable_legislation", slot_type=LegalResource, key_name="id", keyed=True)
+
+        if self._is_empty(self.publisher):
+            self.MissingRequiredField("publisher")
+        if not isinstance(self.publisher, Agent):
+            self.publisher = Agent(**as_dict(self.publisher))
+
+        if not isinstance(self.language, list):
+            self.language = [self.language] if self.language is not None else []
+        self.language = [v if isinstance(v, LinguisticSystem) else LinguisticSystem(**as_dict(v)) for v in self.language]
+
+        if not isinstance(self.geographical_coverage, list):
+            self.geographical_coverage = [self.geographical_coverage] if self.geographical_coverage is not None else []
+        self.geographical_coverage = [v if isinstance(v, Location) else Location(**as_dict(v)) for v in self.geographical_coverage]
 
         super().__post_init__(**kwargs)
 
@@ -2283,10 +2318,10 @@ class HealthDataset(Dataset):
     custodian: Union[dict, "HealthAgent"] = None
     has_code_values: Union[str, list[str]] = None
     has_coding_system: Union[Union[dict, Standard], list[Union[dict, Standard]]] = None
-    has_legal_basis: Union[Union[dict, "LegalBasis"], list[Union[dict, "LegalBasis"]]] = None
-    has_personal_data: Union[Union[dict, "PersonalData"], list[Union[dict, "PersonalData"]]] = None
-    has_purpose: Union[Union[dict, "Purpose"], list[Union[dict, "Purpose"]]] = None
-    has_quality_annotation: Union[Union[dict, "QualityCertificate"], list[Union[dict, "QualityCertificate"]]] = None
+    has_legal_basis: Union[Union[str, LegalBasisId], list[Union[str, LegalBasisId]]] = None
+    has_personal_data: Union[Union[str, PersonalDataId], list[Union[str, PersonalDataId]]] = None
+    has_purpose: Union[Union[str, PurposeId], list[Union[str, PurposeId]]] = None
+    has_quality_annotation: Union[Union[str, QualityCertificateId], list[Union[str, QualityCertificateId]]] = None
     has_structured_data: Union[bool, Bool] = None
     hdab: Union[dict, "HealthAgent"] = None
     health_category: Union[Union[dict, Concept], list[Union[dict, Concept]]] = None
@@ -2306,7 +2341,7 @@ class HealthDataset(Dataset):
     identifier: Union[str, list[str]] = None
     sample: Union[Union[dict, "HealthDistribution"], list[Union[dict, "HealthDistribution"]]] = None
     theme: Union[Union[dict, Concept], list[Union[dict, Concept]]] = None
-    contact_point: Union[Union[dict, Kind], list[Union[dict, Kind]]] = None
+    contact_point: Union[Union[dict, "HealthKind"], list[Union[dict, "HealthKind"]]] = None
     keyword: Union[str, list[str]] = None
     type: Union[Union[dict, Concept], list[Union[dict, Concept]]] = None
     provenance: Union[Union[dict, ProvenanceStatement], list[Union[dict, ProvenanceStatement]]] = None
@@ -2320,6 +2355,7 @@ class HealthDataset(Dataset):
     alternative: Optional[Union[str, list[str]]] = empty_list()
     has_variables: Optional[Union[Union[dict, "TableGroup"], list[Union[dict, "TableGroup"]]]] = empty_list()
     publisher: Optional[Union[dict, "HealthPublisherAgent"]] = None
+    geographical_coverage: Optional[Union[Union[dict, Location], list[Union[dict, Location]]]] = empty_list()
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.id):
@@ -2354,25 +2390,25 @@ class HealthDataset(Dataset):
             self.MissingRequiredField("has_legal_basis")
         if not isinstance(self.has_legal_basis, list):
             self.has_legal_basis = [self.has_legal_basis] if self.has_legal_basis is not None else []
-        self.has_legal_basis = [v if isinstance(v, LegalBasis) else LegalBasis(**as_dict(v)) for v in self.has_legal_basis]
+        self.has_legal_basis = [v if isinstance(v, LegalBasisId) else LegalBasisId(v) for v in self.has_legal_basis]
 
         if self._is_empty(self.has_personal_data):
             self.MissingRequiredField("has_personal_data")
         if not isinstance(self.has_personal_data, list):
             self.has_personal_data = [self.has_personal_data] if self.has_personal_data is not None else []
-        self.has_personal_data = [v if isinstance(v, PersonalData) else PersonalData(**as_dict(v)) for v in self.has_personal_data]
+        self.has_personal_data = [v if isinstance(v, PersonalDataId) else PersonalDataId(v) for v in self.has_personal_data]
 
         if self._is_empty(self.has_purpose):
             self.MissingRequiredField("has_purpose")
         if not isinstance(self.has_purpose, list):
             self.has_purpose = [self.has_purpose] if self.has_purpose is not None else []
-        self.has_purpose = [v if isinstance(v, Purpose) else Purpose(**as_dict(v)) for v in self.has_purpose]
+        self.has_purpose = [v if isinstance(v, PurposeId) else PurposeId(v) for v in self.has_purpose]
 
         if self._is_empty(self.has_quality_annotation):
             self.MissingRequiredField("has_quality_annotation")
         if not isinstance(self.has_quality_annotation, list):
             self.has_quality_annotation = [self.has_quality_annotation] if self.has_quality_annotation is not None else []
-        self.has_quality_annotation = [v if isinstance(v, QualityCertificate) else QualityCertificate(**as_dict(v)) for v in self.has_quality_annotation]
+        self.has_quality_annotation = [v if isinstance(v, QualityCertificateId) else QualityCertificateId(v) for v in self.has_quality_annotation]
 
         if self._is_empty(self.has_structured_data):
             self.MissingRequiredField("has_structured_data")
@@ -2476,7 +2512,7 @@ class HealthDataset(Dataset):
             self.MissingRequiredField("contact_point")
         if not isinstance(self.contact_point, list):
             self.contact_point = [self.contact_point] if self.contact_point is not None else []
-        self.contact_point = [v if isinstance(v, Kind) else Kind(**as_dict(v)) for v in self.contact_point]
+        self.contact_point = [v if isinstance(v, HealthKind) else HealthKind(**as_dict(v)) for v in self.contact_point]
 
         if self._is_empty(self.keyword):
             self.MissingRequiredField("keyword")
@@ -2541,6 +2577,10 @@ class HealthDataset(Dataset):
         if self.publisher is not None and not isinstance(self.publisher, HealthPublisherAgent):
             self.publisher = HealthPublisherAgent(**as_dict(self.publisher))
 
+        if not isinstance(self.geographical_coverage, list):
+            self.geographical_coverage = [self.geographical_coverage] if self.geographical_coverage is not None else []
+        self.geographical_coverage = [v if isinstance(v, Location) else Location(**as_dict(v)) for v in self.geographical_coverage]
+
         super().__post_init__(**kwargs)
 
 
@@ -2576,11 +2616,28 @@ class HealthDistribution(Distribution):
 
     access_URL: Union[dict[Union[str, ResourceId], Union[dict, Resource]], list[Union[dict, Resource]]] = empty_dict()
     applicable_legislation: Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]] = empty_dict()
+    format: Optional[Union[dict, MediaTypeOrExtent]] = None
+    language: Optional[Union[Union[dict, LinguisticSystem], list[Union[dict, LinguisticSystem]]]] = empty_list()
+    status: Optional[Union[dict, Concept]] = None
+    availability: Optional[Union[dict, Concept]] = None
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.applicable_legislation):
             self.MissingRequiredField("applicable_legislation")
         self._normalize_inlined_as_list(slot_name="applicable_legislation", slot_type=LegalResource, key_name="id", keyed=True)
+
+        if self.format is not None and not isinstance(self.format, MediaTypeOrExtent):
+            self.format = MediaTypeOrExtent(**as_dict(self.format))
+
+        if not isinstance(self.language, list):
+            self.language = [self.language] if self.language is not None else []
+        self.language = [v if isinstance(v, LinguisticSystem) else LinguisticSystem(**as_dict(v)) for v in self.language]
+
+        if self.status is not None and not isinstance(self.status, Concept):
+            self.status = Concept(**as_dict(self.status))
+
+        if self.availability is not None and not isinstance(self.availability, Concept):
+            self.availability = Concept(**as_dict(self.availability))
 
         super().__post_init__(**kwargs)
 
@@ -2733,11 +2790,65 @@ class TemporalEntity(YAMLRoot):
         super().__post_init__(**kwargs)
 
 
+@dataclass(repr=False)
+class HealthLicenseDocument(LicenseDocument):
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = DCTERMS["LicenseDocument"]
+    class_class_curie: ClassVar[str] = "dcterms:LicenseDocument"
+    class_name: ClassVar[str] = "HealthLicenseDocument"
+    class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.HealthLicenseDocument
+
+    id: Union[str, HealthLicenseDocumentId] = None
+    type: Optional[Union[Union[dict, Concept], list[Union[dict, Concept]]]] = empty_list()
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.id):
+            self.MissingRequiredField("id")
+        if not isinstance(self.id, HealthLicenseDocumentId):
+            self.id = HealthLicenseDocumentId(self.id)
+
+        self._normalize_inlined_as_list(slot_name="type", slot_type=Concept, key_name="preferred_label", keyed=False)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
+class HealthDataService(DataService):
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = DCAT["DataService"]
+    class_class_curie: ClassVar[str] = "dcat:DataService"
+    class_name: ClassVar[str] = "HealthDataService"
+    class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.HealthDataService
+
+    endpoint_URL: Union[dict[Union[str, ResourceId], Union[dict, Resource]], list[Union[dict, Resource]]] = empty_dict()
+    title: Union[str, list[str]] = None
+    access_rights: Optional[Union[dict, RightsStatement]] = None
+    format: Optional[Union[Union[dict, MediaTypeOrExtent], list[Union[dict, MediaTypeOrExtent]]]] = empty_list()
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self.access_rights is not None and not isinstance(self.access_rights, RightsStatement):
+            self.access_rights = RightsStatement(**as_dict(self.access_rights))
+
+        if not isinstance(self.format, list):
+            self.format = [self.format] if self.format is not None else []
+        self.format = [v if isinstance(v, MediaTypeOrExtent) else MediaTypeOrExtent(**as_dict(v)) for v in self.format]
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
 class LegalBasis(YAMLRoot):
     """
-    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape in the
-    parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this port deliberately does not parse -- see
-    script docstring).
+    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape anywhere in
+    HealthDCAT-AP's own release -- confirmed, not assumed: it doesn't appear in the tier shapes files or in
+    mdr-vocabularies.shape.ttl (which this port does parse, for controlled-vocabulary bindings on other properties --
+    see script docstring); it's a pointer into an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just
+    id: real usage is a reference to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a
+    locally-described object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime's own
+    YAML loader rejects outright ('Empty list elements are not allowed'), making a slotless required range unusable in
+    practice, not just thin.
     """
     _inherited_slots: ClassVar[list[str]] = []
 
@@ -2746,12 +2857,28 @@ class LegalBasis(YAMLRoot):
     class_name: ClassVar[str] = "LegalBasis"
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.LegalBasis
 
+    id: Union[str, LegalBasisId] = None
 
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.id):
+            self.MissingRequiredField("id")
+        if not isinstance(self.id, LegalBasisId):
+            self.id = LegalBasisId(self.id)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
 class PersonalData(YAMLRoot):
     """
-    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape in the
-    parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this port deliberately does not parse -- see
-    script docstring).
+    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape anywhere in
+    HealthDCAT-AP's own release -- confirmed, not assumed: it doesn't appear in the tier shapes files or in
+    mdr-vocabularies.shape.ttl (which this port does parse, for controlled-vocabulary bindings on other properties --
+    see script docstring); it's a pointer into an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just
+    id: real usage is a reference to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a
+    locally-described object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime's own
+    YAML loader rejects outright ('Empty list elements are not allowed'), making a slotless required range unusable in
+    practice, not just thin.
     """
     _inherited_slots: ClassVar[list[str]] = []
 
@@ -2760,12 +2887,28 @@ class PersonalData(YAMLRoot):
     class_name: ClassVar[str] = "PersonalData"
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.PersonalData
 
+    id: Union[str, PersonalDataId] = None
 
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.id):
+            self.MissingRequiredField("id")
+        if not isinstance(self.id, PersonalDataId):
+            self.id = PersonalDataId(self.id)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
 class Purpose(YAMLRoot):
     """
-    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape in the
-    parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this port deliberately does not parse -- see
-    script docstring).
+    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape anywhere in
+    HealthDCAT-AP's own release -- confirmed, not assumed: it doesn't appear in the tier shapes files or in
+    mdr-vocabularies.shape.ttl (which this port does parse, for controlled-vocabulary bindings on other properties --
+    see script docstring); it's a pointer into an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just
+    id: real usage is a reference to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a
+    locally-described object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime's own
+    YAML loader rejects outright ('Empty list elements are not allowed'), making a slotless required range unusable in
+    practice, not just thin.
     """
     _inherited_slots: ClassVar[list[str]] = []
 
@@ -2774,12 +2917,28 @@ class Purpose(YAMLRoot):
     class_name: ClassVar[str] = "Purpose"
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.Purpose
 
+    id: Union[str, PurposeId] = None
 
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.id):
+            self.MissingRequiredField("id")
+        if not isinstance(self.id, PurposeId):
+            self.id = PurposeId(self.id)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
 class QualityCertificate(YAMLRoot):
     """
-    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape in the
-    parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this port deliberately does not parse -- see
-    script docstring).
+    External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape anywhere in
+    HealthDCAT-AP's own release -- confirmed, not assumed: it doesn't appear in the tier shapes files or in
+    mdr-vocabularies.shape.ttl (which this port does parse, for controlled-vocabulary bindings on other properties --
+    see script docstring); it's a pointer into an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just
+    id: real usage is a reference to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a
+    locally-described object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime's own
+    YAML loader rejects outright ('Empty list elements are not allowed'), making a slotless required range unusable in
+    practice, not just thin.
     """
     _inherited_slots: ClassVar[list[str]] = []
 
@@ -2787,6 +2946,16 @@ class QualityCertificate(YAMLRoot):
     class_class_curie: ClassVar[str] = "dqv:QualityCertificate"
     class_name: ClassVar[str] = "QualityCertificate"
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.QualityCertificate
+
+    id: Union[str, QualityCertificateId] = None
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.id):
+            self.MissingRequiredField("id")
+        if not isinstance(self.id, QualityCertificateId):
+            self.id = QualityCertificateId(self.id)
+
+        super().__post_init__(**kwargs)
 
 
 # Enumerations
@@ -3206,7 +3375,7 @@ slots.special_opening_hours_specification = Slot(uri=CV.specialOpeningHoursSpeci
                    model_uri=HEALTH_DCAT_AP_PLUS.special_opening_hours_specification, domain=None, range=Optional[Union[Union[dict, TemporalEntity], list[Union[dict, TemporalEntity]]]])
 
 slots.has_purpose = Slot(uri=DPV.hasPurpose, name="has_purpose", curie=DPV.curie('hasPurpose'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.has_purpose, domain=None, range=Union[Union[dict, Purpose], list[Union[dict, Purpose]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.has_purpose, domain=None, range=Union[Union[str, PurposeId], list[Union[str, PurposeId]]])
 
 slots.hdab = Slot(uri=HEALTHDCATAP.hdab, name="hdab", curie=HEALTHDCATAP.curie('hdab'),
                    model_uri=HEALTH_DCAT_AP_PLUS.hdab, domain=None, range=Union[dict, HealthAgent])
@@ -3221,13 +3390,13 @@ slots.health_theme = Slot(uri=HEALTHDCATAP.healthTheme, name="health_theme", cur
                    model_uri=HEALTH_DCAT_AP_PLUS.health_theme, domain=None, range=Union[Union[dict, Concept], list[Union[dict, Concept]]])
 
 slots.has_legal_basis = Slot(uri=DPV.hasLegalBasis, name="has_legal_basis", curie=DPV.curie('hasLegalBasis'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.has_legal_basis, domain=None, range=Union[Union[dict, LegalBasis], list[Union[dict, LegalBasis]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.has_legal_basis, domain=None, range=Union[Union[str, LegalBasisId], list[Union[str, LegalBasisId]]])
 
 slots.has_personal_data = Slot(uri=DPV.hasPersonalData, name="has_personal_data", curie=DPV.curie('hasPersonalData'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.has_personal_data, domain=None, range=Union[Union[dict, PersonalData], list[Union[dict, PersonalData]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.has_personal_data, domain=None, range=Union[Union[str, PersonalDataId], list[Union[str, PersonalDataId]]])
 
 slots.has_quality_annotation = Slot(uri=DQV.hasQualityAnnotation, name="has_quality_annotation", curie=DQV.curie('hasQualityAnnotation'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.has_quality_annotation, domain=None, range=Union[Union[dict, QualityCertificate], list[Union[dict, QualityCertificate]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.has_quality_annotation, domain=None, range=Union[Union[str, QualityCertificateId], list[Union[str, QualityCertificateId]]])
 
 slots.has_structured_data = Slot(uri=HEALTHDCATAP.hasStructuredData, name="has_structured_data", curie=HEALTHDCATAP.curie('hasStructuredData'),
                    model_uri=HEALTH_DCAT_AP_PLUS.has_structured_data, domain=None, range=Union[bool, Bool])
@@ -3790,6 +3959,15 @@ slots.Software_other_identifier = Slot(uri=ADMS.identifier, name="Software_other
 slots.HealthCatalogue_applicable_legislation = Slot(uri=DCATAP.applicableLegislation, name="HealthCatalogue_applicable_legislation", curie=DCATAP.curie('applicableLegislation'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthCatalogue_applicable_legislation, domain=HealthCatalogue, range=Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]])
 
+slots.HealthCatalogue_language = Slot(uri=DCTERMS.language, name="HealthCatalogue_language", curie=DCTERMS.curie('language'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthCatalogue_language, domain=HealthCatalogue, range=Optional[Union[Union[dict, LinguisticSystem], list[Union[dict, LinguisticSystem]]]])
+
+slots.HealthCatalogue_publisher = Slot(uri=DCTERMS.publisher, name="HealthCatalogue_publisher", curie=DCTERMS.curie('publisher'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthCatalogue_publisher, domain=HealthCatalogue, range=Union[dict, Agent])
+
+slots.HealthCatalogue_geographical_coverage = Slot(uri=DCTERMS.spatial, name="HealthCatalogue_geographical_coverage", curie=DCTERMS.curie('spatial'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthCatalogue_geographical_coverage, domain=HealthCatalogue, range=Optional[Union[Union[dict, Location], list[Union[dict, Location]]]])
+
 slots.Column_name = Slot(uri=FOAF.name, name="Column_name", curie=FOAF.curie('name'),
                    model_uri=HEALTH_DCAT_AP_PLUS.Column_name, domain=Column, range=Union[str, list[str]])
 
@@ -3818,7 +3996,7 @@ slots.HealthDataset_theme = Slot(uri=DCAT.theme, name="HealthDataset_theme", cur
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_theme, domain=HealthDataset, range=Union[Union[dict, Concept], list[Union[dict, Concept]]])
 
 slots.HealthDataset_contact_point = Slot(uri=DCAT.contactPoint, name="HealthDataset_contact_point", curie=DCAT.curie('contactPoint'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_contact_point, domain=HealthDataset, range=Union[Union[dict, Kind], list[Union[dict, Kind]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_contact_point, domain=HealthDataset, range=Union[Union[dict, "HealthKind"], list[Union[dict, "HealthKind"]]])
 
 slots.HealthDataset_keyword = Slot(uri=DCAT.keyword, name="HealthDataset_keyword", curie=DCAT.curie('keyword'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_keyword, domain=HealthDataset, range=Union[str, list[str]])
@@ -3859,11 +4037,35 @@ slots.HealthDataset_landing_page = Slot(uri=DCAT.landingPage, name="HealthDatase
 slots.HealthDataset_relation = Slot(uri=DCTERMS.relation, name="HealthDataset_relation", curie=DCTERMS.curie('relation'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_relation, domain=HealthDataset, range=Union[str, list[str]])
 
+slots.HealthDataset_geographical_coverage = Slot(uri=DCTERMS.spatial, name="HealthDataset_geographical_coverage", curie=DCTERMS.curie('spatial'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_geographical_coverage, domain=HealthDataset, range=Optional[Union[Union[dict, Location], list[Union[dict, Location]]]])
+
+slots.HealthDataset_health_category = Slot(uri=HEALTHDCATAP.healthCategory, name="HealthDataset_health_category", curie=HEALTHDCATAP.curie('healthCategory'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_health_category, domain=HealthDataset, range=Union[Union[dict, Concept], list[Union[dict, Concept]]])
+
+slots.HealthDataset_has_coding_system = Slot(uri=HEALTHDCATAP.hasCodingSystem, name="HealthDataset_has_coding_system", curie=HEALTHDCATAP.curie('hasCodingSystem'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_has_coding_system, domain=HealthDataset, range=Union[Union[dict, Standard], list[Union[dict, Standard]]])
+
+slots.HealthDataset_health_theme = Slot(uri=HEALTHDCATAP.healthTheme, name="HealthDataset_health_theme", curie=HEALTHDCATAP.curie('healthTheme'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_health_theme, domain=HealthDataset, range=Union[Union[dict, Concept], list[Union[dict, Concept]]])
+
 slots.HealthDatasetSeries_applicable_legislation = Slot(uri=DCATAP.applicableLegislation, name="HealthDatasetSeries_applicable_legislation", curie=DCATAP.curie('applicableLegislation'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDatasetSeries_applicable_legislation, domain=HealthDatasetSeries, range=Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]])
 
 slots.HealthDistribution_applicable_legislation = Slot(uri=DCATAP.applicableLegislation, name="HealthDistribution_applicable_legislation", curie=DCATAP.curie('applicableLegislation'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDistribution_applicable_legislation, domain=HealthDistribution, range=Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]])
+
+slots.HealthDistribution_format = Slot(uri=DCTERMS.format, name="HealthDistribution_format", curie=DCTERMS.curie('format'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDistribution_format, domain=HealthDistribution, range=Optional[Union[dict, MediaTypeOrExtent]])
+
+slots.HealthDistribution_language = Slot(uri=DCTERMS.language, name="HealthDistribution_language", curie=DCTERMS.curie('language'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDistribution_language, domain=HealthDistribution, range=Optional[Union[Union[dict, LinguisticSystem], list[Union[dict, LinguisticSystem]]]])
+
+slots.HealthDistribution_status = Slot(uri=ADMS.status, name="HealthDistribution_status", curie=ADMS.curie('status'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDistribution_status, domain=HealthDistribution, range=Optional[Union[dict, Concept]])
+
+slots.HealthDistribution_availability = Slot(uri=DCATAP.availability, name="HealthDistribution_availability", curie=DCATAP.curie('availability'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDistribution_availability, domain=HealthDistribution, range=Optional[Union[dict, Concept]])
 
 slots.HealthAgent_contact_point = Slot(uri=DCAT.contactPoint, name="HealthAgent_contact_point", curie=DCAT.curie('contactPoint'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthAgent_contact_point, domain=HealthAgent, range=Union[dict, ContactPoint])
@@ -3882,4 +4084,13 @@ slots.TemporalEntity_description = Slot(uri=DCTERMS.description, name="TemporalE
 
 slots.TemporalEntity_frequency = Slot(uri=DCTERMS.accrualPeriodicity, name="TemporalEntity_frequency", curie=DCTERMS.curie('accrualPeriodicity'),
                    model_uri=HEALTH_DCAT_AP_PLUS.TemporalEntity_frequency, domain=TemporalEntity, range=Optional[Union[Union[dict, Frequency], list[Union[dict, Frequency]]]])
+
+slots.HealthLicenseDocument_type = Slot(uri=DCTERMS.type, name="HealthLicenseDocument_type", curie=DCTERMS.curie('type'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthLicenseDocument_type, domain=HealthLicenseDocument, range=Optional[Union[Union[dict, Concept], list[Union[dict, Concept]]]])
+
+slots.HealthDataService_access_rights = Slot(uri=DCTERMS.accessRights, name="HealthDataService_access_rights", curie=DCTERMS.curie('accessRights'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataService_access_rights, domain=HealthDataService, range=Optional[Union[dict, RightsStatement]])
+
+slots.HealthDataService_format = Slot(uri=DCTERMS.format, name="HealthDataService_format", curie=DCTERMS.curie('format'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataService_format, domain=HealthDataService, range=Optional[Union[Union[dict, MediaTypeOrExtent], list[Union[dict, MediaTypeOrExtent]]]])
 
