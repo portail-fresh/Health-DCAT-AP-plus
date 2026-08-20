@@ -9462,7 +9462,7 @@ classes:
     class_uri: dqv:QualityCertificate
 metamodel_version: 1.11.0
 source_file: health_dcat_ap_plus.yaml
-source_file_date: '2026-08-18T13:46:20'
+source_file_date: '2026-08-20T11:02:19'
 source_file_size: 2284
-generation_date: '2026-08-18T13:46:31'
+generation_date: '2026-08-20T11:02:31'
 

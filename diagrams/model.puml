@@ -1,0 +1,329 @@
+@startuml
+skinparam nodesep 10
+hide circle
+hide empty members
+class "TemporalEntity" [[{None}]] {
+    {field} description : string  [1..*]
+}
+class "Frequency" [[{See [DCAT-AP specs:Frequency](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Frequency)}]] {
+
+}
+class "ContactPoint" [[{None}]] {
+    {field} contact_page : string  [0..*]
+    {field} email : string  [0..*]
+    {field} telephone : string  [0..*]
+}
+"TemporalEntity" *--> "0..*" "Frequency" : "frequency"
+"ContactPoint" *--> "0..*" "TemporalEntity" : "opening_hours"
+"ContactPoint" *--> "0..*" "TemporalEntity" : "special_opening_hours_specification"
+class "TableGroup" [[{None}]] {
+
+}
+class "Table" [[{None}]] {
+    {field} keyword : string  [0..*]
+    {field} title : string  [1..*]
+    {field} url : string  
+}
+class "HealthDataset" [[{None}]] {
+    {field} alternative : string  [0..*]
+    {field} has_code_values : string  [1..*]
+    {field} has_structured_data : boolean  
+    {field} linked_schemas : string  [1..*]
+    {field} max_typical_age : nonNegativeInteger  
+    {field} min_typical_age : nonNegativeInteger  
+    {field} number_of_records : nonNegativeInteger  
+    {field} number_of_unique_individuals : nonNegativeInteger  
+    {field} population_coverage : string  [1..*]
+    {field} relation : string  [1..*]
+    {field} source_metadata : string  [1..*]
+    {field} identifier : string  [1..*]
+    {field} keyword : string  [1..*]
+    {field} temporal_resolution : duration  [1..*]
+    {field} description(i) : string  [1..*]
+    {field} modification_date(i) : date  
+    {field} release_date(i) : date  
+    {field} spatial_resolution(i) : decimal  
+    {field} title(i) : string  [1..*]
+    {field} version(i) : string  
+    {field} version_notes(i) : string  [0..*]
+    {field} id(i) : uriorcurie  
+}
+"TableGroup" *--> "1..*" "Table" : "table"
+"HealthDataset" *--> "0..*" "TableGroup" : "has_variables"
+class "Column" [[{None}]] {
+    {field} datatype : string  
+    {field} description : string  [1..*]
+    {field} name : string  [1..*]
+    {field} property_url : string  
+    {field} titles : string  [1..*]
+}
+"Table" *--> "1..*" "Column" : "column"
+class "Standard" [[{See [DCAT-AP specs:Standard](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Standard)}]] {
+
+}
+class "RightsStatement" [[{See [DCAT-AP specs:RightsStatement](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#RightsStatement)}]] {
+
+}
+class "Resource" [[{See [DCAT-AP specs:Resource](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Resource)}]] {
+
+}
+class "Relationship" [[{See [DCAT-AP specs:Relationship](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Relationship)}]] {
+
+}
+class "QualityCertificate" [[{External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape in the parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this port deliberately does not parse -- see script docstring).}]] {
+
+}
+"HealthDataset" *--> "1..*" "QualityCertificate" : "has_quality_annotation"
+class "Purpose" [[{External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape in the parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this port deliberately does not parse -- see script docstring).}]] {
+
+}
+"HealthDataset" *--> "1..*" "Purpose" : "has_purpose"
+class "ProvenanceStatement" [[{See [DCAT-AP specs:ProvenanceStatement](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#ProvenanceStatement)}]] {
+
+}
+class "Policy" [[{See [DCAT-AP specs:Policy](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Policy)}]] {
+
+}
+class "PersonalData" [[{External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape in the parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this port deliberately does not parse -- see script docstring).}]] {
+
+}
+"HealthDataset" *--> "1..*" "PersonalData" : "has_personal_data"
+class "PeriodOfTime" [[{See [DCAT-AP specs:PeriodOfTime](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#PeriodOfTime)}]] {
+
+}
+class "MediaTypeOrExtent" [[{See [DCAT-AP specs:MediaTypeOrExtent](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#MediaTypeOrExtent)}]] {
+
+}
+class "MediaType" [[{See [DCAT-AP specs:MediaType](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#MediaType)}]] {
+
+}
+class "Location" [[{See [DCAT-AP specs:Location](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Location)}]] {
+
+}
+class "LinguisticSystem" [[{See [DCAT-AP specs:LinguisticSystem](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#LinguisticSystem)}]] {
+
+}
+class "LicenseDocument" [[{See [DCAT-AP specs:LicenseDocument](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#LicenseDocument)}]] {
+
+}
+class "LegalResource" [[{See [DCAT-AP specs:LegalResource](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#LegalResource)}]] {
+
+}
+class "LegalBasis" [[{External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape in the parsed files (likely shaped only in mdr-vocabularies.shape.ttl, which this port deliberately does not parse -- see script docstring).}]] {
+
+}
+"HealthDataset" *--> "1..*" "LegalBasis" : "has_legal_basis"
+class "DataService" [[{See [DCAT-AP specs:DataService](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#DataService)}]] {
+
+}
+class "Kind" [[{See [DCAT-AP specs:Kind](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Kind)}]] {
+
+}
+class "DatasetSeries" [[{See [DCAT-AP specs:DatasetSeries](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#DatasetSeries)}]] {
+    {field} description : string  [1..*]
+    {field} modification_date : date  
+    {field} release_date : date  
+    {field} title : string  [1..*]
+}
+class "Dataset" [[{A collection of data, published or curated by a single agent, and available for access or download in one or more representations.}]] {
+    {field} description : string  [1..*]
+    {field} identifier : string  [0..*]
+    {field} keyword : string  [0..*]
+    {field} modification_date : date  
+    {field} release_date : date  
+    {field} spatial_resolution : decimal  
+    {field} temporal_resolution : duration  
+    {field} title : string  [1..*]
+    {field} version : string  
+    {field} version_notes : string  [0..*]
+    {field} id : uriorcurie  
+}
+class "HealthKind" [[{None}]] {
+    {field} has_email : string  
+    {field} has_url : string  
+}
+"DataService" *--> "0..*" "Kind" : "contact_point"
+"DatasetSeries" *--> "0..*" "Kind" : "contact_point"
+"Dataset" *--> "0..*" "Kind" : "contact_point"
+"HealthDataset" *--> "1..*" "Kind" : "contact_point"
+"Kind" ^-- "HealthKind"
+class "Identifier" [[{See [DCAT-AP specs:Identifier](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Identifier)}]] {
+
+}
+class "HealthPublisherAgent" [[{None}]] {
+    {field} description : string  
+    {field} name(i) : string  [1..*]
+}
+class "Agent" [[{See [DCAT-AP specs:Agent](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Agent)}]] {
+    {field} name : string  [1..*]
+}
+"HealthPublisherAgent" *--> "1" "ContactPoint" : "contact_point"
+"HealthDataset" *--> "0..1" "HealthPublisherAgent" : "publisher"
+"Agent" ^-- "HealthPublisherAgent"
+class "HealthDistribution" [[{None}]] {
+    {field} byte_size(i) : nonNegativeInteger  
+    {field} description(i) : string  [0..*]
+    {field} modification_date(i) : date  
+    {field} release_date(i) : date  
+    {field} spatial_resolution(i) : decimal  
+    {field} temporal_resolution(i) : duration  
+    {field} title(i) : string  [0..*]
+}
+class "Distribution" [[{See [DCAT-AP specs:Distribution](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Distribution)}]] {
+    {field} byte_size : nonNegativeInteger  
+    {field} description : string  [0..*]
+    {field} modification_date : date  
+    {field} release_date : date  
+    {field} spatial_resolution : decimal  
+    {field} temporal_resolution : duration  
+    {field} title : string  [0..*]
+}
+"HealthDistribution" *--> "1..*" "LegalResource" : "applicable_legislation"
+"HealthDataset" *--> "1..*" "HealthDistribution" : "dataset_distribution"
+"HealthDataset" *--> "1..*" "HealthDistribution" : "sample"
+"HealthDataset" *--> "1..*" "HealthDistribution" : "analytics"
+"Distribution" ^-- "HealthDistribution"
+class "HealthDatasetSeries" [[{None}]] {
+    {field} description(i) : string  [1..*]
+    {field} modification_date(i) : date  
+    {field} release_date(i) : date  
+    {field} title(i) : string  [1..*]
+}
+"HealthDatasetSeries" *--> "1..*" "LegalResource" : "applicable_legislation"
+"DatasetSeries" ^-- "HealthDatasetSeries"
+class "Document" [[{See [DCAT-AP specs:Document](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Document)}]] {
+
+}
+class "Concept" [[{See [DCAT-AP specs:Concept](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Concept)}]] {
+
+}
+class "HealthAgent" [[{None}]] {
+    {field} name(i) : string  [1..*]
+}
+"HealthDataset" *--> "1..*" "Document" : "landing_page"
+"HealthDataset" *--> "1..*" "PeriodOfTime" : "temporal_coverage"
+"HealthDataset" *--> "1..*" "LinguisticSystem" : "language"
+"HealthDataset" *--> "1..*" "Resource" : "is_referenced_by"
+"HealthDataset" *--> "1..*" "Frequency" : "frequency"
+"HealthDataset" *--> "1..*" "Document" : "documentation"
+"HealthDataset" *--> "1..*" "ProvenanceStatement" : "provenance"
+"HealthDataset" *--> "1..*" "Concept" : "type"
+"HealthDataset" *--> "1..*" "Concept" : "theme"
+"HealthDataset" *--> "1..*" "LegalResource" : "applicable_legislation"
+"HealthDataset" *--> "1" "RightsStatement" : "access_rights"
+"HealthDataset" *--> "1" "PeriodOfTime" : "retention_period"
+"HealthDataset" *--> "1..*" "Concept" : "health_theme"
+"HealthDataset" *--> "1..*" "Concept" : "health_category"
+"HealthDataset" *--> "1" "HealthAgent" : "hdab"
+"HealthDataset" *--> "1..*" "Standard" : "has_coding_system"
+"HealthDataset" *--> "1" "HealthAgent" : "custodian"
+"Dataset" ^-- "HealthDataset"
+class "HealthCatalogue" [[{None}]] {
+    {field} description(i) : string  [1..*]
+    {field} modification_date(i) : date  
+    {field} release_date(i) : date  
+    {field} title(i) : string  [1..*]
+}
+class "Catalogue" [[{See [DCAT-AP specs:Catalogue](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Catalogue)}]] {
+    {field} description : string  [1..*]
+    {field} modification_date : date  
+    {field} release_date : date  
+    {field} title : string  [1..*]
+}
+"HealthCatalogue" *--> "1..*" "LegalResource" : "applicable_legislation"
+"Catalogue" ^-- "HealthCatalogue"
+"HealthAgent" *--> "1" "ContactPoint" : "contact_point"
+"Agent" ^-- "HealthAgent"
+class "EvaluatedEntity" [[{An Entity that is being evaluated in a DataGeneratingActivity.}]] {
+
+}
+class "EvaluatedActivity" [[{An activity or process that is being evaluated in a DataGeneratingActivity.}]] {
+
+}
+class "Checksum" [[{See [DCAT-AP specs:Checksum](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Checksum)}]] {
+
+}
+"Distribution" *--> "0..1" "Concept" : "status"
+"Distribution" *--> "0..1" "RightsStatement" : "rights"
+"Distribution" *--> "0..1" "MediaType" : "packaging_format"
+"Distribution" *--> "0..1" "MediaType" : "media_type"
+"Distribution" *--> "0..*" "Standard" : "linked_schemas"
+"Distribution" *--> "0..1" "LicenseDocument" : "licence"
+"Distribution" *--> "0..*" "LinguisticSystem" : "language"
+"Distribution" *--> "0..1" "Policy" : "has_policy"
+"Distribution" *--> "0..1" "MediaTypeOrExtent" : "format"
+"Distribution" *--> "0..*" "Resource" : "download_URL"
+"Distribution" *--> "0..*" "Document" : "documentation"
+"Distribution" *--> "0..1" "MediaType" : "compression_format"
+"Distribution" *--> "0..1" "Checksum" : "checksum"
+"Distribution" *--> "0..1" "Concept" : "availability"
+"Distribution" *--> "0..*" "LegalResource" : "applicable_legislation"
+"Distribution" *--> "0..*" "DataService" : "access_service"
+"Distribution" *--> "1..*" "Resource" : "access_URL"
+"Dataset" *--> "0..*" "Distribution" : "dataset_distribution"
+"Dataset" *--> "0..*" "Distribution" : "sample"
+"DatasetSeries" *--> "0..*" "PeriodOfTime" : "temporal_coverage"
+"DatasetSeries" *--> "0..1" "Agent" : "publisher"
+"DatasetSeries" *--> "0..*" "Location" : "geographical_coverage"
+"DatasetSeries" *--> "0..1" "Frequency" : "frequency"
+"DatasetSeries" *--> "0..*" "LegalResource" : "applicable_legislation"
+"Dataset" *--> "0..*" "DatasetSeries" : "in_series"
+class "DataGeneratingActivity" [[{An Activity (process) that has the objective to produce information (in form of a dataset) about another Activity or Entity.}]] {
+
+}
+class "Attribution" [[{See [DCAT-AP specs:Attribution](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Attribution)}]] {
+
+}
+class "AnalysisDataset" [[{A Dataset that was generated by an analysis of some previously generated data. For example, a dataset that contains the data of an assignment of a chemical structure to a sample based on the spectral data obtained from the sample is an AnalyticalDataset.}]] {
+
+}
+"Dataset" *--> "0..*" "EvaluatedActivity" : "is_about_activity"
+"Dataset" *--> "0..*" "EvaluatedEntity" : "is_about_entity"
+"Dataset" *--> "1..*" "DataGeneratingActivity" : "was_generated_by"
+"Dataset" *--> "0..*" "Concept" : "type"
+"Dataset" *--> "0..*" "Concept" : "theme"
+"Dataset" *--> "0..*" "PeriodOfTime" : "temporal_coverage"
+"Dataset" *--> "0..*" "Dataset" : "source"
+"Dataset" *--> "0..*" "Resource" : "related_resource"
+"Dataset" *--> "0..*" "Relationship" : "qualified_relation"
+"Dataset" *--> "0..*" "Attribution" : "qualified_attribution"
+"Dataset" *--> "0..1" "Agent" : "publisher"
+"Dataset" *--> "0..*" "ProvenanceStatement" : "provenance"
+"Dataset" *--> "0..*" "Identifier" : "other_identifier"
+"Dataset" *--> "0..*" "LinguisticSystem" : "language"
+"Dataset" *--> "0..*" "Document" : "landing_page"
+"Dataset" *--> "0..*" "Resource" : "is_referenced_by"
+"Dataset" *--> "0..*" "Dataset" : "has_version"
+"Dataset" *--> "0..*" "Location" : "geographical_coverage"
+"Dataset" *--> "0..1" "Frequency" : "frequency"
+"Dataset" *--> "0..*" "Document" : "documentation"
+"Dataset" *--> "0..*" "Agent" : "creator"
+"Dataset" *--> "0..*" "Standard" : "conforms_to"
+"Dataset" *--> "0..*" "LegalResource" : "applicable_legislation"
+"Dataset" *--> "0..1" "RightsStatement" : "access_rights"
+"Catalogue" *--> "0..*" "Dataset" : "has_dataset"
+"DataService" *--> "0..*" "Dataset" : "serves_dataset"
+"Dataset" ^-- "AnalysisDataset"
+class "ConceptScheme" [[{See [DCAT-AP specs:ConceptScheme](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#ConceptScheme)}]] {
+
+}
+class "CatalogueRecord" [[{See [DCAT-AP specs:CatalogueRecord](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#CatalogueRecord)}]] {
+
+}
+"Catalogue" *--> "0..*" "ConceptScheme" : "themes"
+"Catalogue" *--> "0..*" "PeriodOfTime" : "temporal_coverage"
+"Catalogue" *--> "0..*" "DataService" : "service"
+"Catalogue" *--> "0..1" "RightsStatement" : "rights"
+"Catalogue" *--> "0..*" "CatalogueRecord" : "record"
+"Catalogue" *--> "1" "Agent" : "publisher"
+"Catalogue" *--> "0..1" "LicenseDocument" : "licence"
+"Catalogue" *--> "0..*" "LinguisticSystem" : "language"
+"Catalogue" *--> "0..1" "Document" : "homepage"
+"Catalogue" *--> "0..*" "Catalogue" : "has_part"
+"Catalogue" *--> "0..*" "Location" : "geographical_coverage"
+"Catalogue" *--> "0..1" "Agent" : "creator"
+"Catalogue" *--> "0..*" "Catalogue" : "catalogue"
+"Catalogue" *--> "0..*" "LegalResource" : "applicable_legislation"
+"Agent" *--> "0..1" "Concept" : "type"
+"DataService" *--> "0..1" "Agent" : "publisher"
+@enduml
