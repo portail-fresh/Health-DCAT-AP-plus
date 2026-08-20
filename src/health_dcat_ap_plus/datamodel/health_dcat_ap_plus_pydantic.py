@@ -6792,6 +6792,10 @@ class HealthDataset(Dataset):
                         'provenance': {'name': 'provenance', 'required': True},
                         'publisher': {'name': 'publisher',
                                       'range': 'HealthPublisherAgent'},
+                        'qualified_attribution': {'inlined_as_list': True,
+                                                  'multivalued': True,
+                                                  'name': 'qualified_attribution',
+                                                  'range': 'DatasetAttribution'},
                         'relation': {'multivalued': True,
                                      'name': 'relation',
                                      'required': True},
@@ -6944,7 +6948,7 @@ class HealthDataset(Dataset):
     provenance: list[ProvenanceStatement] = Field(default=..., description="""A statement about the lineage of a Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcterms:provenance'} })
     publisher: Optional[HealthPublisherAgent] = Field(default=None, description="""An entity (organisation) responsible for making the Dataset available.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'DataService', 'Dataset', 'DatasetSeries'],
          'slot_uri': 'dcterms:publisher'} })
-    qualified_attribution: Optional[list[Attribution]] = Field(default=None, description="""An Agent having some form of responsibility for the resource.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'prov:qualifiedAttribution'} })
+    qualified_attribution: Optional[list[DatasetAttribution]] = Field(default=None, description="""An Agent having some form of responsibility for the resource.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'prov:qualifiedAttribution'} })
     qualified_relation: Optional[list[Relationship]] = Field(default=None, description="""A description of a relationship with another resource.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcat:qualifiedRelation'} })
     related_resource: Optional[list[Resource]] = Field(default=None, description="""A related resource.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcterms:relation'} })
     release_date: Optional[date] = Field(default=None, description="""The date of formal issuance (e.g., publication) of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries', 'Distribution'],
@@ -7820,6 +7824,188 @@ class QualityCertificate(ConfiguredBaseModel):
          'in_subset': ['domain_agnostic_core']} })
 
 
+class DatasetAttribution(Attribution):
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Attribution',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+
+    attribution_agent: Agent = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['DatasetAttribution'], 'slot_uri': 'prov:agent'} })
+    attribution_had_role: str = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['DatasetAttribution'],
+         'slot_uri': 'dcat:hadRole',
+         'values_from': ['https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml']} })
+    title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Any',
+                       'Attribution',
+                       'Catalogue',
+                       'CatalogueRecord',
+                       'ChecksumAlgorithm',
+                       'Concept',
+                       'ConceptScheme',
+                       'DataService',
+                       'Dataset',
+                       'DatasetSeries',
+                       'DefinedTerm',
+                       'Distribution',
+                       'Document',
+                       'Entity',
+                       'Frequency',
+                       'Geometry',
+                       'Identifier',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'LinguisticSystem',
+                       'MediaType',
+                       'MediaTypeOrExtent',
+                       'PeriodOfTime',
+                       'Plan',
+                       'Policy',
+                       'ProvenanceStatement',
+                       'QualitativeAttribute',
+                       'QuantitativeAttribute',
+                       'Resource',
+                       'RightsStatement',
+                       'Role',
+                       'Standard',
+                       'SupportiveEntity',
+                       'Surrounding',
+                       'TimeInstant',
+                       'Table'],
+         'slot_uri': 'dcterms:title'} })
+    description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Any',
+                       'Attribution',
+                       'Catalogue',
+                       'CatalogueRecord',
+                       'ChecksumAlgorithm',
+                       'Concept',
+                       'ConceptScheme',
+                       'DataService',
+                       'Dataset',
+                       'DatasetSeries',
+                       'Distribution',
+                       'Document',
+                       'Entity',
+                       'Frequency',
+                       'Geometry',
+                       'Identifier',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'LinguisticSystem',
+                       'MediaType',
+                       'MediaTypeOrExtent',
+                       'PeriodOfTime',
+                       'Plan',
+                       'Policy',
+                       'ProvenanceStatement',
+                       'QualitativeAttribute',
+                       'QuantitativeAttribute',
+                       'Resource',
+                       'RightsStatement',
+                       'Role',
+                       'Standard',
+                       'SupportiveEntity',
+                       'Surrounding',
+                       'TimeInstant',
+                       'Column',
+                       'HealthPublisherAgent',
+                       'TemporalEntity'],
+         'slot_uri': 'dcterms:description'} })
+
+
+class Association(SupportiveEntity):
+    """
+    The qualified form of prov:wasAssociatedWith (what carried_out_by already shortcuts to, on DataGeneratingActivity/Activity) -- PROV-O's own Activity-side counterpart to Attribution's Entity-side qualification. dcat-ap-plus has no Association class at all (a bigger gap than Attribution, which at least has a title/description stub) -- confirmed absent from its schema, not assumed.
+    This class, and the ready-to-use qualified_association slot below (already correctly ranged at Association), are built here even though this repo's own port never touches the Activity side at all (HealthDCAT-AP's SHACL doesn't reach it -- confirmed in Section 1 Check b of architecture-verification.md) and there's no Health<X> profile of Activity to narrow anything onto: this is exactly the kind of generic, domain-agnostic completion the merge layer exists to provide, so the downstream specialization repo gets a schema it only has to specialize, not one it has to finish first. What's deliberately NOT done here is creating an Activity-side class to actually use qualified_association -- that would be specialization work, the same line already drawn for DatasetAttribution/HealthDataset.
+    """
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Association',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus'})
+
+    agent: AgenticEntity = Field(default=..., description="""The agent responsible in a qualified Association -- PROV-O's own prov:agent. Activity-scoped (AgenticEntity, prov:Agent), matching carried_out_by's own range -- distinct from DatasetAttribution's attribution_agent (Entity-scoped, Agent/foaf:Agent), confirmed correct by HealthDCAT-AP's own real qualifiedAttribution example, which types its agent value `a foaf:Agent, foaf:Organization`, never prov:Agent.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Association'], 'slot_uri': 'prov:agent'} })
+    association_had_role: str = Field(default=..., description="""The role an agent played in a qualified Association -- PROV-O's own prov:hadRole, distinct from DatasetAttribution's had_role (dcat:hadRole, already defined by dcat-ap-plus and reused as-is): Association needed its own slot since dcat-ap-plus's had_role is hardwired to the dcat: predicate, not prov:. Range is a plain uriorcurie into an external codelist, not a nested Role object with title/description -- matches HealthDCAT-AP's own real qualifiedAttribution example (a bare ISO 19115 CI_RoleCode URI, not an inline dcat:Role), and avoids a real LinkML limitation found by testing: a class-plus-scalar any_of union between Role and uriorcurie doesn't reliably validate both shapes (see DatasetAttribution's own had_role in the port script for the fuller writeup of that test).""", json_schema_extra = { "linkml_meta": {'domain_of': ['Association'],
+         'slot_uri': 'prov:hadRole',
+         'values_from': ['https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml']} })
+    title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Any',
+                       'Attribution',
+                       'Catalogue',
+                       'CatalogueRecord',
+                       'ChecksumAlgorithm',
+                       'Concept',
+                       'ConceptScheme',
+                       'DataService',
+                       'Dataset',
+                       'DatasetSeries',
+                       'DefinedTerm',
+                       'Distribution',
+                       'Document',
+                       'Entity',
+                       'Frequency',
+                       'Geometry',
+                       'Identifier',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'LinguisticSystem',
+                       'MediaType',
+                       'MediaTypeOrExtent',
+                       'PeriodOfTime',
+                       'Plan',
+                       'Policy',
+                       'ProvenanceStatement',
+                       'QualitativeAttribute',
+                       'QuantitativeAttribute',
+                       'Resource',
+                       'RightsStatement',
+                       'Role',
+                       'Standard',
+                       'SupportiveEntity',
+                       'Surrounding',
+                       'TimeInstant',
+                       'Table'],
+         'slot_uri': 'dcterms:title'} })
+    description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Any',
+                       'Attribution',
+                       'Catalogue',
+                       'CatalogueRecord',
+                       'ChecksumAlgorithm',
+                       'Concept',
+                       'ConceptScheme',
+                       'DataService',
+                       'Dataset',
+                       'DatasetSeries',
+                       'Distribution',
+                       'Document',
+                       'Entity',
+                       'Frequency',
+                       'Geometry',
+                       'Identifier',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'LinguisticSystem',
+                       'MediaType',
+                       'MediaTypeOrExtent',
+                       'PeriodOfTime',
+                       'Plan',
+                       'Policy',
+                       'ProvenanceStatement',
+                       'QualitativeAttribute',
+                       'QuantitativeAttribute',
+                       'Resource',
+                       'RightsStatement',
+                       'Role',
+                       'Standard',
+                       'SupportiveEntity',
+                       'Surrounding',
+                       'TimeInstant',
+                       'Column',
+                       'HealthPublisherAgent',
+                       'TemporalEntity'],
+         'slot_uri': 'dcterms:description'} })
+
+
 # Model rebuild
 # see https://pydantic-docs.helpmanual.io/usage/models/#rebuilding-a-model
 Agent.model_rebuild()
@@ -7890,3 +8076,5 @@ LegalBasis.model_rebuild()
 PersonalData.model_rebuild()
 Purpose.model_rebuild()
 QualityCertificate.model_rebuild()
+DatasetAttribution.model_rebuild()
+Association.model_rebuild()

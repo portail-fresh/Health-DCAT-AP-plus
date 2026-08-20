@@ -50,5 +50,79 @@ imports:
   # publishes a new release; do not hand-edit the generated file itself.
   - healthdcat_ap_non_public
 
-classes: {}
-slots: {}
+classes:
+
+  Association:
+    is_a: SupportiveEntity
+    class_uri: prov:Association
+    description: >-
+      The qualified form of prov:wasAssociatedWith (what carried_out_by
+      already shortcuts to, on DataGeneratingActivity/Activity) -- PROV-O's
+      own Activity-side counterpart to Attribution's Entity-side
+      qualification. dcat-ap-plus has no Association class at all (a bigger
+      gap than Attribution, which at least has a title/description stub) --
+      confirmed absent from its schema, not assumed.
+
+      This class, and the ready-to-use qualified_association slot below
+      (already correctly ranged at Association), are built here even though
+      this repo's own port never touches the Activity side at all
+      (HealthDCAT-AP's SHACL doesn't reach it -- confirmed in Section 1
+      Check b of architecture-verification.md) and there's no Health<X>
+      profile of Activity to narrow anything onto: this is exactly the kind
+      of generic, domain-agnostic completion the merge layer exists to
+      provide, so the downstream specialization repo gets a schema it only
+      has to specialize, not one it has to finish first. What's deliberately
+      NOT done here is creating an Activity-side class to actually use
+      qualified_association -- that would be specialization work, the same
+      line already drawn for DatasetAttribution/HealthDataset.
+    slots:
+      - agent
+      - association_had_role
+
+slots:
+  qualified_association:
+    description: >-
+      The qualified form of carried_out_by/prov:wasAssociatedWith. Ready to
+      use, not yet used by anything in this repo: reference this slot from
+      whichever Activity-side class the specialization repo defines (its own
+      is_a: DataGeneratingActivity class, the way HealthDataset already
+      narrows qualified_attribution to DatasetAttribution here) and its
+      range is already correctly set -- no further schema work needed there
+      just to make the mechanism usable.
+    slot_uri: prov:qualifiedAssociation
+    range: Association
+    multivalued: true
+    inlined_as_list: true
+
+  agent:
+    description: >-
+      The agent responsible in a qualified Association -- PROV-O's own
+      prov:agent. Activity-scoped (AgenticEntity, prov:Agent), matching
+      carried_out_by's own range -- distinct from DatasetAttribution's
+      attribution_agent (Entity-scoped, Agent/foaf:Agent), confirmed correct
+      by HealthDCAT-AP's own real qualifiedAttribution example, which types
+      its agent value `a foaf:Agent, foaf:Organization`, never prov:Agent.
+    slot_uri: prov:agent
+    range: AgenticEntity
+    required: true
+    inlined: true
+
+  association_had_role:
+    description: >-
+      The role an agent played in a qualified Association -- PROV-O's own
+      prov:hadRole, distinct from DatasetAttribution's had_role
+      (dcat:hadRole, already defined by dcat-ap-plus and reused as-is):
+      Association needed its own slot since dcat-ap-plus's had_role is
+      hardwired to the dcat: predicate, not prov:. Range is a plain
+      uriorcurie into an external codelist, not a nested Role object with
+      title/description -- matches HealthDCAT-AP's own real
+      qualifiedAttribution example (a bare ISO 19115 CI_RoleCode URI, not an
+      inline dcat:Role), and avoids a real LinkML limitation found by
+      testing: a class-plus-scalar any_of union between Role and uriorcurie
+      doesn't reliably validate both shapes (see DatasetAttribution's own
+      had_role in the port script for the fuller writeup of that test).
+    slot_uri: prov:hadRole
+    range: uriorcurie
+    required: true
+    values_from:
+      - https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml

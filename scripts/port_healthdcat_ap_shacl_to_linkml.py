@@ -648,6 +648,73 @@ def main() -> None:
         classes[name] = stub
         stubbed.append(name)
 
+    # dcat-ap-plus's own Attribution class (prov:Attribution) has no agent/
+    # had_role -- title/description only -- so Dataset.qualified_attribution
+    # (already a real dcat-ap-plus slot, range: Attribution) can't actually
+    # record who a role belongs to. Not a HealthDCAT-AP gap and nothing in
+    # its SHACL mentions this (confirmed by grep, not assumed) -- a generic
+    # dcat-ap-plus completion, unrelated to anything mechanically walked
+    # above. Applied here anyway, explicitly, rather than left to the
+    # hand-authored main schema: HealthDataset itself only exists in this
+    # generated file, and LinkML has no clean way to layer more slot_usage
+    # onto an already-imported class from a different schema file.
+    #
+    # Shape confirmed against HealthDCAT-AP's own real documentation example
+    # (release-7, #provqualifiedAttribution -- fetched directly, not
+    # assumed), which differs from what was first tried in two ways:
+    #   - prov:agent's value there is typed `a foaf:Agent, foaf:Organization`
+    #     -- no prov:Agent at all -- so this uses Agent (Entity-scoped,
+    #     matching Dataset.publisher/creator's own range), not AgenticEntity
+    #     (Activity-scoped, correct for Association's agent below, but wrong
+    #     here: qualified_attribution is Dataset's own Entity-side
+    #     mechanism, so its agent should be Entity-scoped too).
+    #   - dcat:hadRole's value there is a bare URI into an external codelist
+    #     (ISO 19115 CI_RoleCode), not a nested dcat:Role object with
+    #     title/description. Tried range: Role first; a bare URI failed
+    #     validation ('not of type object'), and LinkML's any_of between a
+    #     class and a scalar doesn't reliably support both shapes either (a
+    #     class-plus-scalar union is exactly the kind NFDI4Chem's own paper
+    #     flagged as unstable) -- checked by testing both, not assumed.
+    #     Simpler and more faithful to the real example: a plain uriorcurie
+    #     with values_from pointing at the real codelist, the same pattern
+    #     already used for every other controlled-vocabulary-bound slot in
+    #     this schema.
+    if "HealthDataset" in classes:
+        classes["DatasetAttribution"] = {
+            "is_a": "Attribution",
+            "class_uri": "prov:Attribution",
+            "slots": ["attribution_agent", "attribution_had_role"],
+        }
+        slots.setdefault(
+            "attribution_agent",
+            {
+                "slot_uri": "prov:agent",
+                "range": "Agent",
+                "required": True,
+                "inlined": True,
+            },
+        )
+        slots.setdefault(
+            "attribution_had_role",
+            {
+                # Named attribution_had_role, not had_role: dcat-ap-plus
+                # already has its own top-level "had_role" slot (used by
+                # Relationship, no default range) -- reusing that exact name
+                # for a second, differently-shaped slot definition raised
+                # "Conflicting URIs for item: had_role" when actually run,
+                # not assumed.
+                "slot_uri": "dcat:hadRole",
+                "range": "uriorcurie",
+                "required": True,
+                "values_from": ["https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml"],
+            },
+        )
+        classes["HealthDataset"].setdefault("slot_usage", {})["qualified_attribution"] = {
+            "range": "DatasetAttribution",
+            "multivalued": True,
+            "inlined_as_list": True,
+        }
+
     source_commit = None
     if args.healthdcat_ap_repo:
         source_commit = git_commit(Path(args.healthdcat_ap_repo))

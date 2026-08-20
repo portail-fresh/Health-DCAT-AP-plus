@@ -197,6 +197,10 @@ classes:
       health_theme:
         values_from:
         - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme
+      qualified_attribution:
+        range: DatasetAttribution
+        multivalued: true
+        inlined_as_list: true
   HealthDatasetSeries:
     is_a: DatasetSeries
     class_uri: dcat:DatasetSeries
@@ -344,6 +348,12 @@ classes:
     slots:
     - id
     class_uri: dqv:QualityCertificate
+  DatasetAttribution:
+    is_a: Attribution
+    class_uri: prov:Attribution
+    slots:
+    - attribution_agent
+    - attribution_had_role
 slots:
   titles:
     slot_uri: csvw:titles
@@ -474,3 +484,14 @@ slots:
     range: Table
     required: true
     multivalued: true
+  attribution_agent:
+    slot_uri: prov:agent
+    range: Agent
+    required: true
+    inlined: true
+  attribution_had_role:
+    slot_uri: dcat:hadRole
+    range: uriorcurie
+    required: true
+    values_from:
+    - https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml

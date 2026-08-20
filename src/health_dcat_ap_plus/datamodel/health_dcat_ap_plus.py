@@ -1,5 +1,5 @@
 # Auto generated from health_dcat_ap_plus.yaml by pythongen.py version: 0.0.1
-# Generation date: 2026-08-20T16:09:20
+# Generation date: 2026-08-20T17:04:44
 # Schema: Health-DCAT-AP-Plus
 #
 # id: https://w3id.org/portail-fresh/Health-DCAT-AP-Plus
@@ -1568,6 +1568,46 @@ class SupportiveEntity(YAMLRoot):
 
 
 @dataclass(repr=False)
+class Association(SupportiveEntity):
+    """
+    The qualified form of prov:wasAssociatedWith (what carried_out_by already shortcuts to, on
+    DataGeneratingActivity/Activity) -- PROV-O's own Activity-side counterpart to Attribution's Entity-side
+    qualification. dcat-ap-plus has no Association class at all (a bigger gap than Attribution, which at least has a
+    title/description stub) -- confirmed absent from its schema, not assumed.
+    This class, and the ready-to-use qualified_association slot below (already correctly ranged at Association), are
+    built here even though this repo's own port never touches the Activity side at all (HealthDCAT-AP's SHACL doesn't
+    reach it -- confirmed in Section 1 Check b of architecture-verification.md) and there's no Health<X> profile of
+    Activity to narrow anything onto: this is exactly the kind of generic, domain-agnostic completion the merge layer
+    exists to provide, so the downstream specialization repo gets a schema it only has to specialize, not one it has
+    to finish first. What's deliberately NOT done here is creating an Activity-side class to actually use
+    qualified_association -- that would be specialization work, the same line already drawn for
+    DatasetAttribution/HealthDataset.
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = PROV["Association"]
+    class_class_curie: ClassVar[str] = "prov:Association"
+    class_name: ClassVar[str] = "Association"
+    class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.Association
+
+    agent: Union[dict, AgenticEntity] = None
+    association_had_role: Union[str, URIorCURIE] = None
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.agent):
+            self.MissingRequiredField("agent")
+        if not isinstance(self.agent, AgenticEntity):
+            self.agent = AgenticEntity(**as_dict(self.agent))
+
+        if self._is_empty(self.association_had_role):
+            self.MissingRequiredField("association_had_role")
+        if not isinstance(self.association_had_role, URIorCURIE):
+            self.association_had_role = URIorCURIE(self.association_had_role)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
 class Attribution(SupportiveEntity):
     """
     See [DCAT-AP specs:Attribution](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Attribution)
@@ -2356,6 +2396,7 @@ class HealthDataset(Dataset):
     has_variables: Optional[Union[Union[dict, "TableGroup"], list[Union[dict, "TableGroup"]]]] = empty_list()
     publisher: Optional[Union[dict, "HealthPublisherAgent"]] = None
     geographical_coverage: Optional[Union[Union[dict, Location], list[Union[dict, Location]]]] = empty_list()
+    qualified_attribution: Optional[Union[Union[dict, "DatasetAttribution"], list[Union[dict, "DatasetAttribution"]]]] = empty_list()
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.id):
@@ -2580,6 +2621,8 @@ class HealthDataset(Dataset):
         if not isinstance(self.geographical_coverage, list):
             self.geographical_coverage = [self.geographical_coverage] if self.geographical_coverage is not None else []
         self.geographical_coverage = [v if isinstance(v, Location) else Location(**as_dict(v)) for v in self.geographical_coverage]
+
+        self._normalize_inlined_as_list(slot_name="qualified_attribution", slot_type=DatasetAttribution, key_name="attribution_had_role", keyed=False)
 
         super().__post_init__(**kwargs)
 
@@ -2958,6 +3001,32 @@ class QualityCertificate(YAMLRoot):
         super().__post_init__(**kwargs)
 
 
+@dataclass(repr=False)
+class DatasetAttribution(Attribution):
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = PROV["Attribution"]
+    class_class_curie: ClassVar[str] = "prov:Attribution"
+    class_name: ClassVar[str] = "DatasetAttribution"
+    class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.DatasetAttribution
+
+    attribution_agent: Union[dict, Agent] = None
+    attribution_had_role: Union[str, URIorCURIE] = None
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.attribution_agent):
+            self.MissingRequiredField("attribution_agent")
+        if not isinstance(self.attribution_agent, Agent):
+            self.attribution_agent = Agent(**as_dict(self.attribution_agent))
+
+        if self._is_empty(self.attribution_had_role):
+            self.MissingRequiredField("attribution_had_role")
+        if not isinstance(self.attribution_had_role, URIorCURIE):
+            self.attribution_had_role = URIorCURIE(self.attribution_had_role)
+
+        super().__post_init__(**kwargs)
+
+
 # Enumerations
 class DatasetThemes(EnumDefinitionImpl):
 
@@ -3061,6 +3130,15 @@ class QUDTUnitEnum(EnumDefinitionImpl):
 # Slots
 class slots:
     pass
+
+slots.qualified_association = Slot(uri=PROV.qualifiedAssociation, name="qualified_association", curie=PROV.curie('qualifiedAssociation'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.qualified_association, domain=None, range=Optional[Union[Union[dict, Association], list[Union[dict, Association]]]])
+
+slots.agent = Slot(uri=PROV.agent, name="agent", curie=PROV.curie('agent'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.agent, domain=None, range=Union[dict, AgenticEntity])
+
+slots.association_had_role = Slot(uri=PROV.hadRole, name="association_had_role", curie=PROV.curie('hadRole'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.association_had_role, domain=None, range=Union[str, URIorCURIE])
 
 slots.access_URL = Slot(uri=DCAT.accessURL, name="access_URL", curie=DCAT.curie('accessURL'),
                    model_uri=HEALTH_DCAT_AP_PLUS.access_URL, domain=None, range=Optional[str])
@@ -3448,6 +3526,12 @@ slots.column = Slot(uri=CSVW.column, name="column", curie=CSVW.curie('column'),
 
 slots.table = Slot(uri=CSVW.table, name="table", curie=CSVW.curie('table'),
                    model_uri=HEALTH_DCAT_AP_PLUS.table, domain=None, range=Union[Union[dict, Table], list[Union[dict, Table]]])
+
+slots.attribution_agent = Slot(uri=PROV.agent, name="attribution_agent", curie=PROV.curie('agent'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.attribution_agent, domain=None, range=Union[dict, Agent])
+
+slots.attribution_had_role = Slot(uri=DCAT.hadRole, name="attribution_had_role", curie=DCAT.curie('hadRole'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.attribution_had_role, domain=None, range=Union[str, URIorCURIE])
 
 slots.definedTerm__from_CV = Slot(uri=SCHEMA.inDefinedTermSet, name="definedTerm__from_CV", curie=SCHEMA.curie('inDefinedTermSet'),
                    model_uri=HEALTH_DCAT_AP_PLUS.definedTerm__from_CV, domain=None, range=Optional[Union[str, URIorCURIE]])
@@ -4048,6 +4132,9 @@ slots.HealthDataset_has_coding_system = Slot(uri=HEALTHDCATAP.hasCodingSystem, n
 
 slots.HealthDataset_health_theme = Slot(uri=HEALTHDCATAP.healthTheme, name="HealthDataset_health_theme", curie=HEALTHDCATAP.curie('healthTheme'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_health_theme, domain=HealthDataset, range=Union[Union[dict, Concept], list[Union[dict, Concept]]])
+
+slots.HealthDataset_qualified_attribution = Slot(uri=PROV.qualifiedAttribution, name="HealthDataset_qualified_attribution", curie=PROV.curie('qualifiedAttribution'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_qualified_attribution, domain=HealthDataset, range=Optional[Union[Union[dict, "DatasetAttribution"], list[Union[dict, "DatasetAttribution"]]]])
 
 slots.HealthDatasetSeries_applicable_legislation = Slot(uri=DCATAP.applicableLegislation, name="HealthDatasetSeries_applicable_legislation", curie=DCATAP.curie('applicableLegislation'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDatasetSeries_applicable_legislation, domain=HealthDatasetSeries, range=Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]])

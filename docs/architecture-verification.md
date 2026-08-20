@@ -359,22 +359,234 @@ their real semantics.
 
 ## 3. `id` and `other_identifier` on `AgenticEntity` — ORCID/ROR/IdRef readiness
 
-*Pending.*
+**Claim:** `AgenticEntity` has a required `id` (a real URI — an ORCID/ROR IRI
+can be used directly as the subject) plus an optional, multivalued
+`other_identifier` (range `Identifier`: `title` + `notation`) for a second
+scheme when an agent has more than one — e.g. ORCID as `id`, IdRef as
+`other_identifier`.
+
+**Check — schema-level.**
+
+```
+AgenticEntity.id:               range=uriorcurie  required=True
+AgenticEntity.other_identifier: range=Identifier   multivalued=True  slot_uri=adms:identifier
+Identifier class: slots=[notation, title, description], class_uri=adms:Identifier
+```
+
+Cross-checked against `dcat-ap-plus`'s own published docs
+([`AgenticEntity`](https://nfdi-de.github.io/dcat-ap-plus/latest/elements/classes/AgenticEntity/)),
+not just the source YAML — matches exactly (`id`: required `Uriorcurie`;
+`other_identifier`: optional, range `Identifier`). Their docs also confirm
+`Device`/`Software` as the only currently-modeled `AgenticEntity` subclasses
+— matching Hendrik's own comment in Discussion #109 about why those two
+specifically ("some people argue about whether both concepts can be
+considered to be a `foaf:Agent` and `prov:agent`").
+
+**Check — a real instance, not just the schema.** Built the exact ORCID+IdRef
+example from Discussion #109 and pushed it through validation and
+conversion:
+
+```turtle
+<https://orcid.org/0000-0002-1825-0097> a prov:Agent ;
+    dcterms:title "Josiah Carberry" ;
+    adms:identifier [ a adms:Identifier ;
+            dcterms:title "IdRef" ;
+            skos:notation "069774160" ] .
+```
+
+Matches the discussed pattern exactly: the ORCID URI is the subject itself
+(not a separate `id` property triple — `id`-as-subject is how LinkML
+identifier slots serialize, confirmed by every instance converted this
+session, not just this one), IdRef sits alongside as a secondary
+`adms:identifier`.
+
+**Result: confirmed** for `AgenticEntity` itself.
+
+**A real gap this surfaced, worth flagging: `Agent` has *neither* `id` nor
+`other_identifier` at all — not even a thin version.** Checked directly
+against `dcat-ap-plus`'s own class definition, not inferred: `Agent`'s
+entire slot list is `[name, type]`. This matters here specifically because
+`HealthAgent`/`HealthPublisherAgent` — the classes this port already built
+for `hdab`/`custodian`/`publisher` — specialize `Agent`, not `AgenticEntity`.
+Concretely: there is currently no way to record a ROR ID (or any identifier
+at all) for the Health Data Access Body or a dataset's custodian, even
+though those are exactly the kind of organizations you'd want to identify
+precisely. Worth deciding, not silently working around: either raise this
+with the `dcat-ap-plus` maintainers (a natural companion to the
+`Attribution`-has-no-`agent` and `Kind`-had-a-disconnected-shape findings —
+same pattern, a class shipped thinner than its real-world use needs), or add
+`id`/`other_identifier` locally on `HealthAgent`/`HealthPublisherAgent`
+specifically, the same way `contact_point` was locally recovered in §Porting
+#2 — except this time there's no existing HealthDCAT-AP shape to recover it
+from; it would be a genuinely new addition, which is a bigger call than a
+mechanical fix and shouldn't be made silently here.
+
+**Methodological note, worth remembering for the rest of this document and
+beyond:** `SchemaView.induced_slot(name, class_name)` does **not** reliably
+signal "is this slot actually applicable to this class" — called with a
+slot name a class doesn't really use, it can still return a plausible-looking
+generic fallback instead of raising. This produced a real false trail while
+building this section (`Agent.id`/`Agent.other_identifier`/`Agent.contact_point`
+all appeared to "exist" via this call, with values that turned out to be
+generic top-level defaults, not real class-applicable slots). The reliable
+check is `class_induced_slots(class_name)` and checking *membership* in its
+result — used throughout §1 already, and used to catch this specific false
+trail once it looked suspicious.
 
 ## 4. `qualified_attribution` (Entity-side, `Dataset`) — does it actually work?
 
-*Pending.* Known concern going in, from having built this in
-`HealthStudy-DCAT-AP`: `dcat-ap-plus`'s own `Attribution` class only has
-`title`/`description` — `agent`/`had_role` were never wired up. "Works" here
-needs to mean something concrete: does a `HealthDataset` instance with a
-real `qualified_attribution` (PI/processor role, ORCID-identified agent)
-validate and convert to the same shape as HealthDCAT-AP's own real
-documentation example?
+**Claim going in:** `dcat-ap-plus`'s own `Attribution` class has only
+`title`/`description` — `agent`/`had_role` were never wired up, confirmed
+directly (§Porting also references this). Re-confirmed here: neither
+`Attribution` nor `qualified_attribution` appear anywhere in HealthDCAT-AP's
+own SHACL either — this is a generic `dcat-ap-plus` gap, not something
+HealthDCAT-AP could have fixed even if it wanted to.
+
+**A real architecture question this raised, resolved before fixing
+anything:** `HealthStudy-DCAT-AP` already built and verified this exact fix
+(`DatasetAttribution`, `agent`, `had_role`) — but it can't just be copied
+over mechanically, because *where* it needed to attach differs. There,
+`ResearchDataset` (the class needing `qualified_attribution` narrowed) is
+hand-authored directly in the main schema, so adding a sibling class in the
+same file was trivial. Here, `HealthDataset` is *mechanically generated* by
+the port script into `healthdcat_ap_non_public.yaml` — LinkML has no clean
+way to layer more `slot_usage` onto an already-imported class from the
+hand-authored main schema, and hand-editing a file marked "generated, do not
+edit" would just get silently wiped on the next port run. Resolved by
+extending the port script itself with an explicit, clearly-labeled
+completion step (same pattern as the `dcatap:` prefix fix) — applied
+programmatically, survives regeneration, but honestly documented as *not*
+derived from HealthDCAT-AP's SHACL, unlike everything else the script
+produces.
+
+**Fixed, then corrected against HealthDCAT-AP's own real example.** First
+pass reused `HealthStudy-DCAT-AP`'s exact design as-is (`agent`: `prov:agent`
+→ `AgenticEntity`, `had_role`: `dcat:hadRole` → `Role`), flagging the
+`AgenticEntity`-vs-`Agent` choice as an open, unresolved nuance. It wasn't
+just a nuance — checking HealthDCAT-AP's own real documentation example
+(release-7, `#provqualifiedAttribution`, fetched directly) turned up two
+real mismatches:
+
+```turtle
+<https://fair.healthdata.be/dataset/...> a dcat:Dataset ;
+    prov:qualifiedAttribution [ a prov:Attribution;
+        dcat:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#processor>;
+        prov:agent [ a foaf:Agent, foaf:Organization; dct:type <...>; foaf:name "Germany processor"; foaf:homepage <...>; foaf:mbox <...> ]
+    ] .
+```
+
+1. `prov:agent`'s value is typed `foaf:Agent, foaf:Organization` — no
+   `prov:Agent` at all. `qualified_attribution` is `Dataset`'s own
+   Entity-side mechanism, so its agent should be Entity-scoped (`Agent`),
+   matching `Dataset.publisher`/`creator`'s own range — not `AgenticEntity`
+   (Activity-scoped, correct for `Association`'s agent, wrong here). Split
+   into two separate slots: `attribution_agent` (`Agent`, for
+   `DatasetAttribution`) and `agent` (`AgenticEntity`, for `Association`,
+   §5) — conflating them under one shared slot was the original mistake,
+   inherited unquestioned from `HealthStudy-DCAT-AP`.
+2. `dcat:hadRole`'s value is a bare URI into an external codelist (ISO
+   19115 `CI_RoleCode`), not a nested `dcat:Role` object with
+   `title`/`description`. Tried `range: Role` first — a bare URI failed
+   validation ("not of type object"). Tried `any_of: [{range: Role},
+   {range: uriorcurie}]` next — the bare URI then validated, but broke the
+   object form entirely, regardless of which alternative was listed first
+   (tested both orderings). A class-plus-scalar `any_of` union not reliably
+   supporting both shapes matches exactly what NFDI4Chem's own paper flagged
+   for union ranges in general — not a fluke. Settled on `range: uriorcurie`
+   with `values_from` pointing at the real ISO 19115 codelist — simpler than
+   forcing a union, and the *only* shape the one real example actually uses,
+   so there was no evidence the object form was ever needed in practice.
+   Renamed `had_role` → `attribution_had_role` along the way: the bare name
+   collided with `dcat-ap-plus`'s own pre-existing top-level `had_role` slot
+   (`ValueError: Conflicting URIs for item: had_role`, hit by actually
+   running it, not predicted).
+
+Corrected real instance, converted end to end:
+
+```turtle
+[] a prov:Attribution ;
+    dcat:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#processor> ;
+    prov:agent [ a foaf:Agent ; foaf:name "Germany processor" ] .
+```
+
+Now a structural match to the real example (bare codelist URI, `foaf:Agent`
+typing) rather than a plausible-looking approximation. `multivalued: true`/
+`inlined_as_list: true` were restated explicitly on `HealthDataset`'s
+`qualified_attribution` `slot_usage` override, applying the lesson already
+learned in `HealthStudy-DCAT-AP` (a range-only override without restating
+those breaks the generated `__post_init__` even when the values don't
+actually change) — not rediscovered the hard way this time.
+
+**Result: confirmed**, and now actually matching the one real example
+available, not just structurally plausible. Worth remembering: a design
+"already proven" in a sibling repo is proven against *that repo's* test
+data, not automatically against the real spec — worth re-checking against
+primary sources even when reusing a working pattern.
 
 ## 5. `qualified_association` (Activity-side, symmetric via `carried_out_by`/`prov:wasAssociatedWith`) — readiness
 
-*Pending.* `dcat-ap-plus` has no `Association` class at all (only built the
-Entity-side `Attribution` pattern) — same situation as #4 but starting from
-further behind. Open question to resolve here vs. leave to the specialization
-repo: does the `Association` mechanism belong in this merge layer (reusable
-by any downstream specialization) or is it specific enough to defer?
+**Claim going in:** `dcat-ap-plus` has no `Association` class at all (only
+built the Entity-side `Attribution` pattern, and even that only as a stub —
+confirmed absent, not assumed, same grep-everything approach as the other
+findings in this document). Open question: does building `Association`
+belong in this merge layer, or is it specific enough to defer to the
+specialization repo?
+
+**`Association` itself belongs here** — the generic PROV-O completion, same
+reasoning as `DatasetAttribution` (§4). Built in the main hand-authored
+schema (not the port script's completion step, unlike `DatasetAttribution`
+— `Association` has no dependency on anything the port generates):
+`is_a: SupportiveEntity`, `class_uri: prov:Association`, `agent`
+(`prov:agent` → `AgenticEntity` — correctly Activity-scoped here, unlike
+`DatasetAttribution`'s Entity-scoped `attribution_agent`, per §4's
+correction) and `association_had_role` (`prov:hadRole` → `uriorcurie`,
+`values_from` the same ISO 19115 `CI_RoleCode` codelist — same fix as
+`attribution_had_role` in §4, same reason: a bare URI is what
+HealthDCAT-AP's real examples actually use, and a class-plus-scalar
+`any_of` union doesn't reliably validate both shapes).
+
+**A real gap caught by the user, not this document's own checks: the class
+existed, but the mechanism connecting anything to it didn't.**
+`qualified_association` — the slot that actually makes `Association`
+reachable from an Activity — was never defined at all. The original framing
+here ("narrowing `qualified_association` onto a specific class doesn't
+belong in this merge layer") quietly slid into "so don't define the slot
+either," which doesn't follow: the slot itself needs no class to attach
+to — it's new, not an override of an existing `dcat-ap-plus` slot, so its
+`range: Association` can be set directly at the top level, with zero
+dependency on any Activity-side class existing yet. That's exactly the
+"ready to use, only needs specializing" schema the downstream repo needs,
+consistent with the user's own framing of what this merge layer is for.
+Fixed:
+
+```yaml
+qualified_association:
+  slot_uri: prov:qualifiedAssociation
+  range: Association
+  multivalued: true
+  inlined_as_list: true
+```
+
+The specialization repo can now add `qualified_association` to any
+`is_a: DataGeneratingActivity` class's own `slots:` list and get the
+correct range immediately — no schema work needed there just to make the
+mechanism usable, only to define what its own Activity-side class actually
+looks like.
+
+Real instance, converted end to end:
+
+```turtle
+<https://ror.org/00k4n6c32> a prov:Agent ;
+    dcterms:title "Example Funding Agency" .
+
+[] a prov:Association ;
+    prov:agent <https://ror.org/00k4n6c32> ;
+    prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> .
+```
+
+**Result: confirmed**, and corrected on the actual scope question: not
+"defer everything Activity-related," but "defer only what genuinely needs a
+class that doesn't exist yet." `Association` and `qualified_association`
+are both fully usable now; only the class that *references*
+`qualified_association` is left to the specialization repo — the narrowest
+possible thing actually deferred, not the whole mechanism.
