@@ -79,7 +79,14 @@ Signature = Tuple[str, str, str]
 # slot_usage doesn't stop the parent's own __post_init__ from re-processing
 # it under its own, different assumption) -- not something this repo's
 # schema or port script caused or can fix structurally.
-_DATASET_FIELDS_NARROWED_BY_HEALTHDATASET = ("access_rights", "frequency", "language", "theme", "type")
+_DATASET_FIELDS_NARROWED_BY_HEALTHDATASET = (
+    "access_rights",
+    "frequency",
+    "language",
+    "theme",
+    "type",
+    "conforms_to",
+)
 
 
 def _build_test_dataset_graph() -> Graph:
@@ -261,28 +268,29 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # permanent, honest record of it.
         ("Violation", "ClassConstraintComponent", "accessRights"),
         ("Violation", "ClassConstraintComponent", "accrualPeriodicity"),
+        ("Violation", "ClassConstraintComponent", "conformsTo"),
         ("Violation", "ClassConstraintComponent", "language"),
         ("Violation", "ClassConstraintComponent", "theme"),
         ("Violation", "ClassConstraintComponent", "type"),
-        # Real, structural port bug, NOT fixed today (out of scope for the
-        # vocab-range/contactPoint fixes): dcterms:relation/source/conformsTo
-        # are still ported under the wrong dcat-ap-plus slot. Root cause:
-        # dcat-ap-plus reuses each of these predicate URIs across several of
+        # FIXED (was here as a real, structural port bug): dcterms:relation/
+        # source/conformsTo were ported under the wrong dcat-ap-plus slot,
+        # because dcat-ap-plus reuses each predicate URI across several of
         # its own slots (e.g. dcterms:relation alone maps to
         # has_qualitative_attribute / has_quantitative_attribute /
-        # related_resource / relation), and the port script's URI->slot-name
-        # resolution can only remember one candidate per URI -- it picked (or
-        # fell through to) the wrong one, and SHACL's shape-merging-by-predicate
-        # then surfaces the conflict between our port's typing and
-        # dcat-ap-plus's own. To fix: make property_name_for class-context-aware,
-        # or hand-pick the right existing slot per field.
-        ("Violation", "ClassConstraintComponent", "relation"),
-        ("Violation", "ClassConstraintComponent", "source"),
-        ("Violation", "ClassConstraintComponent", "conformsTo"),
-        ("Violation", "NodeKindConstraintComponent", "relation"),
-        ("Violation", "NodeKindConstraintComponent", "source"),
-        ("Violation", "DatatypeConstraintComponent", "relation"),
-        ("Violation", "DatatypeConstraintComponent", "source"),
+        # related_resource / relation) and the port script's URI->slot-name
+        # resolution could only remember one candidate per URI, arbitrarily.
+        # property_name_for now also resolves against the current shape's
+        # own class_name via class_induced_slots first -- confirmed
+        # unambiguous for all three URIs on Dataset specifically (exactly
+        # one induced-slot match each) -- falling back to the classless
+        # dict only when the class doesn't resolve it either. relation and
+        # source are fully resolved now (their own entries are gone from
+        # this allowlist -- confirmed, not assumed). conformsTo above is
+        # the one exception, but for an unrelated reason: it correctly
+        # resolves to conforms_to now, and conforms_to's own remaining
+        # ClassConstraintComponent is just another instance of the
+        # class_uri-sharing pattern already accepted above (accessRights/
+        # theme/etc.), nothing to do with predicate collision anymore.
         # Diagnosed, not a schema bug, and not even a HealthDCAT-AP-port
         # issue at all -- purely internal to dcat-ap-plus's own base schema.
         # Confirmed directly: EvaluatedEntity and Entity themselves declare
@@ -402,6 +410,13 @@ KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Warning", "NodeConstraintComponent", "type"),
         ("Violation", "MinCountConstraintComponent", "inScheme"),
         ("Violation", "HasValueConstraintComponent", "inScheme"),
+        # Benign, expected: dct:source is only sh:Warning-severity
+        # "recommended" in the real shapes (non-public-shapes_recommended.ttl
+        # -- confirmed directly, not assumed, and the reason the port script
+        # was fixed to stop treating every *_recommended.ttl sh:minCount as
+        # a hard LinkML `required`, see the severity-awareness fix above).
+        # This fixture simply doesn't supply the optional source field.
+        ("Warning", "MinCountConstraintComponent", "source"),
         # NEW, but the same test-fixture-artifact family, not a new bug:
         # range.ttl carries its own, independent sh:class requirement for
         # these three HealthDCAT-AP-specific predicates (dcterms:Standard /

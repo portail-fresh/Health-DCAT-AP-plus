@@ -1,5 +1,5 @@
 # Auto generated from health_dcat_ap_plus.yaml by pythongen.py version: 0.0.1
-# Generation date: 2026-08-21T14:14:18
+# Generation date: 2026-08-21T14:36:31
 # Schema: Health-DCAT-AP-Plus
 #
 # id: https://w3id.org/portail-fresh/Health-DCAT-AP-Plus
@@ -2354,48 +2354,43 @@ class HealthDataset(Dataset):
     description: Union[str, list[str]] = None
     title: Union[str, list[str]] = None
     was_generated_by: Union[dict[Union[str, DataGeneratingActivityId], Union[dict, DataGeneratingActivity]], list[Union[dict, DataGeneratingActivity]]] = empty_dict()
-    analytics: Union[Union[dict, "HealthDistribution"], list[Union[dict, "HealthDistribution"]]] = None
-    custodian: Union[dict, "HealthAgent"] = None
-    has_code_values: Union[str, list[str]] = None
-    has_coding_system: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
-    has_legal_basis: Union[Union[str, LegalBasisId], list[Union[str, LegalBasisId]]] = None
-    has_personal_data: Union[Union[str, PersonalDataId], list[Union[str, PersonalDataId]]] = None
-    has_purpose: Union[Union[str, PurposeId], list[Union[str, PurposeId]]] = None
-    has_quality_annotation: Union[Union[str, QualityCertificateId], list[Union[str, QualityCertificateId]]] = None
     has_structured_data: Union[bool, Bool] = None
     hdab: Union[dict, "HealthAgent"] = None
     health_category: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
-    health_theme: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
-    linked_schemas: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
-    max_typical_age: int = None
-    min_typical_age: int = None
-    number_of_records: int = None
-    number_of_unique_individuals: int = None
-    population_coverage: Union[str, list[str]] = None
-    relation: Union[str, list[str]] = None
-    retention_period: Union[dict, PeriodOfTime] = None
-    source_metadata: Union[str, list[str]] = None
     access_rights: Union[str, URIorCURIE] = None
     applicable_legislation: Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]] = empty_dict()
     dataset_distribution: Union[Union[dict, "HealthDistribution"], list[Union[dict, "HealthDistribution"]]] = None
     identifier: Union[str, list[str]] = None
-    sample: Union[Union[dict, "HealthDistribution"], list[Union[dict, "HealthDistribution"]]] = None
     theme: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
     contact_point: Union[Union[dict, "HealthKind"], list[Union[dict, "HealthKind"]]] = None
     keyword: Union[str, list[str]] = None
     type: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
     provenance: Union[Union[dict, ProvenanceStatement], list[Union[dict, ProvenanceStatement]]] = None
-    documentation: Union[dict[Union[str, DocumentId], Union[dict, Document]], list[Union[dict, Document]]] = empty_dict()
-    frequency: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
-    is_referenced_by: Union[dict[Union[str, ResourceId], Union[dict, Resource]], list[Union[dict, Resource]]] = empty_dict()
-    language: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
-    temporal_coverage: Union[Union[dict, PeriodOfTime], list[Union[dict, PeriodOfTime]]] = None
-    temporal_resolution: Union[str, list[str]] = None
-    landing_page: Union[dict[Union[str, DocumentId], Union[dict, Document]], list[Union[dict, Document]]] = empty_dict()
     alternative: Optional[Union[str, list[str]]] = empty_list()
+    analytics: Optional[Union[Union[dict, "HealthDistribution"], list[Union[dict, "HealthDistribution"]]]] = empty_list()
+    custodian: Optional[Union[dict, "HealthAgent"]] = None
+    has_code_values: Optional[Union[str, list[str]]] = empty_list()
+    has_coding_system: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
+    has_legal_basis: Optional[Union[Union[str, LegalBasisId], list[Union[str, LegalBasisId]]]] = empty_list()
+    has_personal_data: Optional[Union[Union[str, PersonalDataId], list[Union[str, PersonalDataId]]]] = empty_list()
+    has_purpose: Optional[Union[Union[str, PurposeId], list[Union[str, PurposeId]]]] = empty_list()
+    has_quality_annotation: Optional[Union[Union[str, QualityCertificateId], list[Union[str, QualityCertificateId]]]] = empty_list()
     has_variables: Optional[Union[Union[dict, "TableGroup"], list[Union[dict, "TableGroup"]]]] = empty_list()
+    health_theme: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
+    max_typical_age: Optional[int] = None
+    min_typical_age: Optional[int] = None
+    number_of_records: Optional[int] = None
+    number_of_unique_individuals: Optional[int] = None
+    population_coverage: Optional[Union[str, list[str]]] = empty_list()
+    retention_period: Optional[Union[dict, PeriodOfTime]] = None
     publisher: Optional[Union[dict, "HealthPublisherAgent"]] = None
+    sample: Optional[Union[Union[dict, "HealthDistribution"], list[Union[dict, "HealthDistribution"]]]] = empty_list()
+    frequency: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
+    source: Optional[Union[dict[Union[str, HealthDatasetId], Union[dict, "HealthDataset"]], list[Union[dict, "HealthDataset"]]]] = empty_dict()
+    temporal_resolution: Optional[Union[str, list[str]]] = empty_list()
+    language: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
     geographical_coverage: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
+    conforms_to: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
     qualified_attribution: Optional[Union[Union[dict, "DatasetAttribution"], list[Union[dict, "DatasetAttribution"]]]] = empty_list()
 
     def __post_init__(self, *_: str, **kwargs: Any):
@@ -2403,53 +2398,6 @@ class HealthDataset(Dataset):
             self.MissingRequiredField("id")
         if not isinstance(self.id, HealthDatasetId):
             self.id = HealthDatasetId(self.id)
-
-        if self._is_empty(self.analytics):
-            self.MissingRequiredField("analytics")
-        if not isinstance(self.analytics, list):
-            self.analytics = [self.analytics] if self.analytics is not None else []
-        self.analytics = [v if isinstance(v, HealthDistribution) else HealthDistribution(**as_dict(v)) for v in self.analytics]
-
-        if self._is_empty(self.custodian):
-            self.MissingRequiredField("custodian")
-        if not isinstance(self.custodian, HealthAgent):
-            self.custodian = HealthAgent(**as_dict(self.custodian))
-
-        if self._is_empty(self.has_code_values):
-            self.MissingRequiredField("has_code_values")
-        if not isinstance(self.has_code_values, list):
-            self.has_code_values = [self.has_code_values] if self.has_code_values is not None else []
-        self.has_code_values = [v if isinstance(v, str) else str(v) for v in self.has_code_values]
-
-        if self._is_empty(self.has_coding_system):
-            self.MissingRequiredField("has_coding_system")
-        if not isinstance(self.has_coding_system, list):
-            self.has_coding_system = [self.has_coding_system] if self.has_coding_system is not None else []
-        self.has_coding_system = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.has_coding_system]
-
-        if self._is_empty(self.has_legal_basis):
-            self.MissingRequiredField("has_legal_basis")
-        if not isinstance(self.has_legal_basis, list):
-            self.has_legal_basis = [self.has_legal_basis] if self.has_legal_basis is not None else []
-        self.has_legal_basis = [v if isinstance(v, LegalBasisId) else LegalBasisId(v) for v in self.has_legal_basis]
-
-        if self._is_empty(self.has_personal_data):
-            self.MissingRequiredField("has_personal_data")
-        if not isinstance(self.has_personal_data, list):
-            self.has_personal_data = [self.has_personal_data] if self.has_personal_data is not None else []
-        self.has_personal_data = [v if isinstance(v, PersonalDataId) else PersonalDataId(v) for v in self.has_personal_data]
-
-        if self._is_empty(self.has_purpose):
-            self.MissingRequiredField("has_purpose")
-        if not isinstance(self.has_purpose, list):
-            self.has_purpose = [self.has_purpose] if self.has_purpose is not None else []
-        self.has_purpose = [v if isinstance(v, PurposeId) else PurposeId(v) for v in self.has_purpose]
-
-        if self._is_empty(self.has_quality_annotation):
-            self.MissingRequiredField("has_quality_annotation")
-        if not isinstance(self.has_quality_annotation, list):
-            self.has_quality_annotation = [self.has_quality_annotation] if self.has_quality_annotation is not None else []
-        self.has_quality_annotation = [v if isinstance(v, QualityCertificateId) else QualityCertificateId(v) for v in self.has_quality_annotation]
 
         if self._is_empty(self.has_structured_data):
             self.MissingRequiredField("has_structured_data")
@@ -2466,61 +2414,6 @@ class HealthDataset(Dataset):
         if not isinstance(self.health_category, list):
             self.health_category = [self.health_category] if self.health_category is not None else []
         self.health_category = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.health_category]
-
-        if self._is_empty(self.health_theme):
-            self.MissingRequiredField("health_theme")
-        if not isinstance(self.health_theme, list):
-            self.health_theme = [self.health_theme] if self.health_theme is not None else []
-        self.health_theme = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.health_theme]
-
-        if self._is_empty(self.linked_schemas):
-            self.MissingRequiredField("linked_schemas")
-        if not isinstance(self.linked_schemas, list):
-            self.linked_schemas = [self.linked_schemas] if self.linked_schemas is not None else []
-        self.linked_schemas = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.linked_schemas]
-
-        if self._is_empty(self.max_typical_age):
-            self.MissingRequiredField("max_typical_age")
-        if not isinstance(self.max_typical_age, int):
-            self.max_typical_age = int(self.max_typical_age)
-
-        if self._is_empty(self.min_typical_age):
-            self.MissingRequiredField("min_typical_age")
-        if not isinstance(self.min_typical_age, int):
-            self.min_typical_age = int(self.min_typical_age)
-
-        if self._is_empty(self.number_of_records):
-            self.MissingRequiredField("number_of_records")
-        if not isinstance(self.number_of_records, int):
-            self.number_of_records = int(self.number_of_records)
-
-        if self._is_empty(self.number_of_unique_individuals):
-            self.MissingRequiredField("number_of_unique_individuals")
-        if not isinstance(self.number_of_unique_individuals, int):
-            self.number_of_unique_individuals = int(self.number_of_unique_individuals)
-
-        if self._is_empty(self.population_coverage):
-            self.MissingRequiredField("population_coverage")
-        if not isinstance(self.population_coverage, list):
-            self.population_coverage = [self.population_coverage] if self.population_coverage is not None else []
-        self.population_coverage = [v if isinstance(v, str) else str(v) for v in self.population_coverage]
-
-        if self._is_empty(self.relation):
-            self.MissingRequiredField("relation")
-        if not isinstance(self.relation, list):
-            self.relation = [self.relation] if self.relation is not None else []
-        self.relation = [v if isinstance(v, str) else str(v) for v in self.relation]
-
-        if self._is_empty(self.retention_period):
-            self.MissingRequiredField("retention_period")
-        if not isinstance(self.retention_period, PeriodOfTime):
-            self.retention_period = PeriodOfTime(**as_dict(self.retention_period))
-
-        if self._is_empty(self.source_metadata):
-            self.MissingRequiredField("source_metadata")
-        if not isinstance(self.source_metadata, list):
-            self.source_metadata = [self.source_metadata] if self.source_metadata is not None else []
-        self.source_metadata = [v if isinstance(v, str) else str(v) for v in self.source_metadata]
 
         if self._is_empty(self.access_rights):
             self.MissingRequiredField("access_rights")
@@ -2542,12 +2435,6 @@ class HealthDataset(Dataset):
         if not isinstance(self.identifier, list):
             self.identifier = [self.identifier] if self.identifier is not None else []
         self.identifier = [v if isinstance(v, str) else str(v) for v in self.identifier]
-
-        if self._is_empty(self.sample):
-            self.MissingRequiredField("sample")
-        if not isinstance(self.sample, list):
-            self.sample = [self.sample] if self.sample is not None else []
-        self.sample = [v if isinstance(v, HealthDistribution) else HealthDistribution(**as_dict(v)) for v in self.sample]
 
         if self._is_empty(self.theme):
             self.MissingRequiredField("theme")
@@ -2579,56 +2466,96 @@ class HealthDataset(Dataset):
             self.provenance = [self.provenance] if self.provenance is not None else []
         self.provenance = [v if isinstance(v, ProvenanceStatement) else ProvenanceStatement(**as_dict(v)) for v in self.provenance]
 
-        if self._is_empty(self.documentation):
-            self.MissingRequiredField("documentation")
-        self._normalize_inlined_as_list(slot_name="documentation", slot_type=Document, key_name="id", keyed=True)
-
-        if self._is_empty(self.frequency):
-            self.MissingRequiredField("frequency")
-        if not isinstance(self.frequency, list):
-            self.frequency = [self.frequency] if self.frequency is not None else []
-        self.frequency = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.frequency]
-
-        if self._is_empty(self.is_referenced_by):
-            self.MissingRequiredField("is_referenced_by")
-        self._normalize_inlined_as_list(slot_name="is_referenced_by", slot_type=Resource, key_name="id", keyed=True)
-
-        if self._is_empty(self.language):
-            self.MissingRequiredField("language")
-        if not isinstance(self.language, list):
-            self.language = [self.language] if self.language is not None else []
-        self.language = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.language]
-
-        if self._is_empty(self.temporal_coverage):
-            self.MissingRequiredField("temporal_coverage")
-        if not isinstance(self.temporal_coverage, list):
-            self.temporal_coverage = [self.temporal_coverage] if self.temporal_coverage is not None else []
-        self.temporal_coverage = [v if isinstance(v, PeriodOfTime) else PeriodOfTime(**as_dict(v)) for v in self.temporal_coverage]
-
-        if self._is_empty(self.temporal_resolution):
-            self.MissingRequiredField("temporal_resolution")
-        if not isinstance(self.temporal_resolution, list):
-            self.temporal_resolution = [self.temporal_resolution] if self.temporal_resolution is not None else []
-        self.temporal_resolution = [v if isinstance(v, str) else str(v) for v in self.temporal_resolution]
-
-        if self._is_empty(self.landing_page):
-            self.MissingRequiredField("landing_page")
-        self._normalize_inlined_as_list(slot_name="landing_page", slot_type=Document, key_name="id", keyed=True)
-
         if not isinstance(self.alternative, list):
             self.alternative = [self.alternative] if self.alternative is not None else []
         self.alternative = [v if isinstance(v, str) else str(v) for v in self.alternative]
+
+        if not isinstance(self.analytics, list):
+            self.analytics = [self.analytics] if self.analytics is not None else []
+        self.analytics = [v if isinstance(v, HealthDistribution) else HealthDistribution(**as_dict(v)) for v in self.analytics]
+
+        if self.custodian is not None and not isinstance(self.custodian, HealthAgent):
+            self.custodian = HealthAgent(**as_dict(self.custodian))
+
+        if not isinstance(self.has_code_values, list):
+            self.has_code_values = [self.has_code_values] if self.has_code_values is not None else []
+        self.has_code_values = [v if isinstance(v, str) else str(v) for v in self.has_code_values]
+
+        if not isinstance(self.has_coding_system, list):
+            self.has_coding_system = [self.has_coding_system] if self.has_coding_system is not None else []
+        self.has_coding_system = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.has_coding_system]
+
+        if not isinstance(self.has_legal_basis, list):
+            self.has_legal_basis = [self.has_legal_basis] if self.has_legal_basis is not None else []
+        self.has_legal_basis = [v if isinstance(v, LegalBasisId) else LegalBasisId(v) for v in self.has_legal_basis]
+
+        if not isinstance(self.has_personal_data, list):
+            self.has_personal_data = [self.has_personal_data] if self.has_personal_data is not None else []
+        self.has_personal_data = [v if isinstance(v, PersonalDataId) else PersonalDataId(v) for v in self.has_personal_data]
+
+        if not isinstance(self.has_purpose, list):
+            self.has_purpose = [self.has_purpose] if self.has_purpose is not None else []
+        self.has_purpose = [v if isinstance(v, PurposeId) else PurposeId(v) for v in self.has_purpose]
+
+        if not isinstance(self.has_quality_annotation, list):
+            self.has_quality_annotation = [self.has_quality_annotation] if self.has_quality_annotation is not None else []
+        self.has_quality_annotation = [v if isinstance(v, QualityCertificateId) else QualityCertificateId(v) for v in self.has_quality_annotation]
 
         if not isinstance(self.has_variables, list):
             self.has_variables = [self.has_variables] if self.has_variables is not None else []
         self.has_variables = [v if isinstance(v, TableGroup) else TableGroup(**as_dict(v)) for v in self.has_variables]
 
+        if not isinstance(self.health_theme, list):
+            self.health_theme = [self.health_theme] if self.health_theme is not None else []
+        self.health_theme = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.health_theme]
+
+        if self.max_typical_age is not None and not isinstance(self.max_typical_age, int):
+            self.max_typical_age = int(self.max_typical_age)
+
+        if self.min_typical_age is not None and not isinstance(self.min_typical_age, int):
+            self.min_typical_age = int(self.min_typical_age)
+
+        if self.number_of_records is not None and not isinstance(self.number_of_records, int):
+            self.number_of_records = int(self.number_of_records)
+
+        if self.number_of_unique_individuals is not None and not isinstance(self.number_of_unique_individuals, int):
+            self.number_of_unique_individuals = int(self.number_of_unique_individuals)
+
+        if not isinstance(self.population_coverage, list):
+            self.population_coverage = [self.population_coverage] if self.population_coverage is not None else []
+        self.population_coverage = [v if isinstance(v, str) else str(v) for v in self.population_coverage]
+
+        if self.retention_period is not None and not isinstance(self.retention_period, PeriodOfTime):
+            self.retention_period = PeriodOfTime(**as_dict(self.retention_period))
+
         if self.publisher is not None and not isinstance(self.publisher, HealthPublisherAgent):
             self.publisher = HealthPublisherAgent(**as_dict(self.publisher))
+
+        if not isinstance(self.sample, list):
+            self.sample = [self.sample] if self.sample is not None else []
+        self.sample = [v if isinstance(v, HealthDistribution) else HealthDistribution(**as_dict(v)) for v in self.sample]
+
+        if not isinstance(self.frequency, list):
+            self.frequency = [self.frequency] if self.frequency is not None else []
+        self.frequency = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.frequency]
+
+        self._normalize_inlined_as_list(slot_name="source", slot_type=HealthDataset, key_name="id", keyed=True)
+
+        if not isinstance(self.temporal_resolution, list):
+            self.temporal_resolution = [self.temporal_resolution] if self.temporal_resolution is not None else []
+        self.temporal_resolution = [v if isinstance(v, str) else str(v) for v in self.temporal_resolution]
+
+        if not isinstance(self.language, list):
+            self.language = [self.language] if self.language is not None else []
+        self.language = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.language]
 
         if not isinstance(self.geographical_coverage, list):
             self.geographical_coverage = [self.geographical_coverage] if self.geographical_coverage is not None else []
         self.geographical_coverage = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.geographical_coverage]
+
+        if not isinstance(self.conforms_to, list):
+            self.conforms_to = [self.conforms_to] if self.conforms_to is not None else []
+        self.conforms_to = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.conforms_to]
 
         self._normalize_inlined_as_list(slot_name="qualified_attribution", slot_type=DatasetAttribution, key_name="attribution_had_role", keyed=False)
 
@@ -3463,28 +3390,28 @@ slots.special_opening_hours_specification = Slot(uri=CV.specialOpeningHoursSpeci
                    model_uri=HEALTH_DCAT_AP_PLUS.special_opening_hours_specification, domain=None, range=Optional[Union[Union[dict, TemporalEntity], list[Union[dict, TemporalEntity]]]])
 
 slots.has_purpose = Slot(uri=DPV.hasPurpose, name="has_purpose", curie=DPV.curie('hasPurpose'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.has_purpose, domain=None, range=Union[Union[str, PurposeId], list[Union[str, PurposeId]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.has_purpose, domain=None, range=Optional[Union[Union[str, PurposeId], list[Union[str, PurposeId]]]])
 
 slots.hdab = Slot(uri=HEALTHDCATAP.hdab, name="hdab", curie=HEALTHDCATAP.curie('hdab'),
                    model_uri=HEALTH_DCAT_AP_PLUS.hdab, domain=None, range=Union[dict, HealthAgent])
 
 slots.custodian = Slot(uri=GEODCATAP.custodian, name="custodian", curie=GEODCATAP.curie('custodian'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.custodian, domain=None, range=Union[dict, HealthAgent])
+                   model_uri=HEALTH_DCAT_AP_PLUS.custodian, domain=None, range=Optional[Union[dict, HealthAgent]])
 
 slots.health_category = Slot(uri=HEALTHDCATAP.healthCategory, name="health_category", curie=HEALTHDCATAP.curie('healthCategory'),
                    model_uri=HEALTH_DCAT_AP_PLUS.health_category, domain=None, range=Union[Union[dict, Concept], list[Union[dict, Concept]]])
 
 slots.health_theme = Slot(uri=HEALTHDCATAP.healthTheme, name="health_theme", curie=HEALTHDCATAP.curie('healthTheme'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.health_theme, domain=None, range=Union[Union[dict, Concept], list[Union[dict, Concept]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.health_theme, domain=None, range=Optional[Union[Union[dict, Concept], list[Union[dict, Concept]]]])
 
 slots.has_legal_basis = Slot(uri=DPV.hasLegalBasis, name="has_legal_basis", curie=DPV.curie('hasLegalBasis'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.has_legal_basis, domain=None, range=Union[Union[str, LegalBasisId], list[Union[str, LegalBasisId]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.has_legal_basis, domain=None, range=Optional[Union[Union[str, LegalBasisId], list[Union[str, LegalBasisId]]]])
 
 slots.has_personal_data = Slot(uri=DPV.hasPersonalData, name="has_personal_data", curie=DPV.curie('hasPersonalData'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.has_personal_data, domain=None, range=Union[Union[str, PersonalDataId], list[Union[str, PersonalDataId]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.has_personal_data, domain=None, range=Optional[Union[Union[str, PersonalDataId], list[Union[str, PersonalDataId]]]])
 
 slots.has_quality_annotation = Slot(uri=DQV.hasQualityAnnotation, name="has_quality_annotation", curie=DQV.curie('hasQualityAnnotation'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.has_quality_annotation, domain=None, range=Union[Union[str, QualityCertificateId], list[Union[str, QualityCertificateId]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.has_quality_annotation, domain=None, range=Optional[Union[Union[str, QualityCertificateId], list[Union[str, QualityCertificateId]]]])
 
 slots.has_structured_data = Slot(uri=HEALTHDCATAP.hasStructuredData, name="has_structured_data", curie=HEALTHDCATAP.curie('hasStructuredData'),
                    model_uri=HEALTH_DCAT_AP_PLUS.has_structured_data, domain=None, range=Union[bool, Bool])
@@ -3493,34 +3420,34 @@ slots.has_variables = Slot(uri=HEALTHDCATAP.hasVariables, name="has_variables", 
                    model_uri=HEALTH_DCAT_AP_PLUS.has_variables, domain=None, range=Optional[Union[Union[dict, TableGroup], list[Union[dict, TableGroup]]]])
 
 slots.analytics = Slot(uri=HEALTHDCATAP.analytics, name="analytics", curie=HEALTHDCATAP.curie('analytics'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.analytics, domain=None, range=Union[Union[dict, HealthDistribution], list[Union[dict, HealthDistribution]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.analytics, domain=None, range=Optional[Union[Union[dict, HealthDistribution], list[Union[dict, HealthDistribution]]]])
 
 slots.has_code_values = Slot(uri=HEALTHDCATAP.hasCodeValues, name="has_code_values", curie=HEALTHDCATAP.curie('hasCodeValues'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.has_code_values, domain=None, range=Union[str, list[str]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.has_code_values, domain=None, range=Optional[Union[str, list[str]]])
 
 slots.has_coding_system = Slot(uri=HEALTHDCATAP.hasCodingSystem, name="has_coding_system", curie=HEALTHDCATAP.curie('hasCodingSystem'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.has_coding_system, domain=None, range=Union[Union[dict, Standard], list[Union[dict, Standard]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.has_coding_system, domain=None, range=Optional[Union[Union[dict, Standard], list[Union[dict, Standard]]]])
 
 slots.min_typical_age = Slot(uri=HEALTHDCATAP.minTypicalAge, name="min_typical_age", curie=HEALTHDCATAP.curie('minTypicalAge'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.min_typical_age, domain=None, range=int)
+                   model_uri=HEALTH_DCAT_AP_PLUS.min_typical_age, domain=None, range=Optional[int])
 
 slots.max_typical_age = Slot(uri=HEALTHDCATAP.maxTypicalAge, name="max_typical_age", curie=HEALTHDCATAP.curie('maxTypicalAge'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.max_typical_age, domain=None, range=int)
+                   model_uri=HEALTH_DCAT_AP_PLUS.max_typical_age, domain=None, range=Optional[int])
 
 slots.number_of_records = Slot(uri=HEALTHDCATAP.numberOfRecords, name="number_of_records", curie=HEALTHDCATAP.curie('numberOfRecords'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.number_of_records, domain=None, range=int)
+                   model_uri=HEALTH_DCAT_AP_PLUS.number_of_records, domain=None, range=Optional[int])
 
 slots.number_of_unique_individuals = Slot(uri=HEALTHDCATAP.numberOfUniqueIndividuals, name="number_of_unique_individuals", curie=HEALTHDCATAP.curie('numberOfUniqueIndividuals'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.number_of_unique_individuals, domain=None, range=int)
+                   model_uri=HEALTH_DCAT_AP_PLUS.number_of_unique_individuals, domain=None, range=Optional[int])
 
 slots.population_coverage = Slot(uri=HEALTHDCATAP.populationCoverage, name="population_coverage", curie=HEALTHDCATAP.curie('populationCoverage'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.population_coverage, domain=None, range=Union[str, list[str]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.population_coverage, domain=None, range=Optional[Union[str, list[str]]])
 
 slots.alternative = Slot(uri=DCTERMS.alternative, name="alternative", curie=DCTERMS.curie('alternative'),
                    model_uri=HEALTH_DCAT_AP_PLUS.alternative, domain=None, range=Optional[Union[str, list[str]]])
 
 slots.retention_period = Slot(uri=HEALTHDCATAP.retentionPeriod, name="retention_period", curie=HEALTHDCATAP.curie('retentionPeriod'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.retention_period, domain=None, range=Union[dict, PeriodOfTime])
+                   model_uri=HEALTH_DCAT_AP_PLUS.retention_period, domain=None, range=Optional[Union[dict, PeriodOfTime]])
 
 slots.agent_contact_point = Slot(uri=CV.contactPoint, name="agent_contact_point", curie=CV.curie('contactPoint'),
                    model_uri=HEALTH_DCAT_AP_PLUS.agent_contact_point, domain=None, range=Union[dict, ContactPoint])
@@ -4087,7 +4014,7 @@ slots.HealthDataset_publisher = Slot(uri=DCTERMS.publisher, name="HealthDataset_
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_publisher, domain=HealthDataset, range=Optional[Union[dict, "HealthPublisherAgent"]])
 
 slots.HealthDataset_sample = Slot(uri=ADMS.sample, name="HealthDataset_sample", curie=ADMS.curie('sample'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_sample, domain=HealthDataset, range=Union[Union[dict, "HealthDistribution"], list[Union[dict, "HealthDistribution"]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_sample, domain=HealthDataset, range=Optional[Union[Union[dict, "HealthDistribution"], list[Union[dict, "HealthDistribution"]]]])
 
 slots.HealthDataset_theme = Slot(uri=DCAT.theme, name="HealthDataset_theme", curie=DCAT.curie('theme'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_theme, domain=HealthDataset, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
@@ -4104,35 +4031,17 @@ slots.HealthDataset_type = Slot(uri=DCTERMS.type, name="HealthDataset_type", cur
 slots.HealthDataset_provenance = Slot(uri=DCTERMS.provenance, name="HealthDataset_provenance", curie=DCTERMS.curie('provenance'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_provenance, domain=HealthDataset, range=Union[Union[dict, ProvenanceStatement], list[Union[dict, ProvenanceStatement]]])
 
-slots.HealthDataset_linked_schemas = Slot(uri=DCTERMS.conformsTo, name="HealthDataset_linked_schemas", curie=DCTERMS.curie('conformsTo'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_linked_schemas, domain=HealthDataset, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
-
-slots.HealthDataset_documentation = Slot(uri=FOAF.page, name="HealthDataset_documentation", curie=FOAF.curie('page'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_documentation, domain=HealthDataset, range=Union[dict[Union[str, DocumentId], Union[dict, Document]], list[Union[dict, Document]]])
-
 slots.HealthDataset_frequency = Slot(uri=DCTERMS.accrualPeriodicity, name="HealthDataset_frequency", curie=DCTERMS.curie('accrualPeriodicity'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_frequency, domain=HealthDataset, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_frequency, domain=HealthDataset, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
 
-slots.HealthDataset_is_referenced_by = Slot(uri=DCTERMS.isReferencedBy, name="HealthDataset_is_referenced_by", curie=DCTERMS.curie('isReferencedBy'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_is_referenced_by, domain=HealthDataset, range=Union[dict[Union[str, ResourceId], Union[dict, Resource]], list[Union[dict, Resource]]])
-
-slots.HealthDataset_language = Slot(uri=DCTERMS.language, name="HealthDataset_language", curie=DCTERMS.curie('language'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_language, domain=HealthDataset, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
-
-slots.HealthDataset_source_metadata = Slot(uri=DCTERMS.source, name="HealthDataset_source_metadata", curie=DCTERMS.curie('source'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_source_metadata, domain=HealthDataset, range=Union[str, list[str]])
-
-slots.HealthDataset_temporal_coverage = Slot(uri=DCTERMS.temporal, name="HealthDataset_temporal_coverage", curie=DCTERMS.curie('temporal'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_temporal_coverage, domain=HealthDataset, range=Union[Union[dict, PeriodOfTime], list[Union[dict, PeriodOfTime]]])
+slots.HealthDataset_source = Slot(uri=DCTERMS.source, name="HealthDataset_source", curie=DCTERMS.curie('source'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_source, domain=HealthDataset, range=Optional[Union[dict[Union[str, HealthDatasetId], Union[dict, "HealthDataset"]], list[Union[dict, "HealthDataset"]]]])
 
 slots.HealthDataset_temporal_resolution = Slot(uri=DCAT.temporalResolution, name="HealthDataset_temporal_resolution", curie=DCAT.curie('temporalResolution'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_temporal_resolution, domain=HealthDataset, range=Union[str, list[str]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_temporal_resolution, domain=HealthDataset, range=Optional[Union[str, list[str]]])
 
-slots.HealthDataset_landing_page = Slot(uri=DCAT.landingPage, name="HealthDataset_landing_page", curie=DCAT.curie('landingPage'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_landing_page, domain=HealthDataset, range=Union[dict[Union[str, DocumentId], Union[dict, Document]], list[Union[dict, Document]]])
-
-slots.HealthDataset_relation = Slot(uri=DCTERMS.relation, name="HealthDataset_relation", curie=DCTERMS.curie('relation'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_relation, domain=HealthDataset, range=Union[str, list[str]])
+slots.HealthDataset_language = Slot(uri=DCTERMS.language, name="HealthDataset_language", curie=DCTERMS.curie('language'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_language, domain=HealthDataset, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
 
 slots.HealthDataset_geographical_coverage = Slot(uri=DCTERMS.spatial, name="HealthDataset_geographical_coverage", curie=DCTERMS.curie('spatial'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_geographical_coverage, domain=HealthDataset, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
@@ -4141,10 +4050,13 @@ slots.HealthDataset_health_category = Slot(uri=HEALTHDCATAP.healthCategory, name
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_health_category, domain=HealthDataset, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
 
 slots.HealthDataset_has_coding_system = Slot(uri=HEALTHDCATAP.hasCodingSystem, name="HealthDataset_has_coding_system", curie=HEALTHDCATAP.curie('hasCodingSystem'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_has_coding_system, domain=HealthDataset, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_has_coding_system, domain=HealthDataset, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
+
+slots.HealthDataset_conforms_to = Slot(uri=DCTERMS.conformsTo, name="HealthDataset_conforms_to", curie=DCTERMS.curie('conformsTo'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_conforms_to, domain=HealthDataset, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
 
 slots.HealthDataset_health_theme = Slot(uri=HEALTHDCATAP.healthTheme, name="HealthDataset_health_theme", curie=HEALTHDCATAP.curie('healthTheme'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_health_theme, domain=HealthDataset, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_health_theme, domain=HealthDataset, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
 
 slots.HealthDataset_qualified_attribution = Slot(uri=PROV.qualifiedAttribution, name="HealthDataset_qualified_attribution", curie=PROV.curie('qualifiedAttribution'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_qualified_attribution, domain=HealthDataset, range=Optional[Union[Union[dict, "DatasetAttribution"], list[Union[dict, "DatasetAttribution"]]]])

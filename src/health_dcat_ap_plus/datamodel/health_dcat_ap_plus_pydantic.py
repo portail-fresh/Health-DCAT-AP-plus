@@ -700,8 +700,7 @@ class CatalogueRecord(ConfiguredBaseModel):
                     {'range': 'DataService'}],
          'domain_of': ['CatalogueRecord'],
          'slot_uri': 'foaf:primaryTopic'} })
-    source_metadata: Optional[CatalogueRecord] = Field(default=None, description="""The original metadata that was used in creating metadata for the Dataset, Data Service or Dataset Series.""", json_schema_extra = { "linkml_meta": {'domain_of': ['CatalogueRecord', 'HealthDataset'],
-         'slot_uri': 'dcterms:source'} })
+    source_metadata: Optional[CatalogueRecord] = Field(default=None, description="""The original metadata that was used in creating metadata for the Dataset, Data Service or Dataset Series.""", json_schema_extra = { "linkml_meta": {'domain_of': ['CatalogueRecord'], 'slot_uri': 'dcterms:source'} })
     title: Optional[list[str]] = Field(default=None, description="""A name given to the Catalogue Record.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
                        'Any',
@@ -3140,8 +3139,7 @@ class Distribution(ConfiguredBaseModel):
          'slot_uri': 'dcterms:language'} })
     licence: Optional[LicenseDocument] = Field(default=None, description="""A licence under which the Distribution is made available.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'DataService', 'Distribution'],
          'slot_uri': 'dcterms:license'} })
-    linked_schemas: Optional[list[Standard]] = Field(default=None, description="""An established schema to which the described Distribution conforms.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution', 'HealthDataset'],
-         'slot_uri': 'dcterms:conformsTo'} })
+    linked_schemas: Optional[list[Standard]] = Field(default=None, description="""An established schema to which the described Distribution conforms.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'dcterms:conformsTo'} })
     media_type: Optional[MediaType] = Field(default=None, description="""The media type of the Distribution as defined in the official register of media types managed by IANA.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'dcat:mediaType'} })
     modification_date: Optional[date] = Field(default=None, description="""The most recent date on which the Distribution was changed or modified.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
                        'CatalogueRecord',
@@ -4194,7 +4192,7 @@ class Relationship(ConfiguredBaseModel):
                                      'slot_uri': 'dcterms:relation'}}})
 
     had_role: list[Role] = Field(default=..., description="""A function of an entity or agent with respect to another entity or resource.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Relationship'], 'slot_uri': 'dcat:hadRole'} })
-    relation: list[Resource] = Field(default=..., description="""A resource related to the source resource.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Relationship', 'HealthDataset'], 'slot_uri': 'dcterms:relation'} })
+    relation: list[Resource] = Field(default=..., description="""A resource related to the source resource.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Relationship'], 'slot_uri': 'dcterms:relation'} })
 
 
 class Software(AgenticEntity):
@@ -6739,17 +6737,18 @@ class HealthDataset(Dataset):
                                           'values_from': ['http://publications.europa.eu/resource/authority/access-right']},
                         'applicable_legislation': {'name': 'applicable_legislation',
                                                    'required': True},
+                        'conforms_to': {'name': 'conforms_to',
+                                        'range': 'uriorcurie',
+                                        'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard']},
                         'contact_point': {'name': 'contact_point',
                                           'range': 'HealthKind',
                                           'required': True},
                         'dataset_distribution': {'name': 'dataset_distribution',
                                                  'range': 'HealthDistribution',
                                                  'required': True},
-                        'documentation': {'name': 'documentation', 'required': True},
                         'frequency': {'multivalued': True,
                                       'name': 'frequency',
                                       'range': 'uriorcurie',
-                                      'required': True,
                                       'values_from': ['http://publications.europa.eu/resource/authority/frequency']},
                         'geographical_coverage': {'comments': ['Recommended alignment '
                                                                "(HealthDCAT-AP's own "
@@ -6773,19 +6772,10 @@ class HealthDataset(Dataset):
                                          'range': 'uriorcurie',
                                          'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme']},
                         'identifier': {'name': 'identifier', 'required': True},
-                        'is_referenced_by': {'name': 'is_referenced_by',
-                                             'required': True},
                         'keyword': {'name': 'keyword', 'required': True},
-                        'landing_page': {'name': 'landing_page', 'required': True},
                         'language': {'name': 'language',
                                      'range': 'uriorcurie',
-                                     'required': True,
                                      'values_from': ['http://publications.europa.eu/resource/authority/language']},
-                        'linked_schemas': {'multivalued': True,
-                                           'name': 'linked_schemas',
-                                           'range': 'uriorcurie',
-                                           'required': True,
-                                           'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard']},
                         'provenance': {'name': 'provenance', 'required': True},
                         'publisher': {'name': 'publisher',
                                       'range': 'HealthPublisherAgent'},
@@ -6793,20 +6783,10 @@ class HealthDataset(Dataset):
                                                   'multivalued': True,
                                                   'name': 'qualified_attribution',
                                                   'range': 'DatasetAttribution'},
-                        'relation': {'multivalued': True,
-                                     'name': 'relation',
-                                     'required': True},
-                        'sample': {'name': 'sample',
-                                   'range': 'HealthDistribution',
-                                   'required': True},
-                        'source_metadata': {'multivalued': True,
-                                            'name': 'source_metadata',
-                                            'required': True},
-                        'temporal_coverage': {'name': 'temporal_coverage',
-                                              'required': True},
+                        'sample': {'name': 'sample', 'range': 'HealthDistribution'},
+                        'source': {'name': 'source', 'range': 'HealthDataset'},
                         'temporal_resolution': {'multivalued': True,
-                                                'name': 'temporal_resolution',
-                                                'required': True},
+                                                'name': 'temporal_resolution'},
                         'theme': {'name': 'theme',
                                   'range': 'uriorcurie',
                                   'required': True,
@@ -6821,38 +6801,32 @@ class HealthDataset(Dataset):
                                  'values_from': ['http://publications.europa.eu/resource/authority/dataset-type']}}})
 
     alternative: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dcterms:alternative'} })
-    analytics: list[HealthDistribution] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:analytics'} })
-    custodian: HealthAgent = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'geodcatap:custodian'} })
-    has_code_values: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasCodeValues'} })
-    has_coding_system: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
+    analytics: Optional[list[HealthDistribution]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:analytics'} })
+    custodian: Optional[HealthAgent] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'geodcatap:custodian'} })
+    has_code_values: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasCodeValues'} })
+    has_coding_system: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
          'slot_uri': 'healthdcatap:hasCodingSystem',
          'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system']} })
-    has_legal_basis: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasLegalBasis'} })
-    has_personal_data: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasPersonalData'} })
-    has_purpose: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasPurpose'} })
-    has_quality_annotation: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dqv:hasQualityAnnotation'} })
+    has_legal_basis: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasLegalBasis'} })
+    has_personal_data: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasPersonalData'} })
+    has_purpose: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasPurpose'} })
+    has_quality_annotation: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dqv:hasQualityAnnotation'} })
     has_structured_data: bool = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasStructuredData'} })
     has_variables: Optional[list[TableGroup]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasVariables'} })
     hdab: HealthAgent = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hdab'} })
     health_category: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
          'slot_uri': 'healthdcatap:healthCategory',
          'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories']} })
-    health_theme: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
+    health_theme: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
          'slot_uri': 'healthdcatap:healthTheme',
          'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme']} })
-    linked_schemas: list[str] = Field(default=..., description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution', 'HealthDataset'],
-         'slot_uri': 'dcterms:conformsTo',
-         'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard']} })
-    max_typical_age: int = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:maxTypicalAge'} })
-    min_typical_age: int = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:minTypicalAge'} })
-    number_of_records: int = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:numberOfRecords'} })
-    number_of_unique_individuals: int = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
+    max_typical_age: Optional[int] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:maxTypicalAge'} })
+    min_typical_age: Optional[int] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:minTypicalAge'} })
+    number_of_records: Optional[int] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:numberOfRecords'} })
+    number_of_unique_individuals: Optional[int] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
          'slot_uri': 'healthdcatap:numberOfUniqueIndividuals'} })
-    population_coverage: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:populationCoverage'} })
-    relation: list[str] = Field(default=..., description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Relationship', 'HealthDataset'], 'slot_uri': 'dcterms:relation'} })
-    retention_period: PeriodOfTime = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:retentionPeriod'} })
-    source_metadata: list[str] = Field(default=..., description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['CatalogueRecord', 'HealthDataset'],
-         'slot_uri': 'dcterms:source'} })
+    population_coverage: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:populationCoverage'} })
+    retention_period: Optional[PeriodOfTime] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:retentionPeriod'} })
     access_rights: str = Field(default=..., description="""Information that indicates whether the Dataset is publicly accessible, has access restrictions or is not public.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'],
          'slot_uri': 'dcterms:accessRights',
          'values_from': ['http://publications.europa.eu/resource/authority/access-right']} })
@@ -6862,7 +6836,9 @@ class HealthDataset(Dataset):
                        'DatasetSeries',
                        'Distribution'],
          'slot_uri': 'dcatap:applicableLegislation'} })
-    conforms_to: Optional[list[Standard]] = Field(default=None, description="""An implementing rule or other specification.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'], 'slot_uri': 'dcterms:conformsTo'} })
+    conforms_to: Optional[list[str]] = Field(default=None, description="""An implementing rule or other specification.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'],
+         'slot_uri': 'dcterms:conformsTo',
+         'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard']} })
     contact_point: list[HealthKind] = Field(default=..., description="""Contact information that can be used for sending comments about the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset', 'DatasetSeries'],
          'recommended': True,
          'slot_uri': 'dcat:contactPoint'} })
@@ -6908,9 +6884,9 @@ class HealthDataset(Dataset):
                        'HealthPublisherAgent',
                        'TemporalEntity'],
          'slot_uri': 'dcterms:description'} })
-    documentation: list[Document] = Field(default=..., description="""A page or document about this Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset', 'Distribution'],
+    documentation: Optional[list[Document]] = Field(default=None, description="""A page or document about this Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset', 'Distribution'],
          'slot_uri': 'foaf:page'} })
-    frequency: list[str] = Field(default=..., description="""The frequency at which the Dataset is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries', 'TemporalEntity'],
+    frequency: Optional[list[str]] = Field(default=None, description="""The frequency at which the Dataset is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries', 'TemporalEntity'],
          'slot_uri': 'dcterms:accrualPeriodicity',
          'values_from': ['http://publications.europa.eu/resource/authority/frequency']} })
     geographical_coverage: Optional[list[str]] = Field(default=None, description="""A geographic region that is covered by the Dataset.""", json_schema_extra = { "linkml_meta": {'comments': ["Recommended alignment (HealthDCAT-AP's own SHACL marks this "
@@ -6924,12 +6900,12 @@ class HealthDataset(Dataset):
     has_version: Optional[list[Dataset]] = Field(default=None, description="""A related Dataset that is a version, edition, or adaptation of the described Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcat:hasVersion'} })
     identifier: list[str] = Field(default=..., description="""The main identifier for the Dataset, e.g. the URI or other unique identifier in the context of the Catalogue.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcterms:identifier'} })
     in_series: Optional[list[DatasetSeries]] = Field(default=None, description="""A dataset series of which the dataset is part.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcat:inSeries'} })
-    is_referenced_by: list[Resource] = Field(default=..., description="""A related resource, such as a publication, that references, cites, or otherwise points to the dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcterms:isReferencedBy'} })
+    is_referenced_by: Optional[list[Resource]] = Field(default=None, description="""A related resource, such as a publication, that references, cites, or otherwise points to the dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcterms:isReferencedBy'} })
     keyword: list[str] = Field(default=..., description="""A keyword or tag describing the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset', 'Table'],
          'recommended': True,
          'slot_uri': 'dcat:keyword'} })
-    landing_page: list[Document] = Field(default=..., description="""A web page that provides access to the Dataset, its Distributions and/or additional information.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'], 'slot_uri': 'dcat:landingPage'} })
-    language: list[str] = Field(default=..., description="""A language of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'CatalogueRecord', 'Dataset', 'Distribution'],
+    landing_page: Optional[list[Document]] = Field(default=None, description="""A web page that provides access to the Dataset, its Distributions and/or additional information.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'], 'slot_uri': 'dcat:landingPage'} })
+    language: Optional[list[str]] = Field(default=None, description="""A language of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'CatalogueRecord', 'Dataset', 'Distribution'],
          'slot_uri': 'dcterms:language',
          'values_from': ['http://publications.europa.eu/resource/authority/language']} })
     modification_date: Optional[date] = Field(default=None, description="""The most recent date on which the Dataset was changed or modified.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
@@ -6948,13 +6924,13 @@ class HealthDataset(Dataset):
     related_resource: Optional[list[Resource]] = Field(default=None, description="""A related resource.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcterms:relation'} })
     release_date: Optional[date] = Field(default=None, description="""The date of formal issuance (e.g., publication) of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries', 'Distribution'],
          'slot_uri': 'dcterms:issued'} })
-    sample: list[HealthDistribution] = Field(default=..., description="""A sample distribution of the dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'adms:sample'} })
-    source: Optional[list[Dataset]] = Field(default=None, description="""A related Dataset from which the described Dataset is derived.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcterms:source'} })
+    sample: Optional[list[HealthDistribution]] = Field(default=None, description="""A sample distribution of the dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'adms:sample'} })
+    source: Optional[list[HealthDataset]] = Field(default=None, description="""A related Dataset from which the described Dataset is derived.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcterms:source'} })
     spatial_resolution: Optional[Decimal] = Field(default=None, description="""The minimum spatial separation resolvable in a dataset, measured in meters.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'Distribution'],
          'slot_uri': 'dcat:spatialResolutionInMeters'} })
-    temporal_coverage: list[PeriodOfTime] = Field(default=..., description="""A temporal period that the Dataset covers.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries'],
+    temporal_coverage: Optional[list[PeriodOfTime]] = Field(default=None, description="""A temporal period that the Dataset covers.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries'],
          'slot_uri': 'dcterms:temporal'} })
-    temporal_resolution: list[str] = Field(default=..., description="""The minimum time period resolvable in the dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'Distribution'],
+    temporal_resolution: Optional[list[str]] = Field(default=None, description="""The minimum time period resolvable in the dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'Distribution'],
          'slot_uri': 'dcat:temporalResolution'} })
     theme: list[str] = Field(default=..., description="""A category of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'],
          'recommended': True,
@@ -7233,8 +7209,7 @@ class HealthDistribution(Distribution):
          'values_from': ['http://publications.europa.eu/resource/authority/language']} })
     licence: Optional[LicenseDocument] = Field(default=None, description="""A licence under which the Distribution is made available.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'DataService', 'Distribution'],
          'slot_uri': 'dcterms:license'} })
-    linked_schemas: Optional[list[Standard]] = Field(default=None, description="""An established schema to which the described Distribution conforms.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution', 'HealthDataset'],
-         'slot_uri': 'dcterms:conformsTo'} })
+    linked_schemas: Optional[list[Standard]] = Field(default=None, description="""An established schema to which the described Distribution conforms.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'dcterms:conformsTo'} })
     media_type: Optional[MediaType] = Field(default=None, description="""The media type of the Distribution as defined in the official register of media types managed by IANA.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'dcat:mediaType'} })
     modification_date: Optional[date] = Field(default=None, description="""The most recent date on which the Distribution was changed or modified.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
                        'CatalogueRecord',

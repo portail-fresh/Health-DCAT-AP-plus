@@ -89,7 +89,7 @@ has_code_values:
   - ICD-O-3
 has_coding_system:
   - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD_O_3
-linked_schemas:
+conforms_to:
   - https://example.org/schemas/cancer-registry-v1
 max_typical_age: 99
 min_typical_age: 0
@@ -97,13 +97,11 @@ number_of_records: 45000
 number_of_unique_individuals: 42000
 population_coverage:
   - National
-relation:
-  - https://example.org/dataset/cancer-mortality-2024
+related_resource:
+  - id: https://example.org/dataset/cancer-mortality-2024
 retention_period:
   start_date: "2024-01-01"
   end_date: "2044-01-01"
-source_metadata:
-  - "Collected via regional hospital reporting network."
 qualified_attribution:
   - attribution_agent:
       name:

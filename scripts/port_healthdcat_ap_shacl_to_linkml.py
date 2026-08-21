@@ -227,10 +227,45 @@ def class_name_for(uri: URIRef, uri_to_class: dict[str, str]) -> str:
     return local_name(uri_str)
 
 
-def property_name_for(uri: URIRef, uri_to_slot: dict[str, str]) -> str:
+def property_name_for(
+    uri: URIRef,
+    uri_to_slot: dict[str, str],
+    base_sv: SchemaView | None = None,
+    cls_name: str | None = None,
+) -> str:
+    """Resolve a SHACL sh:path URI to a LinkML slot name.
+
+    Some dcat-ap-plus predicate URIs are reused across several, unrelated
+    slots -- confirmed by direct inspection, not assumed: dcterms:relation
+    alone maps to has_qualitative_attribute / has_quantitative_attribute /
+    related_resource / relation; dcterms:source to source / source_metadata;
+    dcterms:conformsTo to application_profile / conforms_to / linked_schemas.
+    A single, classless uri_to_slot dict (built by iterating every slot once,
+    keyed by URI) can only remember one candidate per URI -- whichever
+    happened to be inserted last -- and picking the wrong one produced real,
+    confirmed SHACL conflicts (see docs/architecture-verification.md section
+    6 / tests/test_shacl_validation.py's relation/source/conformsTo
+    findings).
+
+    When a class context is available, resolve against THAT class's own
+    induced slots first: confirmed unambiguous for all three URIs above on
+    Dataset specifically (exactly one induced-slot match each -- checked
+    directly, not assumed), since a real class only actually uses one of the
+    candidates. Falls back to the classless dict (or the snake_case default)
+    when the class doesn't resolve it either -- e.g. a brand-new HealthDCAT-AP
+    class with no dcat-ap-plus counterpart at all, where there's no induced
+    slot to match against in the first place.
+    """
     uri_str = str(uri)
     if uri_str in PROPERTY_RENAME:
         return PROPERTY_RENAME[uri_str]
+    if base_sv is not None and cls_name is not None:
+        try:
+            for slot in base_sv.class_induced_slots(cls_name, imports=True):
+                if base_sv.get_uri(slot.name, expand=True) == uri_str:
+                    return slot.name
+        except ValueError:
+            pass
     if uri_str in uri_to_slot:
         return uri_to_slot[uri_str]
     return to_snake_case(local_name(uri_str))
@@ -254,7 +289,7 @@ def resolve_shape_class_name(shape, graph, uri_to_class, cache) -> str:
 
 
 class PropertyFact:
-    __slots__ = ("range_name", "is_class_like", "min_count", "max_count", "path_uri")
+    __slots__ = ("range_name", "is_class_like", "min_count", "max_count", "path_uri", "required")
 
     def __init__(self):
         self.range_name = None
@@ -262,14 +297,29 @@ class PropertyFact:
         self.min_count = None
         self.max_count = None
         self.path_uri = None
+        # Only ever set True by a sh:minCount >= 1 at sh:Violation severity
+        # (or unspecified, which SHACL treats as sh:Violation by default) --
+        # kept separate from min_count itself, which is still recorded for
+        # *_recommended.ttl's own sh:Warning-severity constraints too (still
+        # useful for the multivalued computation below), so a merely
+        # recommended cardinality (e.g. dct:source's sh:minCount 1
+        # sh:severity sh:Warning in non-public-shapes_recommended.ttl --
+        # found by testing a real instance against real shapes, not assumed)
+        # doesn't get mechanically promoted into a hard LinkML `required`.
+        self.required = False
 
 
-def parse_shapes(graph, uri_to_slot, uri_to_class):
+def parse_shapes(graph, uri_to_slot, uri_to_class, base_sv):
     """Walk every named sh:NodeShape and collect {(class, property): PropertyFact}
     plus {class: parent_class} from sh:extends. Mirrors
     healthdcat_ap_non_public_to_table.py's parse_shapes, extended to also
     capture sh:minCount/sh:maxCount (needed here for required/multivalued,
-    not needed there since that script only produced a flat range table)."""
+    not needed there since that script only produced a flat range table).
+
+    base_sv is threaded through to property_name_for so ambiguous predicate
+    URIs (relation/source/conformsTo, see property_name_for's own docstring)
+    resolve against the CURRENT shape's own class_name -- unambiguous --
+    instead of the classless uri_to_slot dict alone."""
     facts: dict[tuple[str, str], PropertyFact] = {}
     shape_target: dict[str, str | None] = {}
     parents: dict[str, str] = {}
@@ -302,7 +352,7 @@ def parse_shapes(graph, uri_to_slot, uri_to_class):
                 skipped.append(f"{class_name}: composite sh:path (e.g. sh:alternativePath), not a single property")
                 continue
 
-            prop_name = property_name_for(path, uri_to_slot)
+            prop_name = property_name_for(path, uri_to_slot, base_sv, class_name)
             key = (class_name, prop_name)
             fact = facts.setdefault(key, PropertyFact())
             if fact.path_uri is None:
@@ -322,11 +372,16 @@ def parse_shapes(graph, uri_to_slot, uri_to_class):
                 elif sh_datatype is not None:
                     fact.range_name = XSD_TYPE_NAME.get(sh_datatype, local_name(str(sh_datatype)))
 
+            severity = graph.value(prop_shape, SH.severity)
+            recommended_only = severity is not None and str(severity).endswith("Warning")
+
             min_count = graph.value(prop_shape, SH.minCount)
             if min_count is not None:
                 min_count = int(min_count)
                 if fact.min_count is None or min_count > fact.min_count:
                     fact.min_count = min_count
+                if min_count >= 1 and not recommended_only:
+                    fact.required = True
             max_count = graph.value(prop_shape, SH.maxCount)
             if max_count is not None and fact.max_count is None:
                 fact.max_count = int(max_count)
@@ -518,7 +573,7 @@ def build_linkml(
             if c != class_name:
                 continue
             range_name = resolve_range(fact.range_name) if fact.range_name else None
-            required = bool(fact.min_count and fact.min_count >= 1)
+            required = fact.required
             multivalued = fact.max_count is None or fact.max_count > 1
 
             existing = base_slot(prop_name, class_name)
@@ -606,7 +661,7 @@ def main() -> None:
     parse_turtle_with_known_fixes(vocab_graph, shacl_dir / "mdr-vocabularies.shape.ttl")
 
     base_sv, uri_to_slot, uri_to_class = load_base_schema(args.base_schema)
-    facts, shape_target, shape_parents, skipped, class_like_range_uris = parse_shapes(graph, uri_to_slot, uri_to_class)
+    facts, shape_target, shape_parents, skipped, class_like_range_uris = parse_shapes(graph, uri_to_slot, uri_to_class, base_sv)
 
     base_class_names = set(base_sv.all_classes(imports=True))
     rename = build_rename_map(facts, shape_target, base_class_names)
@@ -635,7 +690,7 @@ def main() -> None:
                 "class_uri": base_sv.get_uri(class_name, expand=False),
             }
 
-        slot_name = property_name_for(URIRef(predicate_uri), uri_to_slot)
+        slot_name = property_name_for(URIRef(predicate_uri), uri_to_slot, base_sv, class_name)
         cls = classes[final_class_name]
         parent_name = cls.get("is_a")
         try:

@@ -108,15 +108,12 @@ classes:
     - hdab
     - health_category
     - health_theme
-    - linked_schemas
     - max_typical_age
     - min_typical_age
     - number_of_records
     - number_of_unique_individuals
     - population_coverage
-    - relation
     - retention_period
-    - source_metadata
     slot_usage:
       access_rights:
         required: true
@@ -134,7 +131,6 @@ classes:
         range: HealthPublisherAgent
       sample:
         range: HealthDistribution
-        required: true
       theme:
         required: true
         values_from:
@@ -155,40 +151,19 @@ classes:
           not strictly enforced.
       provenance:
         required: true
-      linked_schemas:
-        required: true
-        multivalued: true
-        values_from:
-        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard
-        range: uriorcurie
-      documentation:
-        required: true
       frequency:
-        required: true
         multivalued: true
         values_from:
         - http://publications.europa.eu/resource/authority/frequency
         range: uriorcurie
-      is_referenced_by:
-        required: true
+      source:
+        range: HealthDataset
+      temporal_resolution:
+        multivalued: true
       language:
-        required: true
         values_from:
         - http://publications.europa.eu/resource/authority/language
         range: uriorcurie
-      source_metadata:
-        required: true
-        multivalued: true
-      temporal_coverage:
-        required: true
-      temporal_resolution:
-        required: true
-        multivalued: true
-      landing_page:
-        required: true
-      relation:
-        required: true
-        multivalued: true
       geographical_coverage:
         values_from:
         - http://publications.europa.eu/resource/authority/country
@@ -206,6 +181,10 @@ classes:
       has_coding_system:
         values_from:
         - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system
+        range: uriorcurie
+      conforms_to:
+        values_from:
+        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard
         range: uriorcurie
       health_theme:
         values_from:
@@ -399,7 +378,6 @@ slots:
   has_purpose:
     slot_uri: dpv:hasPurpose
     range: Purpose
-    required: true
     multivalued: true
   hdab:
     slot_uri: healthdcatap:hdab
@@ -408,7 +386,6 @@ slots:
   custodian:
     slot_uri: geodcatap:custodian
     range: HealthAgent
-    required: true
   health_category:
     slot_uri: healthdcatap:healthCategory
     range: Concept
@@ -417,22 +394,18 @@ slots:
   health_theme:
     slot_uri: healthdcatap:healthTheme
     range: Concept
-    required: true
     multivalued: true
   has_legal_basis:
     slot_uri: dpv:hasLegalBasis
     range: LegalBasis
-    required: true
     multivalued: true
   has_personal_data:
     slot_uri: dpv:hasPersonalData
     range: PersonalData
-    required: true
     multivalued: true
   has_quality_annotation:
     slot_uri: dqv:hasQualityAnnotation
     range: QualityCertificate
-    required: true
     multivalued: true
   has_structured_data:
     slot_uri: healthdcatap:hasStructuredData
@@ -445,36 +418,28 @@ slots:
   analytics:
     slot_uri: healthdcatap:analytics
     range: HealthDistribution
-    required: true
     multivalued: true
   has_code_values:
     slot_uri: healthdcatap:hasCodeValues
-    required: true
     multivalued: true
   has_coding_system:
     slot_uri: healthdcatap:hasCodingSystem
     range: Standard
-    required: true
     multivalued: true
   min_typical_age:
     slot_uri: healthdcatap:minTypicalAge
     range: nonNegativeInteger
-    required: true
   max_typical_age:
     slot_uri: healthdcatap:maxTypicalAge
     range: nonNegativeInteger
-    required: true
   number_of_records:
     slot_uri: healthdcatap:numberOfRecords
     range: nonNegativeInteger
-    required: true
   number_of_unique_individuals:
     slot_uri: healthdcatap:numberOfUniqueIndividuals
     range: nonNegativeInteger
-    required: true
   population_coverage:
     slot_uri: healthdcatap:populationCoverage
-    required: true
     multivalued: true
   alternative:
     slot_uri: dcterms:alternative
@@ -482,7 +447,6 @@ slots:
   retention_period:
     slot_uri: healthdcatap:retentionPeriod
     range: PeriodOfTime
-    required: true
   agent_contact_point:
     slot_uri: cv:contactPoint
     range: ContactPoint

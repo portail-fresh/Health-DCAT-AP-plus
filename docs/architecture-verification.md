@@ -807,6 +807,47 @@ to fix):
   `dcat:Dataset`'s own shape closure, independent of the rest of the
   schema, ruling out any other cause.
 
+**A fourth and fifth real, structural port bug**, both fixed the same way,
+found while building out a fuller test fixture:
+
+- **The `dcterms:relation`/`dcterms:source`/`dcterms:conformsTo` predicate
+  collision, now fixed.** `dcat-ap-plus` reuses each of these predicate
+  URIs across several of its own slots (`dcterms:relation` alone maps to
+  `has_qualitative_attribute` / `has_quantitative_attribute` /
+  `related_resource` / `relation`), and the port script's URI→slot-name
+  resolution (a single classless dict, one slot name remembered per URI)
+  could only pick one, arbitrarily. `property_name_for` now resolves
+  against the *current shape's own class* first — checked directly, all
+  three URIs resolve unambiguously against `Dataset`'s own induced slots
+  (`related_resource`, `source`, `conforms_to` respectively) — falling
+  back to the classless dict only when the class doesn't resolve it either
+  (a genuinely new HealthDCAT-AP class with no `dcat-ap-plus` counterpart).
+  `HealthDataset.relation`/`source_metadata` are renamed to
+  `related_resource`/`source` accordingly (the fixture and
+  `tests/test_shacl_validation.py` updated to match); `linked_schemas` is
+  renamed to `conforms_to`, correctly picking up the vocab-range fix along
+  the way (it's one of the `values_from`-bound fields from §6's first
+  fix).
+- **`sh:severity sh:Warning` cardinality getting promoted to a hard LinkML
+  `required`, now fixed.** Found chasing why `source`'s newly-correct
+  resolution left it `required: true` despite `dct:source` not appearing
+  anywhere in HealthDCAT-AP's *required*-tier files at all — it turned out
+  to live only in `non-public-shapes_recommended.ttl`, `sh:severity
+  sh:Warning`. `parse_shapes` never tracked `sh:severity` at all (only the
+  separate `mdr-vocabularies.shape.ttl` parser did, for its own
+  `recommended_only` comments) — every `sh:minCount` from the
+  `*_recommended.ttl` files was mechanically promoted into a hard
+  `required`, regardless of severity. Confirmed with real numbers, not
+  assumed: `HealthDataset`'s own required-field count dropped from ~30 to
+  16 once fixed (`access_rights`, `applicable_legislation`, `contact_point`,
+  `dataset_distribution`, `description`, `has_structured_data`, `hdab`,
+  `health_category`, `id`, `identifier`, `keyword`, `provenance`, `theme`,
+  `title`, `type`, `was_generated_by`) — spot-checked several of the
+  now-optional ones directly against both real shape files (`dct:source`,
+  `dpv:hasPurpose`, `healthdcatap:minTypicalAge`, `healthdcatap:analytics`)
+  to confirm each really is `sh:Warning`-only, not a fix that silently
+  loosened something genuinely required.
+
 One genuine bug in HealthDCAT-AP's own upstream shapes, not ours: in
 `non-public-shapes.ttl`, `Dataset_Shape`'s conditional constraint ("if
 `hasStructuredData` is true, must have `hasVariables`") is a bare `sh:or`
@@ -835,13 +876,14 @@ vocabulary term IRIs would resolve, expected to mostly disappear once the
 vocab-range bug above is fixed and the fixture switches from fabricated
 `skos:Concept` blank nodes to real term IRIs).
 
-**Result: three real, structural port bugs found that no prior check in
-this document could see — all three fixed and verified (real-shapes
-violations: 31 → 20 → 19) — plus two findings fully diagnosed as non-bugs
-(one entirely internal to `dcat-ap-plus`'s own base schema, one a two-cause
-rdflib/pyshacl tooling nuance), one confirmed upstream bug (not ours), and
-one settled architectural question, all formalized as a permanent
-regression test** (`just test` runs it; the upstream-shapes half skips
-gracefully if `repos/healthdcat-ap` isn't cloned locally) so future
-port-script or schema changes get checked against real SHACL automatically
-instead of ad hoc.
+**Result: five real, structural port bugs found that no prior check in
+this document could see — all five fixed and verified (real-shapes
+violations: 31 → 20 → 19 → 20, the last uptick a single benign, expected
+`sh:Warning` finding, not a regression) — plus two findings fully
+diagnosed as non-bugs (one entirely internal to `dcat-ap-plus`'s own base
+schema, one a two-cause rdflib/pyshacl tooling nuance), one confirmed
+upstream bug (not ours), and one settled architectural question, all
+formalized as a permanent regression test** (`just test` runs it; the
+upstream-shapes half skips gracefully if `repos/healthdcat-ap` isn't
+cloned locally) so future port-script or schema changes get checked
+against real SHACL automatically instead of ad hoc.
