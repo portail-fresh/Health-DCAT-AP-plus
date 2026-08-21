@@ -9,15 +9,20 @@ keyword:
   - cancer
   - registry
 theme:
-  - preferred_label:
-      - Health
+  # dcat:theme's real shape requires this exact fixed term in addition to
+  # whatever else (mdr-vocabularies.shape.ttl, sh:Violation severity), plus
+  # a bare IRI (sh:nodeKind sh:IRI) -- both confirmed directly against
+  # HealthDCAT-AP's real shapes, see docs/architecture-verification.md
+  # section 6.
+  - http://publications.europa.eu/resource/authority/data-theme/HEAL
 type:
-  - preferred_label:
-      - Dataset
+  - http://publications.europa.eu/resource/authority/dataset-type/EXPLOITABLE
 contact_point:
   - has_email: "mailto:data-access@example.org"
-access_rights:
-  title: Non-public
+# dct:accessRights's real shape requires this exact fixed value
+# (sh:hasValue, non-public-shapes.ttl) -- confirmed directly, see
+# docs/architecture-verification.md section 6.
+access_rights: http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC
 applicable_legislation:
   - id: https://example.org/legislation/eu-2025-327
 documentation:
@@ -25,7 +30,7 @@ documentation:
 landing_page:
   - id: https://example.org/dataset/cancer-registry-2024/landing
 language:
-  - title: English
+  - http://publications.europa.eu/resource/authority/language/ENG
 provenance:
   - title: Collected under regional ethics approval REC-2023-114.
 temporal_coverage:
@@ -36,7 +41,7 @@ temporal_resolution:
 is_referenced_by:
   - id: https://example.org/publications/cancer-registry-report-2024
 frequency:
-  - title: Annual
+  - http://publications.europa.eu/resource/authority/frequency/ANNUAL
 sample:
   - access_URL:
       - id: https://example.org/dataset/cancer-registry-2024/sample
@@ -55,21 +60,22 @@ analytics:
 hdab:
   name:
     - National Health Data Access Body
-  contact_point:
+  # HealthAgent_Shape's own predicate (cv:contactPoint), not
+  # dcat:contactPoint -- see agent_contact_point's own definition and
+  # docs/architecture-verification.md section 6.
+  agent_contact_point:
     email:
       - "hdab@example.org"
 custodian:
   name:
     - Regional Cancer Registry Authority
-  contact_point:
+  agent_contact_point:
     email:
       - "custodian@example.org"
 health_category:
-  - preferred_label:
-      - Oncology
+  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories/ONCOLOGY
 health_theme:
-  - preferred_label:
-      - Cancer
+  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme/CANCER
 has_legal_basis:
   - https://w3id.org/dpv#LegalObligation
 has_personal_data:
@@ -82,7 +88,7 @@ has_structured_data: true
 has_code_values:
   - ICD-O-3
 has_coding_system:
-  - title: ICD-O-3
+  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD_O_3
 linked_schemas:
   - https://example.org/schemas/cancer-registry-v1
 max_typical_age: 99

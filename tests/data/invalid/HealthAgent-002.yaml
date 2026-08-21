@@ -1,5 +1,5 @@
-# Invalid: HealthAgent requires contact_point (tightened from Agent's own
-# optional-by-default shape by HealthDCAT-AP's :HealthAgent_Shape).
+# Invalid: HealthAgent requires agent_contact_point (tightened from Agent's
+# own optional-by-default shape by HealthDCAT-AP's :HealthAgent_Shape).
 ---
 name:
   - "Health Data Access Body (example, missing contact point)"

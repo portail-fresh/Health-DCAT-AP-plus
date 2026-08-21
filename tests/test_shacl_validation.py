@@ -58,40 +58,62 @@ SH = Namespace("http://www.w3.org/ns/shacl#")
 Signature = Tuple[str, str, str]
 
 
+# Fields HealthDataset.__post_init__ narrows from Dataset's own nested-class
+# range to a bare uriorcurie. HealthDataset's own __post_init__ correctly
+# coerces each to its new (uriorcurie, possibly list) shape *before*
+# unconditionally calling super().__post_init__(**kwargs) -- Dataset's own,
+# still nested-class-range coercion for the same fields, which then crashes
+# on the already-correct value: a direct `RightsStatement(**as_dict(...))`/
+# `Frequency(**as_dict(...))`/`LinguisticSystem(**as_dict(...))` call for
+# access_rights/frequency/language (TypeError: ...argument after ** must be
+# a mapping, not URIorCURIE -- checked directly: jsonasobj2.as_dict() is a
+# harmless passthrough on a plain scalar, so this is Python itself rejecting
+# `**` on a non-mapping at the call site, not reachable via an as_dict()
+# patch the way the old single-vs-multivalued frequency crash was), and a
+# ValueError from _normalize_inlined_as_list's own key-matching logic for
+# theme/type (it re-wraps each already-plain-IRI value as
+# Concept(preferred_label=<the IRI>) and then complains the "key" doesn't
+# match, since a bare IRI was never meant to round-trip through that
+# nested-object helper at all). Real, pre-existing LinkML code-gen
+# limitation (a subclass narrowing a slot's range or multivalued-ness via
+# slot_usage doesn't stop the parent's own __post_init__ from re-processing
+# it under its own, different assumption) -- not something this repo's
+# schema or port script caused or can fix structurally.
+_DATASET_FIELDS_NARROWED_BY_HEALTHDATASET = ("access_rights", "frequency", "language", "theme", "type")
+
+
 def _build_test_dataset_graph() -> Graph:
     """Build the fixture's RDF graph via the real dataclass -> rdflib_dumper path.
 
-    Needs one workaround: HealthDataset.__post_init__ (in the generated
-    health_dcat_ap_plus.py) correctly normalizes `frequency` as its own
-    multivalued list, then unconditionally calls
-    super().__post_init__(**kwargs) -- Dataset's own, still-single-valued
-    frequency logic -- which re-processes the now-list value and crashes
-    (TypeError: ...Frequency() argument after ** must be a mapping, not
-    list). This is a real, pre-existing LinkML code-gen limitation (a
-    subclass narrowing a slot's multivalued-ness via slot_usage doesn't stop
-    the parent's own __post_init__ from re-applying its own, different
-    assumption) -- not something this repo's schema or port script caused or
-    can fix structurally, so it's worked around here at construction time:
-    the generated module's `as_dict` is monkeypatched, for the duration of
-    one construction call only, to treat a single-item list of an
-    already-constructed object as that object's own dict -- letting
-    Dataset.__post_init__'s stale single-value branch succeed as a no-op
-    instead of crashing.
+    Works around the __post_init__ re-processing bug described above by
+    monkeypatching Dataset.__post_init__ itself, for the duration of one
+    construction call only: temporarily blank out the three affected fields
+    right before Dataset's own __post_init__ runs (so its stale coercion
+    for them becomes a harmless no-op on None), then restore
+    HealthDataset's own already-correct values immediately after -- letting
+    Dataset's coercion for every *other* field it still legitimately owns
+    (creator, geographical_coverage, has_version, ...) run completely
+    unaffected.
     """
     data = yaml.safe_load(FIXTURE_PATH.read_text(encoding="utf-8"))
 
-    real_as_dict = dm.as_dict
+    real_dataset_post_init = dm.Dataset.__post_init__
 
-    def _patched_as_dict(obj):
-        if isinstance(obj, list) and len(obj) == 1 and hasattr(obj[0], "__dict__"):
-            return dict(obj[0].__dict__)
-        return real_as_dict(obj)
+    def _patched_dataset_post_init(self, *args, **kwargs):
+        saved = {name: getattr(self, name) for name in _DATASET_FIELDS_NARROWED_BY_HEALTHDATASET}
+        for name in saved:
+            setattr(self, name, None)
+        try:
+            real_dataset_post_init(self, *args, **kwargs)
+        finally:
+            for name, value in saved.items():
+                setattr(self, name, value)
 
-    dm.as_dict = _patched_as_dict
+    dm.Dataset.__post_init__ = _patched_dataset_post_init
     try:
         obj = dm.HealthDataset(**data)
     finally:
-        dm.as_dict = real_as_dict
+        dm.Dataset.__post_init__ = real_dataset_post_init
 
     sv = SchemaView(str(SCHEMA_PATH))
     return rdflib_dumper.as_rdf_graph(obj, schemaview=sv)
@@ -205,33 +227,62 @@ def _assert_known_violations(actual: FrozenSet[Signature], known: FrozenSet[Sign
 
 # ---------------------------------------------------------------------------
 # Violations against OUR OWN generated SHACL (src/.../healthdcat_ap_non_public.yaml
-# + health_dcat_ap_plus.yaml). Found 2026-08-21, see
-# docs/architecture-verification.md.
+# + health_dcat_ap_plus.yaml). Found 2026-08-21, updated 2026-08-21 after
+# fixing the vocab-range and cv:contactPoint bugs (see KNOWN_REAL_SHAPES_VIOLATIONS
+# below and docs/architecture-verification.md section 6) -- both fixes are
+# real, verified wins (the real-shapes run dropped from 31 to 20 violations,
+# every NodeKind/hasValue/contactPoint finding from before resolved).
 # ---------------------------------------------------------------------------
 KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
     {
-        # Real, structural port bug: dcterms:relation/source/conformsTo are
-        # ported as plain strings, but the generated shape for each stacks
-        # sh:class + sh:nodeKind + sh:datatype constraints (all three fire
-        # here). Root cause: dcat-ap-plus reuses each of these predicate
-        # URIs across several of its own slots (e.g. dcterms:relation alone
-        # maps to has_qualitative_attribute / has_quantitative_attribute /
-        # related_resource / relation), and the port script's
-        # URI->slot-name resolution can only remember one candidate per
-        # URI -- it picked (or fell through to) the wrong one, and SHACL's
-        # shape-merging-by-predicate then surfaces the conflict between our
-        # port's typing and dcat-ap-plus's own. To fix: make
-        # property_name_for class-context-aware, or hand-pick the right
-        # existing slot per field.
+        # Structural, but investigated and settled, not a bug: HealthDataset
+        # shares dcat:Dataset's own class_uri with dcat-ap-plus's unmodified
+        # base Dataset class (the whole point of the "Health<X> profile"
+        # pattern -- same real-world type, tighter shape). Confirmed directly
+        # by querying our own generated SHACL: sh:targetClass dcat:Dataset
+        # now carries *two* sh:property shapes for dct:accessRights (and
+        # accrualPeriodicity/language/theme/type) -- dcat-ap-plus's own
+        # original RightsStatement-classed one, untouched, plus HealthDataset's
+        # new uriorcurie/nodeKind-IRI one -- and a bare IRI can't satisfy both
+        # at once. Checked how systemic this is (26 such conflicts across the
+        # whole schema, 17 from this fix, spanning 5 classes -- see
+        # docs/architecture-verification.md section 6) and why it happens:
+        # dcat-ap-plus's RightsStatement/Frequency/Concept ranges faithfully
+        # reflect plain DCAT-AP's own convention, while HealthDCAT-AP's real
+        # spec genuinely diverges from that convention for these same
+        # predicates -- a real difference between the two specs, not
+        # something either got wrong, and not something present in the
+        # KNOWN_REAL_SHAPES_VIOLATIONS test below (HealthDCAT-AP's own real
+        # shapes are self-sufficient and never actually get unioned with
+        # plain DCAT-AP's generic ones in practice). Decision: leave this be
+        # rather than inventing a "most-specific-class-wins" SHACL-resolution
+        # rule of our own -- that wouldn't be any more correct, since real
+        # SHACL has no override semantics either. This allowlist entry is the
+        # permanent, honest record of it.
+        ("Violation", "ClassConstraintComponent", "accessRights"),
+        ("Violation", "ClassConstraintComponent", "accrualPeriodicity"),
+        ("Violation", "ClassConstraintComponent", "language"),
+        ("Violation", "ClassConstraintComponent", "theme"),
+        ("Violation", "ClassConstraintComponent", "type"),
+        # Real, structural port bug, NOT fixed today (out of scope for the
+        # vocab-range/contactPoint fixes): dcterms:relation/source/conformsTo
+        # are still ported under the wrong dcat-ap-plus slot. Root cause:
+        # dcat-ap-plus reuses each of these predicate URIs across several of
+        # its own slots (e.g. dcterms:relation alone maps to
+        # has_qualitative_attribute / has_quantitative_attribute /
+        # related_resource / relation), and the port script's URI->slot-name
+        # resolution can only remember one candidate per URI -- it picked (or
+        # fell through to) the wrong one, and SHACL's shape-merging-by-predicate
+        # then surfaces the conflict between our port's typing and
+        # dcat-ap-plus's own. To fix: make property_name_for class-context-aware,
+        # or hand-pick the right existing slot per field.
         ("Violation", "ClassConstraintComponent", "relation"),
         ("Violation", "ClassConstraintComponent", "source"),
         ("Violation", "ClassConstraintComponent", "conformsTo"),
         ("Violation", "NodeKindConstraintComponent", "relation"),
         ("Violation", "NodeKindConstraintComponent", "source"),
-        ("Violation", "NodeKindConstraintComponent", "conformsTo"),
         ("Violation", "DatatypeConstraintComponent", "relation"),
         ("Violation", "DatatypeConstraintComponent", "source"),
-        ("Violation", "DatatypeConstraintComponent", "conformsTo"),
         # Real, not-yet-diagnosed: EvaluatedEntity (used as is_about_entity's
         # range) requires prov:value, which the fixture's population entity
         # doesn't supply. Need to determine whether prov:value truly belongs
@@ -241,7 +292,7 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # above, confirmed by checking dcat-ap-plus's own schema: hasLegalBasis
         # -> dpv:hasLegalBasis, hasPersonalData -> dpv:hasPersonalData,
         # hasPurpose -> dpv:hasPurpose, hasQualityAnnotation ->
-        # dqv:hasQualityAnnotation, and "type" all carry sh:class
+        # dqv:hasQualityAnnotation, and "subject" all carry sh:class
         # constraints our port's own value (a bare term IRI, per
         # HealthDCAT-AP's real qualifiedAttribution-style usage) doesn't
         # satisfy without the real DPV/DQV ontologies loaded for
@@ -253,10 +304,10 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Violation", "ClassConstraintComponent", "hasPurpose"),
         ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
         ("Violation", "ClassConstraintComponent", "subject"),
-        ("Violation", "ClassConstraintComponent", "type"),
         # Already-known, separate, pre-existing LinkML code-gen bug (same
-        # class as the frequency multivalued-narrowing crash worked around
-        # in _build_test_dataset_graph): HealthDataset.temporal_resolution
+        # class as the frequency/access_rights/theme/type/language
+        # __post_init__ re-processing crash worked around in
+        # _build_test_dataset_graph): HealthDataset.temporal_resolution
         # ends up serialized as a Python list's repr baked into one
         # xsd:duration literal ("['P1D']") instead of one duration value --
         # not yet root-caused, tracked separately, not fixed here.
@@ -277,7 +328,6 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Violation", "DatatypeConstraintComponent", "name"),
         ("Violation", "DatatypeConstraintComponent", "hasCodeValues"),
         ("Violation", "DatatypeConstraintComponent", "populationCoverage"),
-        ("Violation", "DatatypeConstraintComponent", "prefLabel"),
         ("Violation", "DatatypeConstraintComponent", "hasEmail"),
         ("Violation", "DatatypeConstraintComponent", "startDate"),
         ("Violation", "DatatypeConstraintComponent", "endDate"),
@@ -292,24 +342,19 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
 
 # ---------------------------------------------------------------------------
 # Violations against HealthDCAT-AP's own real, official upstream SHACL.
-# Found 2026-08-21, see docs/architecture-verification.md.
+# Found 2026-08-21, updated 2026-08-21 after fixing the vocab-range and
+# cv:contactPoint bugs: down from 31 to 20 violations -- every NodeKind
+# (bare-IRI), sh:hasValue (NON_PUBLIC/HEAL), and contactPoint finding from
+# before is gone. See docs/architecture-verification.md section 6.
 # ---------------------------------------------------------------------------
 KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
     {
-        # Real, structural port bug (systemic): every values_from-bound slot
-        # we ported (theme, health_category, health_theme, access_rights,
-        # frequency, has_coding_system, language, type, conforms_to) keeps
-        # its class-object range (Concept/RightsStatement/Frequency/
-        # Standard/...) inherited from dcat-ap-plus or added by our own
-        # port. The real shapes require bare IRI values for all of them.
-        ("Violation", "NodeKindConstraintComponent", "healthCategory"),
-        ("Violation", "NodeKindConstraintComponent", "hasCodingSystem"),
-        ("Violation", "NodeKindConstraintComponent", "healthTheme"),
-        ("Violation", "NodeKindConstraintComponent", "language"),
-        ("Violation", "NodeKindConstraintComponent", "accrualPeriodicity"),
-        ("Violation", "NodeKindConstraintComponent", "accessRights"),
-        ("Violation", "NodeKindConstraintComponent", "conformsTo"),
-        ("Violation", "NodeKindConstraintComponent", "theme"),
+        # mdr-vocabularies.shape.ttl's own "must conform to X_Restriction"
+        # node-shape check (skos:inScheme membership) still fires -- expected,
+        # test-fixture artifact, not a schema bug: these are illustrative
+        # term IRIs, not real EU/HealthDCAT-AP authority-table entries with
+        # a genuine skos:inScheme triple. Same root cause as the
+        # ClassConstraintComponent findings just below.
         ("Violation", "NodeConstraintComponent", "healthCategory"),
         ("Violation", "NodeConstraintComponent", "healthTheme"),
         ("Violation", "NodeConstraintComponent", "theme"),
@@ -319,30 +364,22 @@ KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Violation", "NodeConstraintComponent", "language"),
         ("Violation", "NodeConstraintComponent", "conformsTo"),
         ("Warning", "NodeConstraintComponent", "type"),
-        ("Warning", "NodeKindConstraintComponent", "type"),
-        # dct:accessRights specifically: the real shape wants
-        # sh:hasValue <.../access-right/NON_PUBLIC> exactly -- a fixed
-        # single term, not a free RightsStatement object at all (a special
-        # case beyond just "should be an IRI").
-        ("Violation", "HasValueConstraintComponent", "accessRights"),
-        # dcat:theme specifically: the real shape requires including the
-        # fixed <.../data-theme/HEAL> term (mdr-vocabularies.shape.ttl,
-        # sh:Violation severity -- required, not just recommended).
-        ("Violation", "HasValueConstraintComponent", "theme"),
-        # Real, structural port bug: HealthAgent / HealthPublisherAgent
-        # (hdab, custodian, publisher) reuse dcat-ap-plus's own
-        # contact_point slot, hardwired to dcat:contactPoint. The real
-        # HealthAgent_Shape requires cv:contactPoint (the m8g Core
-        # Vocabulary predicate) instead -- a different predicate for
-        # Agent-typed contact points than for Dataset/Distribution's own.
-        ("Violation", "NodeConstraintComponent", "hdab"),
-        ("Violation", "NodeConstraintComponent", "custodian"),
-        ("Violation", "ClassConstraintComponent", "hdab"),
-        ("Violation", "MinCountConstraintComponent", "contactPoint"),
-        # Already-known from the self-shapes pass, now independently
-        # reconfirmed: the plain Dataset-level contact_point's
-        # vcard:hasEmail must be an IRI (mailto:...), not a string literal.
-        ("Violation", "NodeKindConstraintComponent", "hasEmail"),
+        ("Violation", "MinCountConstraintComponent", "inScheme"),
+        ("Violation", "HasValueConstraintComponent", "inScheme"),
+        # NEW, but the same test-fixture-artifact family, not a new bug:
+        # range.ttl carries its own, independent sh:class requirement for
+        # these three HealthDCAT-AP-specific predicates (dcterms:Standard /
+        # skos:Concept), separate from mdr-vocabularies.shape.ttl's
+        # skos:inScheme check above. Previously satisfied by accident --
+        # the old fixture used nested Concept/Standard objects that
+        # self-asserted their own rdf:type; now that the range is
+        # (correctly) a bare IRI, nothing in this fixture asserts a type on
+        # it at all. Needs the real vocabulary graph loaded, or explicit
+        # rdf:type triples on the term IRIs, neither of which this fixture
+        # attempts.
+        ("Violation", "ClassConstraintComponent", "hasCodingSystem"),
+        ("Violation", "ClassConstraintComponent", "healthCategory"),
+        ("Violation", "ClassConstraintComponent", "healthTheme"),
         # Test-fixture artifacts, not schema bugs: dpv:hasLegalBasis /
         # hasPersonalData / hasPurpose / dqv:hasQualityAnnotation need the
         # real DPV/DQV ontologies loaded (or explicit rdf:type triples on
@@ -352,15 +389,17 @@ KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Violation", "ClassConstraintComponent", "hasPersonalData"),
         ("Violation", "ClassConstraintComponent", "hasPurpose"),
         ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
-        # Test-fixture artifacts: the fixture's skos:Concept blank nodes
-        # (theme/healthCategory/healthTheme/language/accessRights/
-        # accrualPeriodicity/hasCodingSystem) don't carry real EU
-        # authority-table skos:inScheme values -- expected to mostly
-        # resolve once the vocab-range bug above is fixed and real
-        # vocabulary term IRIs are used instead of fabricated Concept
-        # objects.
-        ("Violation", "MinCountConstraintComponent", "inScheme"),
-        ("Violation", "HasValueConstraintComponent", "inScheme"),
+        # Not yet fixed -- HealthAgent_Shape/HealthPublisherAgent_Shape also
+        # require the agent value's own rdf:type to include foaf:Agent, not
+        # just health_dcat_ap_plus:HealthAgent; our port doesn't currently
+        # emit the ancestor type. Separate from the cv:contactPoint fix
+        # (that part is confirmed resolved -- MinCountConstraintComponent/
+        # NodeConstraintComponent "custodian" both gone from this list).
+        ("Violation", "ClassConstraintComponent", "hdab"),
+        # Already-known from the self-shapes pass, now independently
+        # reconfirmed: the plain Dataset-level contact_point's
+        # vcard:hasEmail must be an IRI (mailto:...), not a string literal.
+        ("Violation", "NodeKindConstraintComponent", "hasEmail"),
     }
 )
 

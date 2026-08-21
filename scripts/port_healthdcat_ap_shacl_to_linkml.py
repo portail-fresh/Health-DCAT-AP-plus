@@ -81,6 +81,27 @@ CLASS_RENAME = {
     "http://www.w3.org/ns/dcat#CatalogRecord": "CatalogueRecord",
 }
 
+# Same kind of accidental collision CLASS_RENAME exists for, but on the
+# property side, found by real SHACL validation (tests/test_shacl_validation.py)
+# rather than by inspection: HealthAgent_Shape/HealthPublisherAgent_Shape's
+# own sh:path cv:contactPoint (http://data.europa.eu/m8g/contactPoint --
+# the Core Vocabulary's own predicate for an organization's contact point)
+# has no match in uri_to_slot, so property_name_for falls back to
+# to_snake_case(local_name(...)) = "contact_point" -- which happens to be
+# the exact same LinkML name dcat-ap-plus already uses for its own, totally
+# different, Dataset/Distribution-scoped dcat:contactPoint slot. build_linkml's
+# base_slot() then finds that unrelated same-named slot via its classless
+# fallback (HealthAgent isn't a real dcat-ap-plus class, so the class-specific
+# lookup fails first) and wrongly treats it as the same slot, silently
+# dropping the real cv:contactPoint predicate. Confirmed via pyshacl against
+# HealthDCAT-AP's real HealthAgent_Shape, which requires cv:contactPoint,
+# not dcat:contactPoint -- not a hypothetical. Renamed here, same fix as
+# attribution_had_role's own collision with dcat-ap-plus's pre-existing
+# had_role.
+PROPERTY_RENAME = {
+    "http://data.europa.eu/m8g/contactPoint": "agent_contact_point",
+}
+
 XSD_TYPE_NAME = {
     XSD.string: "string",
     XSD.date: "date",
@@ -208,6 +229,8 @@ def class_name_for(uri: URIRef, uri_to_class: dict[str, str]) -> str:
 
 def property_name_for(uri: URIRef, uri_to_slot: dict[str, str]) -> str:
     uri_str = str(uri)
+    if uri_str in PROPERTY_RENAME:
+        return PROPERTY_RENAME[uri_str]
     if uri_str in uri_to_slot:
         return uri_to_slot[uri_str]
     return to_snake_case(local_name(uri_str))
@@ -313,7 +336,7 @@ def parse_shapes(graph, uri_to_slot, uri_to_class):
 
 def parse_vocabulary_restrictions(vocab_graph):
     """Parse mdr-vocabularies.shape.ttl's controlled-vocabulary-membership
-    shapes into {(target_class_uri, predicate_uri): (vocab_uris, recommended_only)}.
+    shapes into {(target_class_uri, predicate_uri): (vocab_uris, recommended_only, requires_iri)}.
 
     Two shape patterns, both confirmed by reading the file rather than
     guessed: (1) simple "X_Restriction" shapes are just
@@ -327,6 +350,18 @@ def parse_vocabulary_restrictions(vocab_graph):
     different kind of constraint -- a fixed required value, not "must be
     from vocabulary V" -- and isn't representable via values_from, so it's
     reported as skipped rather than silently dropped or misrepresented.
+
+    requires_iri: whether the SAME property shape also carries
+    `sh:nodeKind sh:IRI`. Checked directly against every one of these
+    ShapeCV property entries (not assumed uniform): 25 of 27 do -- the
+    value at that path must itself be a bare IRI, not a nested class
+    object, confirmed by real pyshacl violations (NodeKindConstraintComponent)
+    when this repo's port left the base class-object range in place. The 2
+    exceptions -- dct:publisher (no sh:nodeKind at all) and
+    prov:wasGeneratedBy (sh:nodeKind sh:BlankNodeOrIRI, not sh:IRI) -- are
+    real: their values are meant to stay nested/inlined objects (Agent,
+    DataGeneratingActivity), so requires_iri is False for them and the
+    caller must not force a bare-IRI range there.
     """
     restriction_vocabs: dict = {}
     for shape in vocab_graph.subjects(RDF.type, SH.NodeShape):
@@ -347,7 +382,7 @@ def parse_vocabulary_restrictions(vocab_graph):
             return out
         return []
 
-    bindings: dict[tuple[str, str], tuple[list[str], bool]] = {}
+    bindings: dict[tuple[str, str], tuple[list[str], bool, bool]] = {}
     skipped: list[str] = []
     for shape in vocab_graph.subjects(RDF.type, SH.NodeShape):
         target = vocab_graph.value(shape, SH.targetClass)
@@ -367,12 +402,14 @@ def parse_vocabulary_restrictions(vocab_graph):
                 continue
             severity = vocab_graph.value(prop, SH.severity)
             recommended_only = severity is not None and str(severity).endswith("Warning")
+            requires_iri = vocab_graph.value(prop, SH.nodeKind) == SH.IRI
             key = (str(target), str(path))
             if key in bindings:
-                prev_vocabs, prev_recommended = bindings[key]
+                prev_vocabs, prev_recommended, prev_requires_iri = bindings[key]
                 vocabs = sorted(set(prev_vocabs) | set(vocabs))
                 recommended_only = prev_recommended and recommended_only
-            bindings[key] = (vocabs, recommended_only)
+                requires_iri = prev_requires_iri and requires_iri
+            bindings[key] = (vocabs, recommended_only, requires_iri)
     return bindings, skipped
 
 
@@ -561,7 +598,7 @@ def main() -> None:
     # Apply controlled-vocabulary-membership bindings (mdr-vocabularies.shape.ttl)
     # onto the classes/slots build_linkml just produced.
     vocab_bindings, vocab_skipped = parse_vocabulary_restrictions(vocab_graph)
-    for (target_class_uri, predicate_uri), (vocab_uris, recommended_only) in vocab_bindings.items():
+    for (target_class_uri, predicate_uri), (vocab_uris, recommended_only, requires_iri) in vocab_bindings.items():
         class_name = class_name_for(URIRef(target_class_uri), uri_to_class)
         final_class_name = rename.get(class_name, class_name)
         if final_class_name not in classes:
@@ -599,6 +636,21 @@ def main() -> None:
 
         usage = cls.setdefault("slot_usage", {}).setdefault(slot_name, {})
         usage["values_from"] = vocab_uris
+        if requires_iri:
+            # The same property shape that carries this vocabulary binding
+            # also requires sh:nodeKind sh:IRI (confirmed per-binding, not
+            # assumed uniform -- see parse_vocabulary_restrictions):
+            # HealthDCAT-AP wants a bare codelist-term IRI here, not a
+            # nested class object inherited from dcat-ap-plus's own,
+            # unconstrained base range. Real, structural port bug found by
+            # actual pyshacl validation against HealthDCAT-AP's real
+            # shapes (tests/test_shacl_validation.py) -- every one of
+            # theme/health_category/health_theme/access_rights/frequency/
+            # has_coding_system/language/type/conforms_to was left ranged
+            # over Concept/RightsStatement/Frequency/Standard/... instead
+            # of a plain reference, and values_from was recording *which*
+            # vocabulary without ever correcting the range to match.
+            usage["range"] = "uriorcurie"
         if recommended_only:
             usage.setdefault("comments", []).append(
                 "Recommended alignment (HealthDCAT-AP's own SHACL marks this sh:Warning, not sh:Violation) -- not strictly enforced."

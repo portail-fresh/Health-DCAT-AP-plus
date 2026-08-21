@@ -608,43 +608,137 @@ locally at `repos/healthdcat-ap`, per README.md) — two independent
 questions ("is our merge self-consistent?" and "does the dataset portion
 still conform to the spec it was ported from?").
 
-Both runs currently produce real violations. Rather than requiring
-conformance outright, the tests compare the exact set of violation
-*signatures* (severity, SHACL constraint component, result path) against an
-explicit, commented allowlist in the test file — a genuinely new violation
-fails the test (a real regression), and so does fixing a known one (a
-prompt to prune the allowlist), so the allowlist stays an accurate,
-living record of what's actually still broken. Two real, structural port
-bugs came out of this, not visible to any check above:
+Both runs produce real violations. Rather than requiring conformance
+outright, the tests compare the exact set of violation *signatures*
+(severity, SHACL constraint component, result path) against an explicit,
+commented allowlist in the test file — a genuinely new violation fails the
+test (a real regression), and so does fixing a known one (a prompt to
+prune the allowlist), so the allowlist stays an accurate, living record of
+what's actually still broken. Two real, structural port bugs came out of
+the first run, not visible to any check above — **both now fixed and
+verified** (the real-shapes violation count dropped from 31 to 20; every
+`NodeKind`, `sh:hasValue`, and `contactPoint` finding below is confirmed
+gone from the allowlist):
 
-- **Vocabulary-bound slots keep class-object ranges.** Every
+- **Vocabulary-bound slots kept class-object ranges.** Every
   `values_from`-bound slot this repo ported (`theme`, `health_category`,
   `health_theme`, `access_rights`, `frequency`, `has_coding_system`,
-  `language`, `type`, `conforms_to`) still ranges over a nested class
-  (`Concept`, `RightsStatement`, `Frequency`, `Standard`, ...) inherited
-  from `dcat-ap-plus` or added by the port, instead of the bare IRI the real
+  `language`, `type`, `conforms_to`) ranged over a nested class (`Concept`,
+  `RightsStatement`, `Frequency`, `Standard`, ...) inherited from
+  `dcat-ap-plus` or added by the port, instead of the bare IRI the real
   shapes require (`sh:nodeKind sh:IRI`, confirmed directly in
-  `non-public-shapes.ttl`/`mdr-vocabularies.shape.ttl`). Same lesson as
+  `non-public-shapes.ttl`/`mdr-vocabularies.shape.ttl` — 25 of 27
+  vocabulary-bound property shapes there carry it; the 2 real exceptions,
+  `dct:publisher` and `prov:wasGeneratedBy`, correctly stay nested/inlined
+  objects and were confirmed *not* touched by the fix). Same lesson as
   `attribution_had_role` in §4, except it turns out that fix should have
   generalized to every vocabulary-bound field, not just that one —
   `values_from` correctly recorded *which* vocabulary to point to, but
-  never corrected the range to match. Two sharper instances of the same
-  family: `dct:accessRights` requires `sh:hasValue
-  <.../access-right/NON_PUBLIC>` exactly (a fixed term, not a free
-  `RightsStatement` object at all), and `dcat:theme` must include the fixed
-  `.../data-theme/HEAL` term specifically (`mdr-vocabularies.shape.ttl`,
-  `sh:Violation` severity — required, not recommended).
-- **`HealthAgent`/`HealthPublisherAgent` reuse the wrong contact-point
-  predicate.** `hdab`/`custodian`/`publisher` reuse `dcat-ap-plus`'s own
+  never corrected the range to match. **Fixed** in
+  `parse_vocabulary_restrictions`/`main()` (the port script): every
+  vocabulary binding whose source property shape also carries
+  `sh:nodeKind sh:IRI` now forces `range: uriorcurie` in the generated
+  `slot_usage`. Two sharper instances of the same family, also now
+  resolvable since the range supports a plain IRI: `dct:accessRights`
+  requires `sh:hasValue <.../access-right/NON_PUBLIC>` exactly (the test
+  fixture now supplies it directly), and `dcat:theme` must include the
+  fixed `.../data-theme/HEAL` term specifically (ditto).
+- **`HealthAgent`/`HealthPublisherAgent` reused the wrong contact-point
+  predicate.** `hdab`/`custodian`/`publisher` reused `dcat-ap-plus`'s own
   `contact_point` slot, hardwired to `dcat:contactPoint` (confirmed via
-  `SchemaView.induced_slot`). The real `HealthAgent_Shape` requires
-  `cv:contactPoint` (`http://data.europa.eu/m8g/` Core Vocabulary
-  predicate) instead — a different predicate for Agent-typed contact points
-  than for Dataset/Distribution's own. Same class of issue as the
+  `SchemaView.induced_slot`) — root cause: `cv:contactPoint`'s local name
+  snake-cases to the exact same `contact_point`, and `build_linkml`'s
+  classless slot-lookup fallback (needed because `HealthAgent` isn't a real
+  `dcat-ap-plus` class) matched that name to the wrong, unrelated slot. The
+  real `HealthAgent_Shape` requires `cv:contactPoint`
+  (`http://data.europa.eu/m8g/` Core Vocabulary predicate) instead — a
+  different predicate for Agent-typed contact points than for
+  Dataset/Distribution's own. Same class of issue as the
   `attribution_had_role` rename in §4: a `dcat-ap-plus` slot reused where
-  it doesn't actually apply. Neither bug is fixed yet — tracked in
-  `KNOWN_OWN_SHAPES_VIOLATIONS`/`KNOWN_REAL_SHAPES_VIOLATIONS` in the test
-  file pending a fix.
+  it doesn't actually apply. **Fixed** via a `PROPERTY_RENAME` map (same
+  pattern as `CLASS_RENAME`) — `cv:contactPoint` now resolves to its own
+  `agent_contact_point` slot, correctly `slot_uri: cv:contactPoint`.
+
+Regenerating after both fixes surfaced one new, deeper finding — visible
+only against our own generated shapes, not the real ones: `HealthDataset`
+shares `dcat:Dataset`'s own `class_uri` with `dcat-ap-plus`'s unmodified
+base `Dataset` class (the whole point of the "`Health<X>` profile"
+pattern — same real-world type, tighter shape). Confirmed directly by
+querying our generated SHACL: `sh:targetClass dcat:Dataset` now carries
+*two* `sh:property` shapes for `dct:accessRights` (and
+`accrualPeriodicity`/`language`/`theme`/`type`) — `dcat-ap-plus`'s own
+original `RightsStatement`-classed one, untouched, plus `HealthDataset`'s
+new `uriorcurie`/`nodeKind`-IRI one — and a bare IRI can't satisfy both at
+once. Every earlier profile narrowing (e.g. `contact_point` →
+`HealthKind`) was a subclass tightening, compatible with the base shape;
+this is the first one where the override is a genuinely different,
+mutually exclusive value shape (object vs. scalar) on the *same*
+`class_uri`, which "layer a stricter shape on top" can't reconcile by
+itself.
+
+**Investigated further, not treated as a one-off.** Querying every
+`(sh:targetClass, sh:path)` pair in our generated SHACL for more than one
+disagreeing value-shape combination turns up 26 such conflicts — 17 of
+them freshly caused by the vocab-range fix, spanning five classes, not
+just `HealthDataset`: `Catalog/language`, `Catalog/publisher`,
+`Catalog/spatial`, `DataService/accessRights`, `DataService/format`,
+`Dataset/accessRights`, `Dataset/accrualPeriodicity`, `Dataset/conformsTo`,
+`Dataset/language`, `Dataset/spatial`, `Dataset/type`, `Dataset/theme`,
+`Distribution/availability`, `Distribution/format`,
+`Distribution/language`, `Distribution/status`. So this isn't a one-off:
+it will recur every time a future `Health<X>` tightening swaps a value's
+shape (object → scalar) rather than just narrowing it — and that's exactly
+the pattern HealthDCAT-AP's real spec uses for essentially every
+controlled-vocabulary field.
+
+The important question was *why* — is `dcat-ap-plus` wrong to model these
+as nested objects, or is this real, and if real, does it mean our own
+generated SHACL should be made clean? Checked directly, not assumed:
+`dcat-ap-plus`'s own schema gives `Dataset.access_rights` `range:
+RightsStatement` and `Dataset.frequency` `range: Frequency` with no
+rationale comment either way — this is `dcat-ap-plus` faithfully
+reflecting *plain DCAT-AP's own* standard convention (DCAT-AP itself
+genuinely models `dct:accessRights`/`dct:accrualPeriodicity` as objects).
+HealthDCAT-AP's real spec then requires bare IRIs for the same predicates
+— a real divergence between the two specs, not a mistake either one made.
+And critically: HealthDCAT-AP's own real, official validation set
+(`non-public-shapes.ttl` etc., exactly what §6's real-shapes test
+validates against) is never combined with plain DCAT-AP's own generic
+`shapes.ttl` in practice — the real-shapes test is already clean, and
+stays clean regardless of this finding. The conflict exists *only* in our
+own self-generated SHACL, the one place that naively unions
+`dcat-ap-plus`'s base `Dataset` shape with `HealthDataset`'s override —
+something the real validation ecosystem never actually does either.
+
+Given that, the options considered:
+
+1. **Give `Health<X>` its own `class_uri`.** Rejected — HealthDCAT-AP's
+   real `Dataset_Shape` targets plain `dcat:Dataset`, not a health-specific
+   subtype (confirmed directly in `non-public-shapes.ttl`). A different
+   `class_uri` would make our own output non-conformant to the actual
+   spec — strictly worse than the cosmetic self-SHACL noise it would fix.
+2. **Drop `is_a: Dataset`, keep the same `class_uri`.** Doesn't help —
+   `Dataset` stays present in the compiled schema regardless (imported,
+   referenced elsewhere), so `linkml generate shacl` still emits its shape
+   independently. Checked directly, changes nothing.
+3. **Custom SHACL generation that resolves one shape per real `class_uri`**
+   (most-specific class wins). Buildable, but not more *correct* — real
+   SHACL has no override semantics, so a resolved single-shape output
+   wouldn't reflect what an actual SHACL processor does if it received
+   both shape sources together. It would just be us inventing our own
+   resolution rule to make a self-test quieter.
+4. **Stop expecting our self-generated SHACL to be globally clean; let it
+   be a self-consistency smell test, and treat the real-shapes test as the
+   authoritative signal.** Matches what the real ecosystem already does
+   (HealthDCAT-AP's own shapes are self-sufficient, never stacked with
+   plain DCAT-AP's), costs nothing to implement, and is already backed by
+   a passing test.
+
+**Chosen: option 4.** This isn't a bug to fix — it's a correctly-surfaced
+structural fact about how HealthDCAT-AP relates to DCAT-AP, and the
+authoritative check (the real-shapes test) already reflects it correctly.
+`KNOWN_OWN_SHAPES_VIOLATIONS` stays the honest, permanent record of it
+rather than papering over it with an invented resolution rule.
 
 One genuine bug in HealthDCAT-AP's own upstream shapes, not ours: in
 `non-public-shapes.ttl`, `Dataset_Shape`'s conditional constraint ("if
@@ -675,8 +769,9 @@ vocab-range bug above is fixed and the fixture switches from fabricated
 `skos:Concept` blank nodes to real term IRIs).
 
 **Result: two real, structural port bugs found that no prior check in this
-document could see, one confirmed upstream bug (not ours), formalized as a
-permanent regression test** (`just test` runs it; the upstream-shapes half
-skips gracefully if `repos/healthdcat-ap` isn't cloned locally) so future
-port-script or schema changes get checked against real SHACL automatically
-instead of ad hoc.
+document could see — both fixed and verified — plus one confirmed upstream
+bug (not ours) and one new, still-open architectural question, all
+formalized as a permanent regression test** (`just test` runs it; the
+upstream-shapes half skips gracefully if `repos/healthdcat-ap` isn't cloned
+locally) so future port-script or schema changes get checked against real
+SHACL automatically instead of ad hoc.

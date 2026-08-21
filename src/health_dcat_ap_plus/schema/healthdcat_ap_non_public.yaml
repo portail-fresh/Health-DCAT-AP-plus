@@ -4,7 +4,7 @@
 # regenerate after editing it or after HealthDCAT-AP publishes a new release.
 # Source: repos\healthdcat-ap\public\releases\release-7\html\shacl
 # healthdcat-ap commit: e90053e73b3c5252706efa16afd4da424875e1b1
-# Generated: 2026-08-20
+# Generated: 2026-08-21
 id: https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public
 name: healthdcat_ap_non_public
 title: HealthDCAT-AP (non-public tier), ported from SHACL
@@ -49,9 +49,11 @@ classes:
       language:
         values_from:
         - http://publications.europa.eu/resource/authority/language
+        range: uriorcurie
       publisher:
         values_from:
         - http://publications.europa.eu/resource/authority/corporate-body
+        range: uriorcurie
         comments:
         - Recommended alignment (HealthDCAT-AP's own SHACL marks this sh:Warning, not sh:Violation) --
           not strictly enforced.
@@ -61,6 +63,7 @@ classes:
         - http://publications.europa.eu/resource/authority/place
         - http://publications.europa.eu/resource/authority/continent
         - http://sws.geonames.org
+        range: uriorcurie
         comments:
         - Recommended alignment (HealthDCAT-AP's own SHACL marks this sh:Warning, not sh:Violation) --
           not strictly enforced.
@@ -119,6 +122,7 @@ classes:
         required: true
         values_from:
         - http://publications.europa.eu/resource/authority/access-right
+        range: uriorcurie
       applicable_legislation:
         required: true
       dataset_distribution:
@@ -135,6 +139,7 @@ classes:
         required: true
         values_from:
         - http://publications.europa.eu/resource/authority/data-theme
+        range: uriorcurie
       contact_point:
         range: HealthKind
         required: true
@@ -144,6 +149,7 @@ classes:
         required: true
         values_from:
         - http://publications.europa.eu/resource/authority/dataset-type
+        range: uriorcurie
         comments:
         - Recommended alignment (HealthDCAT-AP's own SHACL marks this sh:Warning, not sh:Violation) --
           not strictly enforced.
@@ -154,6 +160,7 @@ classes:
         multivalued: true
         values_from:
         - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard
+        range: uriorcurie
       documentation:
         required: true
       frequency:
@@ -161,12 +168,14 @@ classes:
         multivalued: true
         values_from:
         - http://publications.europa.eu/resource/authority/frequency
+        range: uriorcurie
       is_referenced_by:
         required: true
       language:
         required: true
         values_from:
         - http://publications.europa.eu/resource/authority/language
+        range: uriorcurie
       source_metadata:
         required: true
         multivalued: true
@@ -186,18 +195,22 @@ classes:
         - http://publications.europa.eu/resource/authority/place
         - http://publications.europa.eu/resource/authority/continent
         - http://sws.geonames.org
+        range: uriorcurie
         comments:
         - Recommended alignment (HealthDCAT-AP's own SHACL marks this sh:Warning, not sh:Violation) --
           not strictly enforced.
       health_category:
         values_from:
         - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories
+        range: uriorcurie
       has_coding_system:
         values_from:
         - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system
+        range: uriorcurie
       health_theme:
         values_from:
         - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme
+        range: uriorcurie
       qualified_attribution:
         range: DatasetAttribution
         multivalued: true
@@ -217,32 +230,28 @@ classes:
       format:
         values_from:
         - http://publications.europa.eu/resource/authority/file-type
+        range: uriorcurie
       language:
         values_from:
         - http://publications.europa.eu/resource/authority/language
+        range: uriorcurie
       status:
         values_from:
         - http://publications.europa.eu/resource/authority/distribution-status
+        range: uriorcurie
       availability:
         values_from:
         - http://publications.europa.eu/resource/authority/planned-availability
+        range: uriorcurie
   HealthAgent:
     is_a: Agent
     slots:
-    - contact_point
-    slot_usage:
-      contact_point:
-        range: ContactPoint
-        required: true
+    - agent_contact_point
   HealthPublisherAgent:
     is_a: Agent
     slots:
-    - contact_point
+    - agent_contact_point
     - description
-    slot_usage:
-      contact_point:
-        range: ContactPoint
-        required: true
   HealthKind:
     is_a: Kind
     class_uri: vcard:Kind
@@ -276,7 +285,7 @@ classes:
         required: true
         multivalued: true
       frequency:
-        range: Frequency
+        range: uriorcurie
         multivalued: true
         values_from:
         - http://publications.europa.eu/resource/authority/frequency
@@ -287,6 +296,7 @@ classes:
       type:
         values_from:
         - http://purl.org/adms/licencetype/1.0
+        range: uriorcurie
   HealthDataService:
     is_a: DataService
     class_uri: dcat:DataService
@@ -294,9 +304,11 @@ classes:
       access_rights:
         values_from:
         - http://publications.europa.eu/resource/authority/access-right
+        range: uriorcurie
       format:
         values_from:
         - http://publications.europa.eu/resource/authority/file-type
+        range: uriorcurie
   LegalBasis:
     description: 'External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined
       by a sh:NodeShape anywhere in HealthDCAT-AP''s own release -- confirmed, not assumed: it doesn''t
@@ -468,6 +480,10 @@ slots:
   retention_period:
     slot_uri: healthdcatap:retentionPeriod
     range: PeriodOfTime
+    required: true
+  agent_contact_point:
+    slot_uri: cv:contactPoint
+    range: ContactPoint
     required: true
   has_url:
     slot_uri: vcard:hasURL
