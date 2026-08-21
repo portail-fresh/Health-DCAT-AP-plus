@@ -245,10 +245,12 @@ classes:
         range: uriorcurie
   HealthAgent:
     is_a: Agent
+    class_uri: foaf:Agent
     slots:
     - agent_contact_point
   HealthPublisherAgent:
     is_a: Agent
+    class_uri: foaf:Agent
     slots:
     - agent_contact_point
     - description

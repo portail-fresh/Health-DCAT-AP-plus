@@ -740,6 +740,73 @@ authoritative check (the real-shapes test) already reflects it correctly.
 `KNOWN_OWN_SHAPES_VIOLATIONS` stays the honest, permanent record of it
 rather than papering over it with an invented resolution rule.
 
+**A third real, structural port bug, found the same way**:
+`HealthAgent`/`HealthPublisherAgent` (case 2 in the port script's own
+docstring — a synthetic class with no `sh:targetClass` match) never got a
+`class_uri` at all. Root cause: `:HealthAgent_Shape` in the real shapes has
+no `sh:targetClass` of its own — only `sh:extends :Agent_Shape` — so it's a
+pure value-shape, reused via `sh:node` from `hdab`/`custodian`/`publisher`,
+not an independently-targeted RDF type. The port correctly resolved
+`is_a: Agent` from the `sh:extends`, but `class_uri` was only ever set from
+`sh:targetClass`, which is absent here — so `HealthAgent` silently fell
+back to LinkML's own auto-generated `class_uri`
+(`health_dcat_ap_plus:HealthAgent`) instead of inheriting `foaf:Agent` from
+its parent, the same "profile, same `class_uri` as base" pattern used
+everywhere else in this port. Real instances of `hdab`/`custodian` never
+actually typed as `foaf:Agent` at all — confirmed via real SHACL validation
+(`HealthAgent_Shape` requires it; the dumped RDF never provided it, and
+`ClassConstraintComponent "hdab"` was in `KNOWN_REAL_SHAPES_VIOLATIONS`).
+**Fixed**: `build_linkml` now falls back to the resolved parent's own
+`class_uri` when a class has an `is_a` (via `sh:extends`) but no
+`sh:targetClass` of its own. Verified: the `hdab` finding is gone from the
+real-shapes test.
+
+Fixing it introduced one expected instance of the *same* class_uri-sharing
+fact from above, this time in our own shapes: `HealthAgent`/
+`HealthPublisherAgent` now correctly share `class_uri: foaf:Agent` with
+`dcat-ap-plus`'s own base `Agent` — which is what makes a real `hdab`/
+`custodian` value actually type as `foaf:Agent`, as it should — but that
+also means `Agent`'s merged `foaf:Agent` shape now carries
+`HealthAgent`'s required `agent_contact_point` constraint too, which bleeds
+onto *every* `foaf:Agent`-typed node in the graph, including
+`DatasetAttribution.attribution_agent`'s plain `Agent` value (§4), which
+has nothing to do with `HealthAgent` and shouldn't need a contact point.
+Tracked as `MinCountConstraintComponent "contactPoint"` in
+`KNOWN_OWN_SHAPES_VIOLATIONS` — the same accepted limitation as everything
+else in that section, not a new category of problem.
+
+**Two more findings from the same investigation, both fully diagnosed as
+non-bugs** (not schema or port issues, and not fixed, since there's nothing
+to fix):
+
+- The `MinCountConstraintComponent "value"` finding on `is_about_entity`
+  isn't about `EvaluatedEntity` at all — confirmed directly: neither
+  `EvaluatedEntity` nor `Entity` declares a `value` slot. `dcat-ap-plus`'s
+  own `QualitativeAttribute` class does (`required: true`), and shares the
+  exact same `class_uri: prov:Entity` with `Entity`/`EvaluatedEntity`/
+  `AnalysisSourceData` (four distinct `dcat-ap-plus` classes, confirmed by
+  grep) — the same class_uri-sharing mechanism as everything above, except
+  this instance is entirely internal to `dcat-ap-plus`'s own base schema,
+  with nothing to do with HealthDCAT-AP or this port at all.
+- The whole `DatatypeConstraintComponent` cluster in
+  `KNOWN_OWN_SHAPES_VIOLATIONS` (title/description/... and separately
+  startDate/maxTypicalAge/...) is diagnosed too, in two unrelated causes,
+  neither a schema bug: (a) `rdflib.Literal("x") != rdflib.Literal("x",
+  datatype=XSD.string)` in rdflib itself, confirmed directly — `.datatype`
+  is `None` vs. explicit — so `rdflib_dumper`'s plain-string output never
+  satisfies `sh:datatype xsd:string` even though RDF 1.1 says an untyped
+  literal *is* an `xsd:string`; and (b), for fields that already carry the
+  exactly-correct explicit datatype and still fail (`maxTypicalAge` etc.):
+  `linkml generate shacl` numbers `sh:order` per source class, restarting
+  at 1 for `HealthDataset`'s own additions, and once merged onto the same
+  `dcat:Dataset` shape subject (the class_uri-sharing fact again),
+  `sh:order` values collide across unrelated properties — confirmed
+  directly, `dcat:landingPage` and `healthdcatap:maxTypicalAge` both carry
+  `sh:order 15` on the merged shape — and `pyshacl` visibly mishandles the
+  collision. Reproduced in a self-contained, 948-triple extract of just
+  `dcat:Dataset`'s own shape closure, independent of the rest of the
+  schema, ruling out any other cause.
+
 One genuine bug in HealthDCAT-AP's own upstream shapes, not ours: in
 `non-public-shapes.ttl`, `Dataset_Shape`'s conditional constraint ("if
 `hasStructuredData` is true, must have `hasVariables`") is a bare `sh:or`
@@ -768,10 +835,13 @@ vocabulary term IRIs would resolve, expected to mostly disappear once the
 vocab-range bug above is fixed and the fixture switches from fabricated
 `skos:Concept` blank nodes to real term IRIs).
 
-**Result: two real, structural port bugs found that no prior check in this
-document could see — both fixed and verified — plus one confirmed upstream
-bug (not ours) and one new, still-open architectural question, all
-formalized as a permanent regression test** (`just test` runs it; the
-upstream-shapes half skips gracefully if `repos/healthdcat-ap` isn't cloned
-locally) so future port-script or schema changes get checked against real
-SHACL automatically instead of ad hoc.
+**Result: three real, structural port bugs found that no prior check in
+this document could see — all three fixed and verified (real-shapes
+violations: 31 → 20 → 19) — plus two findings fully diagnosed as non-bugs
+(one entirely internal to `dcat-ap-plus`'s own base schema, one a two-cause
+rdflib/pyshacl tooling nuance), one confirmed upstream bug (not ours), and
+one settled architectural question, all formalized as a permanent
+regression test** (`just test` runs it; the upstream-shapes half skips
+gracefully if `repos/healthdcat-ap` isn't cloned locally) so future
+port-script or schema changes get checked against real SHACL automatically
+instead of ad hoc.

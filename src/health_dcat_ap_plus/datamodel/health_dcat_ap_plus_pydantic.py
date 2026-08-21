@@ -7295,7 +7295,8 @@ class HealthDistribution(Distribution):
 
 
 class HealthAgent(Agent):
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'foaf:Agent',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
 
     agent_contact_point: ContactPoint = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthAgent', 'HealthPublisherAgent'],
          'slot_uri': 'cv:contactPoint'} })
@@ -7306,7 +7307,8 @@ class HealthAgent(Agent):
 
 
 class HealthPublisherAgent(Agent):
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'foaf:Agent',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
 
     agent_contact_point: ContactPoint = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthAgent', 'HealthPublisherAgent'],
          'slot_uri': 'cv:contactPoint'} })

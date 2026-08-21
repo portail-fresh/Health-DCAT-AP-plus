@@ -283,11 +283,32 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Violation", "NodeKindConstraintComponent", "source"),
         ("Violation", "DatatypeConstraintComponent", "relation"),
         ("Violation", "DatatypeConstraintComponent", "source"),
-        # Real, not-yet-diagnosed: EvaluatedEntity (used as is_about_entity's
-        # range) requires prov:value, which the fixture's population entity
-        # doesn't supply. Need to determine whether prov:value truly belongs
-        # on EvaluatedEntity or bled in from a sibling class.
+        # Diagnosed, not a schema bug, and not even a HealthDCAT-AP-port
+        # issue at all -- purely internal to dcat-ap-plus's own base schema.
+        # Confirmed directly: EvaluatedEntity and Entity themselves declare
+        # no "value" slot at all; dcat-ap-plus's own QualitativeAttribute
+        # class ("A piece of information that is attributed to an Entity,
+        # Activity or AgenticEntity") does, with required: true, and shares
+        # the exact same class_uri: prov:Entity as Entity/EvaluatedEntity/
+        # AnalysisSourceData (4 distinct dcat-ap-plus classes, all class_uri
+        # prov:Entity, confirmed by grep). Same class_uri-sharing mechanism
+        # as the accessRights/theme/etc. finding above -- QualitativeAttribute's
+        # own required field bleeds onto the merged prov:Entity shape and
+        # applies to every prov:Entity-typed node, including ones that have
+        # nothing to do with QualitativeAttribute.
         ("Violation", "MinCountConstraintComponent", "value"),
+        # Same class_uri-sharing mechanism again, this time a direct,
+        # expected side effect of the cv:contactPoint fix itself: HealthAgent/
+        # HealthPublisherAgent now correctly share class_uri: foaf:Agent with
+        # dcat-ap-plus's own base Agent class (as they should -- that's what
+        # makes a real hdab/custodian value actually typed foaf:Agent, which
+        # HealthAgent_Shape requires). But that means Agent's own merged
+        # foaf:Agent shape now also carries HealthAgent's required
+        # agent_contact_point (cv:contactPoint) constraint, which bleeds onto
+        # every foaf:Agent-typed node in the graph -- including
+        # DatasetAttribution.attribution_agent's plain Agent value, which has
+        # no contactPoint and shouldn't need one.
+        ("Violation", "MinCountConstraintComponent", "contactPoint"),
         # Same predicate-URI-collision family as relation/source/conformsTo
         # above, confirmed by checking dcat-ap-plus's own schema: hasLegalBasis
         # -> dpv:hasLegalBasis, hasPersonalData -> dpv:hasPersonalData,
@@ -312,14 +333,12 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # xsd:duration literal ("['P1D']") instead of one duration value --
         # not yet root-caused, tracked separately, not fixed here.
         ("Violation", "DatatypeConstraintComponent", "temporalResolution"),
-        # Not yet independently diagnosed as a real bug vs. pyshacl/rdflib
-        # strictness. Plain RDF literals are xsd:string by RDF 1.1
-        # semantics, so the string-valued ones below look like they might
-        # just be pyshacl being stricter than that -- but startDate/endDate/
-        # hasStructuredData/maxTypicalAge/minTypicalAge/numberOfRecords/
-        # numberOfUniqueIndividuals are already explicitly typed literals
-        # in the dump (xsd:date/xsd:boolean/xsd:nonNegativeInteger) and
-        # still fail, which is a genuine open question, not yet explained.
+        # Diagnosed, not a schema bug -- confirmed by direct, isolated
+        # reproduction (not assumed): rdflib.Literal("x") != rdflib.Literal(
+        # "x", datatype=XSD.string) in rdflib itself (.datatype is None vs.
+        # explicit), so rdflib_dumper's plain-string output never satisfies
+        # sh:datatype xsd:string even though RDF 1.1 says an untyped literal
+        # IS an xsd:string. Affects every plain-string-typed slot below.
         ("Violation", "DatatypeConstraintComponent", "title"),
         ("Violation", "DatatypeConstraintComponent", "description"),
         ("Violation", "DatatypeConstraintComponent", "identifier"),
@@ -329,6 +348,22 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Violation", "DatatypeConstraintComponent", "hasCodeValues"),
         ("Violation", "DatatypeConstraintComponent", "populationCoverage"),
         ("Violation", "DatatypeConstraintComponent", "hasEmail"),
+        # Diagnosed, not a schema bug -- a different cause from the string
+        # ones above (these already carry the exactly-correct explicit
+        # datatype in the dump -- xsd:date/xsd:boolean/xsd:nonNegativeInteger
+        # -- and still fail). Root cause confirmed by direct, isolated
+        # reproduction: linkml generate shacl numbers sh:order per source
+        # class, restarting at 1 for HealthDataset's own additions; once
+        # merged onto the same dcat:Dataset shape subject (the same
+        # class_uri-sharing fact from the "26 conflicts" investigation
+        # above, this time surfacing via sh:order instead of a semantic
+        # conflict), sh:order values collide across unrelated properties
+        # (confirmed directly: dcat:landingPage and healthdcatap:maxTypicalAge
+        # both carry sh:order 15 on the merged shape) -- and pyshacl visibly
+        # mishandles the collision, misreporting a passing value as a
+        # datatype violation. Reproduced in a self-contained 948-triple
+        # extract of just dcat:Dataset's own shape closure, independent of
+        # the rest of the schema, ruling out any other cause.
         ("Violation", "DatatypeConstraintComponent", "startDate"),
         ("Violation", "DatatypeConstraintComponent", "endDate"),
         ("Violation", "DatatypeConstraintComponent", "hasStructuredData"),
@@ -342,10 +377,11 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
 
 # ---------------------------------------------------------------------------
 # Violations against HealthDCAT-AP's own real, official upstream SHACL.
-# Found 2026-08-21, updated 2026-08-21 after fixing the vocab-range and
-# cv:contactPoint bugs: down from 31 to 20 violations -- every NodeKind
-# (bare-IRI), sh:hasValue (NON_PUBLIC/HEAL), and contactPoint finding from
-# before is gone. See docs/architecture-verification.md section 6.
+# Found 2026-08-21, updated 2026-08-21: 31 -> 20 after the vocab-range and
+# cv:contactPoint fixes (every NodeKind bare-IRI, sh:hasValue NON_PUBLIC/HEAL,
+# and contactPoint finding gone) -> 19 after also fixing HealthAgent's
+# missing foaf:Agent class_uri (the ClassConstraintComponent "hdab" finding
+# is gone). See docs/architecture-verification.md section 6.
 # ---------------------------------------------------------------------------
 KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
     {
@@ -389,13 +425,6 @@ KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Violation", "ClassConstraintComponent", "hasPersonalData"),
         ("Violation", "ClassConstraintComponent", "hasPurpose"),
         ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
-        # Not yet fixed -- HealthAgent_Shape/HealthPublisherAgent_Shape also
-        # require the agent value's own rdf:type to include foaf:Agent, not
-        # just health_dcat_ap_plus:HealthAgent; our port doesn't currently
-        # emit the ancestor type. Separate from the cv:contactPoint fix
-        # (that part is confirmed resolved -- MinCountConstraintComponent/
-        # NodeConstraintComponent "custodian" both gone from this list).
-        ("Violation", "ClassConstraintComponent", "hdab"),
         # Already-known from the self-shapes pass, now independently
         # reconfirmed: the plain Dataset-level contact_point's
         # vcard:hasEmail must be an IRI (mailto:...), not a string literal.

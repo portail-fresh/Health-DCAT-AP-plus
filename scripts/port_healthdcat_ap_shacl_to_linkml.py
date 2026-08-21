@@ -482,6 +482,23 @@ def build_linkml(
             target = shape_target.get(class_name)
             if target:
                 cls["class_uri"] = to_curie(target)
+            elif parent and parent in base_class_names:
+                # A shape with sh:extends but no sh:targetClass of its own
+                # (e.g. :HealthAgent_Shape: sh:extends :Agent_Shape, no
+                # targetClass -- confirmed directly, not assumed) is a pure
+                # value-shape, reused via sh:node from other properties
+                # (hdab/custodian/publisher), not a real independent RDF
+                # type. Its real-world type is its parent's own class_uri --
+                # the same "Health<X> profile, same class_uri as base"
+                # pattern used for every other profile class in this port,
+                # just arrived at via sh:extends instead of sh:targetClass.
+                # Without this, HealthAgent/HealthPublisherAgent silently
+                # fell back to LinkML's own auto-generated class_uri
+                # instead of foaf:Agent, so real instances never actually
+                # typed as foaf:Agent at all -- confirmed via real SHACL
+                # validation (HealthAgent_Shape requires it; our dumped RDF
+                # never provided it).
+                cls["class_uri"] = base_sv.get_uri(parent, expand=False)
 
         own_slots: list[str] = []
         slot_usage: dict[str, dict] = {}

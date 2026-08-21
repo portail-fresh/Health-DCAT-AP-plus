@@ -1,5 +1,5 @@
 # Auto generated from health_dcat_ap_plus.yaml by pythongen.py version: 0.0.1
-# Generation date: 2026-08-21T09:44:49
+# Generation date: 2026-08-21T14:14:18
 # Schema: Health-DCAT-AP-Plus
 #
 # id: https://w3id.org/portail-fresh/Health-DCAT-AP-Plus
@@ -2697,8 +2697,8 @@ class HealthDistribution(Distribution):
 class HealthAgent(Agent):
     _inherited_slots: ClassVar[list[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS["HealthAgent"]
-    class_class_curie: ClassVar[str] = "health_dcat_ap_plus:HealthAgent"
+    class_class_uri: ClassVar[URIRef] = FOAF["Agent"]
+    class_class_curie: ClassVar[str] = "foaf:Agent"
     class_name: ClassVar[str] = "HealthAgent"
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.HealthAgent
 
@@ -2718,8 +2718,8 @@ class HealthAgent(Agent):
 class HealthPublisherAgent(Agent):
     _inherited_slots: ClassVar[list[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS["HealthPublisherAgent"]
-    class_class_curie: ClassVar[str] = "health_dcat_ap_plus:HealthPublisherAgent"
+    class_class_uri: ClassVar[URIRef] = FOAF["Agent"]
+    class_class_curie: ClassVar[str] = "foaf:Agent"
     class_name: ClassVar[str] = "HealthPublisherAgent"
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.HealthPublisherAgent
 
