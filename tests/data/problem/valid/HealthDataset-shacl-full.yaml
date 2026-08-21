@@ -1,0 +1,116 @@
+id: https://example.org/dataset/cancer-registry-2024
+title:
+  - "Regional cancer incidence registry 2024"
+description:
+  - "Annual registry of new cancer diagnoses, regional coverage."
+identifier:
+  - "https://example.org/dataset/cancer-registry-2024"
+keyword:
+  - cancer
+  - registry
+theme:
+  - preferred_label:
+      - Health
+type:
+  - preferred_label:
+      - Dataset
+contact_point:
+  - has_email: "mailto:data-access@example.org"
+access_rights:
+  title: Non-public
+applicable_legislation:
+  - id: https://example.org/legislation/eu-2025-327
+documentation:
+  - id: https://example.org/doc/methodology
+landing_page:
+  - id: https://example.org/dataset/cancer-registry-2024/landing
+language:
+  - title: English
+provenance:
+  - title: Collected under regional ethics approval REC-2023-114.
+temporal_coverage:
+  - start_date: "2024-01-01"
+    end_date: "2024-12-31"
+temporal_resolution:
+  - P1D
+is_referenced_by:
+  - id: https://example.org/publications/cancer-registry-report-2024
+frequency:
+  - title: Annual
+sample:
+  - access_URL:
+      - id: https://example.org/dataset/cancer-registry-2024/sample
+    applicable_legislation:
+      - id: https://example.org/legislation/eu-2025-327
+dataset_distribution:
+  - access_URL:
+      - id: https://example.org/dataset/cancer-registry-2024/download
+    applicable_legislation:
+      - id: https://example.org/legislation/eu-2025-327
+analytics:
+  - access_URL:
+      - id: https://example.org/dataset/cancer-registry-2024/analytics
+    applicable_legislation:
+      - id: https://example.org/legislation/eu-2025-327
+hdab:
+  name:
+    - National Health Data Access Body
+  contact_point:
+    email:
+      - "hdab@example.org"
+custodian:
+  name:
+    - Regional Cancer Registry Authority
+  contact_point:
+    email:
+      - "custodian@example.org"
+health_category:
+  - preferred_label:
+      - Oncology
+health_theme:
+  - preferred_label:
+      - Cancer
+has_legal_basis:
+  - https://w3id.org/dpv#LegalObligation
+has_personal_data:
+  - https://w3id.org/dpv/dpv-pd#MedicalHealthInsurance
+has_purpose:
+  - https://w3id.org/dpv#MedicalResearchPurpose
+has_quality_annotation:
+  - https://example.org/quality-certificate/iso-27001
+has_structured_data: true
+has_code_values:
+  - ICD-O-3
+has_coding_system:
+  - title: ICD-O-3
+linked_schemas:
+  - https://example.org/schemas/cancer-registry-v1
+max_typical_age: 99
+min_typical_age: 0
+number_of_records: 45000
+number_of_unique_individuals: 42000
+population_coverage:
+  - National
+relation:
+  - https://example.org/dataset/cancer-mortality-2024
+retention_period:
+  start_date: "2024-01-01"
+  end_date: "2044-01-01"
+source_metadata:
+  - "Collected via regional hospital reporting network."
+qualified_attribution:
+  - attribution_agent:
+      name:
+        - "National Cancer Registry Data Processor"
+    attribution_had_role: https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#processor
+was_generated_by:
+  - id: https://example.org/activity/cancer-registry-collection-2024
+    title:
+      - "Cancer registry data collection process"
+is_about_entity:
+  - id: https://example.org/population/regional-cancer-patients-2024
+    title: "Regional cancer patient population, 2024 cohort"
+is_about_activity:
+  - id: https://example.org/activity/diagnostic-reporting-process
+    title:
+      - "Diagnostic reporting and coding process"

@@ -590,3 +590,93 @@ class that doesn't exist yet." `Association` and `qualified_association`
 are both fully usable now; only the class that *references*
 `qualified_association` is left to the specialization repo — the narrowest
 possible thing actually deferred, not the whole mechanism.
+
+## 6. Real SHACL validation — does a real instance actually conform?
+
+Everything above verifies the *schema*: shapes of classes and slots, checked
+via `SchemaView` introspection and `linkml-validate`'s JSON-schema-derived
+checks. None of that can see what real SHACL enforces —
+`sh:nodeKind`/IRI-vs-literal, `sh:class` membership, `sh:hasValue`,
+cardinality nested inside sub-shapes. `tests/test_shacl_validation.py`
+closes that gap: it builds a comprehensive `HealthDataset` instance (a
+cancer registry dataset with agents, activities, entities, attribution —
+[tests/data/problem/valid/HealthDataset-shacl-full.yaml](../tests/data/problem/valid/HealthDataset-shacl-full.yaml)),
+dumps it to real RDF via `rdflib_dumper.as_rdf_graph`, and runs `pyshacl`
+against it twice: once against our own generated SHACL, once against
+HealthDCAT-AP's real, official upstream `.ttl` shapes directly (cloned
+locally at `repos/healthdcat-ap`, per README.md) — two independent
+questions ("is our merge self-consistent?" and "does the dataset portion
+still conform to the spec it was ported from?").
+
+Both runs currently produce real violations. Rather than requiring
+conformance outright, the tests compare the exact set of violation
+*signatures* (severity, SHACL constraint component, result path) against an
+explicit, commented allowlist in the test file — a genuinely new violation
+fails the test (a real regression), and so does fixing a known one (a
+prompt to prune the allowlist), so the allowlist stays an accurate,
+living record of what's actually still broken. Two real, structural port
+bugs came out of this, not visible to any check above:
+
+- **Vocabulary-bound slots keep class-object ranges.** Every
+  `values_from`-bound slot this repo ported (`theme`, `health_category`,
+  `health_theme`, `access_rights`, `frequency`, `has_coding_system`,
+  `language`, `type`, `conforms_to`) still ranges over a nested class
+  (`Concept`, `RightsStatement`, `Frequency`, `Standard`, ...) inherited
+  from `dcat-ap-plus` or added by the port, instead of the bare IRI the real
+  shapes require (`sh:nodeKind sh:IRI`, confirmed directly in
+  `non-public-shapes.ttl`/`mdr-vocabularies.shape.ttl`). Same lesson as
+  `attribution_had_role` in §4, except it turns out that fix should have
+  generalized to every vocabulary-bound field, not just that one —
+  `values_from` correctly recorded *which* vocabulary to point to, but
+  never corrected the range to match. Two sharper instances of the same
+  family: `dct:accessRights` requires `sh:hasValue
+  <.../access-right/NON_PUBLIC>` exactly (a fixed term, not a free
+  `RightsStatement` object at all), and `dcat:theme` must include the fixed
+  `.../data-theme/HEAL` term specifically (`mdr-vocabularies.shape.ttl`,
+  `sh:Violation` severity — required, not recommended).
+- **`HealthAgent`/`HealthPublisherAgent` reuse the wrong contact-point
+  predicate.** `hdab`/`custodian`/`publisher` reuse `dcat-ap-plus`'s own
+  `contact_point` slot, hardwired to `dcat:contactPoint` (confirmed via
+  `SchemaView.induced_slot`). The real `HealthAgent_Shape` requires
+  `cv:contactPoint` (`http://data.europa.eu/m8g/` Core Vocabulary
+  predicate) instead — a different predicate for Agent-typed contact points
+  than for Dataset/Distribution's own. Same class of issue as the
+  `attribution_had_role` rename in §4: a `dcat-ap-plus` slot reused where
+  it doesn't actually apply. Neither bug is fixed yet — tracked in
+  `KNOWN_OWN_SHAPES_VIOLATIONS`/`KNOWN_REAL_SHAPES_VIOLATIONS` in the test
+  file pending a fix.
+
+One genuine bug in HealthDCAT-AP's own upstream shapes, not ours: in
+`non-public-shapes.ttl`, `Dataset_Shape`'s conditional constraint ("if
+`hasStructuredData` is true, must have `hasVariables`") is a bare `sh:or`
+used directly as an `sh:property` value with no `sh:path` — not a
+well-formed SHACL PropertyShape, which makes strict processors (`pyshacl`
+included, in `advanced` mode) reject the whole file. The test works around
+it (drops just that triple, asserting there's exactly one such offender so
+a future upstream change would be caught) rather than fixing it — not our
+file to fix. Worth raising with Mohamed Chouaiech (the file's listed
+author) alongside the already-known `dcatap:` prefix typo (missing trailing
+slash in `deprecateduris.ttl`/`range.ttl`/`mdr-vocabularies.shape.ttl`,
+confirmed fixed in the vendored `HealthDCAT-AP_validator` copies of the
+same files but not the top-level release ones), whenever that conversation
+happens.
+
+The rest of the allowlisted violations are either already-known separate
+bugs reconfirmed independently (`vcard:hasEmail` must be an IRI, not a
+string literal — same finding as §1 Check c, now caught by real shapes too;
+the `temporal_resolution` list-repr-into-literal bug, same class as the
+`frequency` multivalued-narrowing crash worked around in the test's own
+fixture-construction helper) or test-fixture artifacts, not schema bugs
+(the DPV/DQV `sh:class` membership checks need the real ontologies loaded
+for reasoning, which this fixture doesn't attempt; most of the
+`skos:inScheme` "non-EU managed concept" warnings are exactly what real
+vocabulary term IRIs would resolve, expected to mostly disappear once the
+vocab-range bug above is fixed and the fixture switches from fabricated
+`skos:Concept` blank nodes to real term IRIs).
+
+**Result: two real, structural port bugs found that no prior check in this
+document could see, one confirmed upstream bug (not ours), formalized as a
+permanent regression test** (`just test` runs it; the upstream-shapes half
+skips gracefully if `repos/healthdcat-ap` isn't cloned locally) so future
+port-script or schema changes get checked against real SHACL automatically
+instead of ad hoc.
