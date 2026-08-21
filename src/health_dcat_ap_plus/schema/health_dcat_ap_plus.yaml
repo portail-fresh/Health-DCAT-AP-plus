@@ -79,13 +79,45 @@ classes:
       profile of Activity to narrow anything onto: this is exactly the kind
       of generic, domain-agnostic completion the merge layer exists to
       provide, so the downstream specialization repo gets a schema it only
-      has to specialize, not one it has to finish first. What's deliberately
-      NOT done here is creating an Activity-side class to actually use
-      qualified_association -- that would be specialization work, the same
-      line already drawn for DatasetAttribution/HealthDataset.
+      has to specialize, not one it has to finish first.
     slots:
       - agent
       - association_had_role
+
+  AssociatedDataGeneratingActivity:
+    is_a: DataGeneratingActivity
+    class_uri: prov:Activity
+    description: >-
+      DataGeneratingActivity, with qualified_association actually wired in
+      -- was_generated_by can then carry PI/sponsor/funder-style agent
+      roles on a real HealthDataset instance, not just document that the
+      slot exists. Originally deferred as "specialization work" (the same
+      line drawn for DatasetAttribution/HealthDataset): the reasoning was
+      never "Activity-side classes belong exclusively downstream," it was
+      "don't invent a class before there's a real need for it." This one
+      is exactly as generic as Association itself -- no health-specific
+      content, just DataGeneratingActivity plus the one slot that makes
+      qualified_association reachable -- so once a real need appeared (an
+      end-to-end example with AgenticEntities on Activities), building it
+      here is the same kind of generic completion Association already is,
+      not a boundary violation.
+
+      Can't be done by narrowing HealthDataset.was_generated_by's range
+      directly onto this class from either file: HealthDataset lives in
+      the generated healthdcat_ap_non_public.yaml, which doesn't import
+      this file (this file imports it, not the reverse, so it can't see
+      Association/qualified_association), and this file can't reopen
+      HealthDataset's own already-imported slot_usage either (confirmed
+      elsewhere this session: reopening an imported class throws
+      "Conflicting URIs"). Used directly instead, by constructing real
+      instances of this class in place of plain DataGeneratingActivity
+      ones -- isinstance-compatible since it's a real subclass, so
+      LinkML's own inlined-list construction (_normalize_inlined_as_list)
+      accepts an already-built instance as-is without needing to touch
+      was_generated_by's declared range at all. See
+      tests/test_shacl_validation.py for the real instance.
+    slots:
+      - qualified_association
 
 slots:
   qualified_association:

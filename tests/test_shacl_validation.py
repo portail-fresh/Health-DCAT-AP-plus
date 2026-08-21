@@ -104,6 +104,20 @@ def _build_test_dataset_graph() -> Graph:
     """
     data = yaml.safe_load(FIXTURE_PATH.read_text(encoding="utf-8"))
 
+    # was_generated_by's declared range is plain DataGeneratingActivity
+    # (dcat-ap-plus's own class, no qualified_association field at all), so
+    # HealthDataset's own _normalize_inlined_as_list(slot_type=
+    # DataGeneratingActivity, ...) would reject the qualified_association
+    # key in the fixture's entries outright. Pre-construct each entry as a
+    # real AssociatedDataGeneratingActivity instance instead (a real
+    # DataGeneratingActivity subclass, defined in health_dcat_ap_plus.yaml
+    # -- see its own docstring there): _normalize_inlined_as_list's own
+    # isinstance(list_entry, slot_type) fast path (confirmed by reading its
+    # source directly, not assumed) preserves an already-built instance
+    # exactly as-is, so no further shielding is needed here the way the
+    # other narrowed fields above need it.
+    data["was_generated_by"] = [dm.AssociatedDataGeneratingActivity(**entry) for entry in data["was_generated_by"]]
+
     real_dataset_post_init = dm.Dataset.__post_init__
 
     def _patched_dataset_post_init(self, *args, **kwargs):

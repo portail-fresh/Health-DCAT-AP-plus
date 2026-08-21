@@ -584,12 +584,68 @@ Real instance, converted end to end:
     prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> .
 ```
 
-**Result: confirmed**, and corrected on the actual scope question: not
-"defer everything Activity-related," but "defer only what genuinely needs a
-class that doesn't exist yet." `Association` and `qualified_association`
-are both fully usable now; only the class that *references*
-`qualified_association` is left to the specialization repo — the narrowest
-possible thing actually deferred, not the whole mechanism.
+**Result: confirmed**, and corrected on the actual scope question at the
+time: not "defer everything Activity-related," but "defer only what
+genuinely needs a class that doesn't exist yet." `Association` and
+`qualified_association` were both fully usable already; only the class
+that *references* `qualified_association` was left to the specialization
+repo.
+
+**That narrowest deferred piece was itself built here once a real need
+appeared** — a request for a full worked example with `AgenticEntity`s on
+`Activity`s (PI/sponsor/funder), the same kind of thing this whole
+document keeps testing rather than assuming works.
+`AssociatedDataGeneratingActivity` (`health_dcat_ap_plus.yaml`) is
+`DataGeneratingActivity`, `is_a`, same `class_uri`, with
+`qualified_association` added to its own `slots:` — exactly as generic and
+health-agnostic as `Association` itself, so building it doesn't cross the
+line that was actually meant (no health-specific content, just the one
+slot that makes the already-generic mechanism reachable from a real
+Activity). Couldn't be done by narrowing `HealthDataset.was_generated_by`'s
+declared range directly onto it — `HealthDataset` lives in the generated
+`healthdcat_ap_non_public.yaml`, which doesn't import this file (only the
+reverse), and reopening an already-imported class's `slot_usage` throws
+"Conflicting URIs" regardless of which file tries it (confirmed elsewhere
+this session). Used directly instead:
+`tests/test_shacl_validation.py`'s fixture-construction helper
+pre-constructs each `was_generated_by` entry as a real
+`AssociatedDataGeneratingActivity` instance before `HealthDataset(**data)`
+runs — `_normalize_inlined_as_list`'s own `isinstance(list_entry,
+slot_type)` fast path (confirmed by reading its source directly) accepts
+an already-built subclass instance as-is, no schema-level range narrowing
+needed at all.
+
+Full worked example — `tests/data/problem/valid/HealthDataset-shacl-full.yaml`'s
+`was_generated_by`, three real ISO 19115 `CI_RoleCode` roles (not
+invented):
+
+```turtle
+<https://example.org/activity/cancer-registry-collection-2024> a prov:Activity ;
+    dcterms:title "Cancer registry data collection process" ;
+    prov:qualifiedAssociation
+        [ a prov:Association ;
+            prov:agent <https://orcid.org/0000-0002-1825-0097> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ],
+        [ a prov:Association ;
+            prov:agent <https://ror.org/00k4n6c32> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
+        [ a prov:Association ;
+            prov:agent <https://ror.org/03yrm5c26> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ] .
+
+<https://orcid.org/0000-0002-1825-0097> a prov:Agent ;
+    dcterms:title "Dr. Maria Santos" .
+```
+
+Checked against both shape sets in §6 as part of the same fixture, not
+separately: zero new violations against either — our own generated SHACL
+has no conflicting shape for `prov:Agent`/`prov:Association`/
+`prov:qualifiedAssociation` (`Association`/`AgenticEntity` are
+hand-authored, no base `dcat-ap-plus` class collides with them the way
+`Dataset`'s own fields did in §6), and HealthDCAT-AP's real shapes
+genuinely never reach the Activity side at all (the same finding already
+confirmed in §1 Check b) — so real Activity-side content adds nothing new
+to validate against there either.
 
 ## 6. Real SHACL validation — does a real instance actually conform?
 
@@ -599,7 +655,8 @@ checks. None of that can see what real SHACL enforces —
 `sh:nodeKind`/IRI-vs-literal, `sh:class` membership, `sh:hasValue`,
 cardinality nested inside sub-shapes. `tests/test_shacl_validation.py`
 closes that gap: it builds a comprehensive `HealthDataset` instance (a
-cancer registry dataset with agents, activities, entities, attribution —
+cancer registry dataset with agents, activities, entities, attribution,
+and qualified associations (PI/sponsor/funder, §5) —
 [tests/data/problem/valid/HealthDataset-shacl-full.yaml](../tests/data/problem/valid/HealthDataset-shacl-full.yaml)),
 dumps it to real RDF via `rdflib_dumper.as_rdf_graph`, and runs `pyshacl`
 against it twice: once against our own generated SHACL, once against

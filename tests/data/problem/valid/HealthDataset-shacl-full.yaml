@@ -107,10 +107,32 @@ qualified_attribution:
       name:
         - "National Cancer Registry Data Processor"
     attribution_had_role: https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#processor
+# AssociatedDataGeneratingActivity instances (DataGeneratingActivity, with
+# qualified_association wired in -- see the class's own docstring in
+# health_dcat_ap_plus.yaml). Loaded and constructed separately in
+# tests/test_shacl_validation.py's _build_test_dataset_graph, not by
+# HealthDataset's own construction directly (its was_generated_by is
+# declared range: DataGeneratingActivity, which has no qualified_association
+# field at all -- the plain dcat-ap-plus class was never meant to carry
+# roles); the real ISO 19115 CI_RoleCode terms below (principalInvestigator/
+# sponsor/funder) are standard codelist values, not invented.
 was_generated_by:
   - id: https://example.org/activity/cancer-registry-collection-2024
     title:
       - "Cancer registry data collection process"
+    qualified_association:
+      - agent:
+          id: https://orcid.org/0000-0002-1825-0097
+          title: "Dr. Maria Santos"
+        association_had_role: https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator
+      - agent:
+          id: https://ror.org/00k4n6c32
+          title: "National Institute of Public Health"
+        association_had_role: https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor
+      - agent:
+          id: https://ror.org/03yrm5c26
+          title: "European Health Research Council"
+        association_had_role: https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder
 is_about_entity:
   - id: https://example.org/population/regional-cancer-patients-2024
     title: "Regional cancer patient population, 2024 cohort"

@@ -1,5 +1,5 @@
 # Auto generated from health_dcat_ap_plus.yaml by pythongen.py version: 0.0.1
-# Generation date: 2026-08-21T14:36:31
+# Generation date: 2026-08-21T14:40:38
 # Schema: Health-DCAT-AP-Plus
 #
 # id: https://w3id.org/portail-fresh/Health-DCAT-AP-Plus
@@ -134,6 +134,10 @@ class AgenticEntityId(URIorCURIE):
 
 
 class DataGeneratingActivityId(ActivityId):
+    pass
+
+
+class AssociatedDataGeneratingActivityId(DataGeneratingActivityId):
     pass
 
 
@@ -610,6 +614,47 @@ class DataGeneratingActivity(Activity):
 
         if self.occurred_in is not None and not isinstance(self.occurred_in, Surrounding):
             self.occurred_in = Surrounding(**as_dict(self.occurred_in))
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
+class AssociatedDataGeneratingActivity(DataGeneratingActivity):
+    """
+    DataGeneratingActivity, with qualified_association actually wired in -- was_generated_by can then carry
+    PI/sponsor/funder-style agent roles on a real HealthDataset instance, not just document that the slot exists.
+    Originally deferred as "specialization work" (the same line drawn for DatasetAttribution/HealthDataset): the
+    reasoning was never "Activity-side classes belong exclusively downstream," it was "don't invent a class before
+    there's a real need for it." This one is exactly as generic as Association itself -- no health-specific content,
+    just DataGeneratingActivity plus the one slot that makes qualified_association reachable -- so once a real need
+    appeared (an end-to-end example with AgenticEntities on Activities), building it here is the same kind of generic
+    completion Association already is, not a boundary violation.
+    Can't be done by narrowing HealthDataset.was_generated_by's range directly onto this class from either file:
+    HealthDataset lives in the generated healthdcat_ap_non_public.yaml, which doesn't import this file (this file
+    imports it, not the reverse, so it can't see Association/qualified_association), and this file can't reopen
+    HealthDataset's own already-imported slot_usage either (confirmed elsewhere this session: reopening an imported
+    class throws "Conflicting URIs"). Used directly instead, by constructing real instances of this class in place of
+    plain DataGeneratingActivity ones -- isinstance-compatible since it's a real subclass, so LinkML's own
+    inlined-list construction (_normalize_inlined_as_list) accepts an already-built instance as-is without needing to
+    touch was_generated_by's declared range at all. See tests/test_shacl_validation.py for the real instance.
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = PROV["Activity"]
+    class_class_curie: ClassVar[str] = "prov:Activity"
+    class_name: ClassVar[str] = "AssociatedDataGeneratingActivity"
+    class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.AssociatedDataGeneratingActivity
+
+    id: Union[str, AssociatedDataGeneratingActivityId] = None
+    qualified_association: Optional[Union[Union[dict, "Association"], list[Union[dict, "Association"]]]] = empty_list()
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.id):
+            self.MissingRequiredField("id")
+        if not isinstance(self.id, AssociatedDataGeneratingActivityId):
+            self.id = AssociatedDataGeneratingActivityId(self.id)
+
+        self._normalize_inlined_as_list(slot_name="qualified_association", slot_type=Association, key_name="association_had_role", keyed=False)
 
         super().__post_init__(**kwargs)
 
@@ -1579,9 +1624,7 @@ class Association(SupportiveEntity):
     reach it -- confirmed in Section 1 Check b of architecture-verification.md) and there's no Health<X> profile of
     Activity to narrow anything onto: this is exactly the kind of generic, domain-agnostic completion the merge layer
     exists to provide, so the downstream specialization repo gets a schema it only has to specialize, not one it has
-    to finish first. What's deliberately NOT done here is creating an Activity-side class to actually use
-    qualified_association -- that would be specialization work, the same line already drawn for
-    DatasetAttribution/HealthDataset.
+    to finish first.
     """
     _inherited_slots: ClassVar[list[str]] = []
 
