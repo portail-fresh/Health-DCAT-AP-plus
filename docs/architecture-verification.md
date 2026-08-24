@@ -682,7 +682,7 @@ cardinality nested inside sub-shapes. `tests/test_shacl_validation.py`
 closes that gap: it builds a comprehensive `HealthDataset` instance (a
 cancer registry dataset with agents, activities, entities, attribution,
 and qualified associations (PI/sponsor/funder, §5) —
-[tests/data/problem/valid/HealthDataset-shacl-full.yaml](../tests/data/problem/valid/HealthDataset-shacl-full.yaml)),
+[tests/data/problem/valid/HealthDataset-shacl-full.yaml](https://github.com/portail-fresh/Health-DCAT-AP-plus/blob/main/tests/data/problem/valid/HealthDataset-shacl-full.yaml)),
 dumps it to real RDF via `rdflib_dumper.as_rdf_graph`, and runs `pyshacl`
 against it twice: once against our own generated SHACL, once against
 HealthDCAT-AP's real, official upstream `.ttl` shapes directly (cloned

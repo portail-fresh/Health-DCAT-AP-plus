@@ -62,6 +62,7 @@ watch:
 nav:
   - Home: index.md
   - Schema: elements/index.md
+  - Architecture Verification: architecture-verification.md
   - About: about.md
 
 exclude_docs: |
