@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://portail-fresh.github.io/Health-DCAT-AP-Plus/elements/identifier/">
+        <link rel="canonical" href="https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/association_had_role/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>Slot: identifier - Health-DCAT-AP-Plus</title>
+        <title>Slot: association_had_role - Health-DCAT-AP-Plus</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#slot-identifier" class="md-skip">
+        <a href="#slot-association_had_role" class="md-skip">
           Skip to content
         </a>
       
@@ -93,7 +93,7 @@
     aria-label="header.title"
   >
     <a
-      href="https://portail-fresh.github.io/Health-DCAT-AP-Plus/"
+      href="https://portail-fresh.github.io/Health-DCAT-AP-plus/"
       title="Health-DCAT-AP-Plus"
       class="md-header__button md-logo"
       aria-label="Health-DCAT-AP-Plus"
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Slot: identifier
+              Slot: association_had_role
             
           </span>
         </div>
@@ -199,7 +199,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/portail-fresh/Health-DCAT-AP-Plus" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/portail-fresh/Health-DCAT-AP-plus" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -244,7 +244,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/portail-fresh/Health-DCAT-AP-Plus" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/portail-fresh/Health-DCAT-AP-plus" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -485,10 +485,10 @@
   
 
 
-<h1 id="slot-identifier">Slot: identifier</h1>
-<p><em>This slot is described in more detail within the class in which it is used.</em></p>
+<h1 id="slot-association_had_role">Slot: association_had_role</h1>
+<p><em>The role an agent played in a qualified Association -- PROV-O's own prov:hadRole, distinct from DatasetAttribution's had_role (dcat:hadRole, already defined by dcat-ap-plus and reused as-is): Association needed its own slot since dcat-ap-plus's had_role is hardwired to the dcat: predicate, not prov:. Range is a plain uriorcurie into an external codelist, not a nested Role object with title/description -- matches HealthDCAT-AP's own real qualifiedAttribution example (a bare ISO 19115 CI_RoleCode URI, not an inline dcat:Role), and avoids a real LinkML limitation found by testing: a class-plus-scalar any_of union between Role and uriorcurie doesn't reliably validate both shapes (see DatasetAttribution's own had_role in the port script for the fuller writeup of that test).</em></p>
 <div>
-<p>URI: <a href="http://purl.org/dc/terms/identifier">dcterms:identifier</a></p>
+<p>URI: <a href="http://www.w3.org/ns/prov#hadRole">prov:hadRole</a></p>
 <!-- no inheritance hierarchy -->
 <h2 id="applicable-classes">Applicable Classes</h2>
 <table>
@@ -501,19 +501,9 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="../Dataset/">Dataset</a></td>
-<td>A collection of data, published or curated by a single agent, and available f...</td>
-<td>yes</td>
-</tr>
-<tr>
-<td><a href="../AnalysisDataset/">AnalysisDataset</a></td>
-<td>A Dataset that was generated by an analysis of some previously generated data</td>
+<td><a href="../Association/">Association</a></td>
+<td>The qualified form of prov:wasAssociatedWith (what carried_out_by already sho...</td>
 <td>no</td>
-</tr>
-<tr>
-<td><a href="../HealthDataset/">HealthDataset</a></td>
-<td></td>
-<td>yes</td>
 </tr>
 </tbody>
 </table>
@@ -529,15 +519,15 @@
 <tbody>
 <tr>
 <td>Range</td>
-<td><a href="../String/">String</a></td>
+<td><a href="../Uriorcurie/">Uriorcurie</a></td>
 </tr>
 <tr>
 <td>Domain Of</td>
-<td><a href="../Dataset/">Dataset</a></td>
+<td><a href="../Association/">Association</a></td>
 </tr>
 <tr>
 <td>Slot URI</td>
-<td><a href="http://purl.org/dc/terms/identifier">dcterms:identifier</a></td>
+<td><a href="http://www.w3.org/ns/prov#hadRole">prov:hadRole</a></td>
 </tr>
 </tbody>
 </table>
@@ -551,15 +541,15 @@
 </thead>
 <tbody>
 <tr>
-<td></td>
-<td></td>
+<td>Required</td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>
 <h2 id="identifier-and-mapping-information">Identifier and Mapping Information</h2>
 <h3 id="schema-source">Schema Source</h3>
 <ul>
-<li>from schema: <a href="https://w3id.org/portail-fresh/Health-DCAT-AP-Plus">https://w3id.org/portail-fresh/Health-DCAT-AP-Plus</a></li>
+<li>from schema: <a href="https://w3id.org/portail-fresh/Health-DCAT-AP-plus">https://w3id.org/portail-fresh/Health-DCAT-AP-plus</a></li>
 </ul>
 <h2 id="mappings">Mappings</h2>
 <table>
@@ -572,25 +562,36 @@
 <tbody>
 <tr>
 <td>self</td>
-<td>dcterms:identifier</td>
+<td>prov:hadRole</td>
 </tr>
 <tr>
 <td>native</td>
-<td>health_dcat_ap_plus:identifier</td>
+<td>health_dcat_ap_plus:association_had_role</td>
 </tr>
 </tbody>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">identifier</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This slot is described in more detail within the class in which it is</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">used.</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/portail-fresh/Health-DCAT-AP-Plus</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">association_had_role</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'The</span><span class="nv"> </span><span class="s">role</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">agent</span><span class="nv"> </span><span class="s">played</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">qualified</span><span class="nv"> </span><span class="s">Association</span><span class="nv"> </span><span class="s">--</span><span class="nv"> </span><span class="s">PROV-O</span><span class="se">''</span><span class="s">s</span><span class="nv"> </span><span class="s">own</span>
+<span class="w">  </span><span class="s">prov:hadRole,</span><span class="nv"> </span><span class="s">distinct</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">DatasetAttribution</span><span class="se">''</span><span class="s">s</span><span class="nv"> </span><span class="s">had_role</span><span class="nv"> </span><span class="s">(dcat:hadRole,</span><span class="nv"> </span><span class="s">already</span>
+<span class="w">  </span><span class="s">defined</span><span class="nv"> </span><span class="s">by</span><span class="nv"> </span><span class="s">dcat-ap-plus</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">reused</span><span class="nv"> </span><span class="s">as-is):</span><span class="nv"> </span><span class="s">Association</span><span class="nv"> </span><span class="s">needed</span><span class="nv"> </span><span class="s">its</span><span class="nv"> </span><span class="s">own</span><span class="nv"> </span><span class="s">slot</span><span class="nv"> </span><span class="s">since</span>
+<span class="w">  </span><span class="s">dcat-ap-plus</span><span class="se">''</span><span class="s">s</span><span class="nv"> </span><span class="s">had_role</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">hardwired</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">dcat:</span><span class="nv"> </span><span class="s">predicate,</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">prov:.</span><span class="nv"> </span><span class="s">Range</span><span class="nv"> </span><span class="s">is</span>
+<span class="w">  </span><span class="s">a</span><span class="nv"> </span><span class="s">plain</span><span class="nv"> </span><span class="s">uriorcurie</span><span class="nv"> </span><span class="s">into</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">external</span><span class="nv"> </span><span class="s">codelist,</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">nested</span><span class="nv"> </span><span class="s">Role</span><span class="nv"> </span><span class="s">object</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">title/description</span>
+<span class="w">  </span><span class="s">--</span><span class="nv"> </span><span class="s">matches</span><span class="nv"> </span><span class="s">HealthDCAT-AP</span><span class="se">''</span><span class="s">s</span><span class="nv"> </span><span class="s">own</span><span class="nv"> </span><span class="s">real</span><span class="nv"> </span><span class="s">qualifiedAttribution</span><span class="nv"> </span><span class="s">example</span><span class="nv"> </span><span class="s">(a</span><span class="nv"> </span><span class="s">bare</span><span class="nv"> </span><span class="s">ISO</span><span class="nv"> </span><span class="s">19115</span>
+<span class="w">  </span><span class="s">CI_RoleCode</span><span class="nv"> </span><span class="s">URI,</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">inline</span><span class="nv"> </span><span class="s">dcat:Role),</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">avoids</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">real</span><span class="nv"> </span><span class="s">LinkML</span><span class="nv"> </span><span class="s">limitation</span><span class="nv"> </span><span class="s">found</span>
+<span class="w">  </span><span class="s">by</span><span class="nv"> </span><span class="s">testing:</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">class-plus-scalar</span><span class="nv"> </span><span class="s">any_of</span><span class="nv"> </span><span class="s">union</span><span class="nv"> </span><span class="s">between</span><span class="nv"> </span><span class="s">Role</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">uriorcurie</span><span class="nv"> </span><span class="s">doesn</span><span class="se">''</span><span class="s">t</span>
+<span class="w">  </span><span class="s">reliably</span><span class="nv"> </span><span class="s">validate</span><span class="nv"> </span><span class="s">both</span><span class="nv"> </span><span class="s">shapes</span><span class="nv"> </span><span class="s">(see</span><span class="nv"> </span><span class="s">DatasetAttribution</span><span class="se">''</span><span class="s">s</span><span class="nv"> </span><span class="s">own</span><span class="nv"> </span><span class="s">had_role</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">port</span>
+<span class="w">  </span><span class="s">script</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">fuller</span><span class="nv"> </span><span class="s">writeup</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">that</span><span class="nv"> </span><span class="s">test).'</span>
+<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/portail-fresh/Health-DCAT-AP-plus</span>
 <span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dcterms:identifier</span>
+<span class="nt">values_from</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml</span>
+<span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prov:hadRole</span>
 <span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dataset</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Association</span>
+<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uriorcurie</span>
+<span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 </details>
 </div>

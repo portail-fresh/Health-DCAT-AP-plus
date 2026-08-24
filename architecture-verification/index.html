@@ -1,0 +1,1425 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://portail-fresh.github.io/Health-DCAT-AP-plus/architecture-verification/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Architecture verification: the Health-DCAT-AP-plus merge layer - Health-DCAT-AP-Plus</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+
+      
+    
+<script src="../assets/pymdownx-extras/material-extra-theme-2ek1P7jT.js" type="text/javascript"></script>
+<script src="../assets/pymdownx-extras/material-extra-3rdparty-BUCF4rjN.js" type="text/javascript"></script>
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../css/pandas-dataframe.css">
+    
+      <link rel="stylesheet" href="../assets/pymdownx-extras/extra-c6ab11540a.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#architecture-verification-the-health-dcat-ap-plus-merge-layer" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+<header class="md-header" data-md-component="header">
+  <nav
+    class="md-header__inner md-grid"
+    aria-label="header.title"
+  >
+    <a
+      href="https://portail-fresh.github.io/Health-DCAT-AP-plus/"
+      title="Health-DCAT-AP-Plus"
+      class="md-header__button md-logo"
+      aria-label="Health-DCAT-AP-Plus"
+    >
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Health-DCAT-AP-Plus
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Architecture verification: the Health-DCAT-AP-plus merge layer
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      <div class="md-header-nav__scheme md-header-nav__button md-source__icon md-icon">
+          <a
+            href="javascript:toggleScheme();"
+            title="Light mode"
+            class="light-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="Dark mode"
+            class="dark-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="System preference"
+            class="system-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+          </a>
+           <a
+            href="javascript:toggleScheme();"
+            title="Unknown scheme"
+            class="unknown-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m15.07 11.25-.9.92C13.45 12.89 13 13.5 13 15h-2v-.5c0-1.11.45-2.11 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41a2 2 0 0 0-2-2 2 2 0 0 0-2 2H8a4 4 0 0 1 4-4 4 4 0 0 1 4 4 3.2 3.2 0 0 1-.93 2.25M13 19h-2v-2h2M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg>
+          </a>
+      </div>
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/portail-fresh/Health-DCAT-AP-plus" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Health-DCAT-AP-Plus" class="md-nav__button md-logo" aria-label="Health-DCAT-AP-Plus" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    Health-DCAT-AP-Plus
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/portail-fresh/Health-DCAT-AP-plus" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#import-hierarchy-per-hendrik-borgelts-comment-discussion-109" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import hierarchy (per Hendrik Borgelt's comment, Discussion #109)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#porting-healthdcat-aps-shacl-to-linkml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Porting HealthDCAT-AP's SHACL to LinkML
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-merge-resolution-does-dataset-really-get-the-health-attributes-and-do-agenticentityactivity-stay-untouched" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Merge resolution: does Dataset really get the health attributes, and do AgenticEntity/Activity stay untouched?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-agenticentity-vs-agent-confidence-in-the-intended-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. AgenticEntity vs Agent — confidence in the intended usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-id-and-other_identifier-on-agenticentity-orcidroridref-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. id and other_identifier on AgenticEntity — ORCID/ROR/IdRef readiness
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+  
+  
+
+
+<h1 id="architecture-verification-the-health-dcat-ap-plus-merge-layer">Architecture verification: the Health-DCAT-AP-plus merge layer</h1>
+<p>Context: <a href="https://github.com/nfdi-de/dcat-ap-plus/discussions/109">nfdi-de/dcat-ap-plus Discussion #109</a>,
+where the <code>dcat-ap-plus</code> maintainers (Hendrik Borgelt, Philip Strömert) confirmed
+the intended architecture — this repo imports the LinkML port of HealthDCAT-AP's
+SHACL plus <code>dcat-ap-plus</code> itself, as one clean intermediate layer. A <em>separate</em>
+downstream repo specializes it further (roles, <code>ResearchStudy</code>-shaped classes,
+...) — that specialization work does not belong here.</p>
+<p>This document has two parts. The first documents <em>how the port itself works</em>
+— what it reads, what it deliberately doesn't, what's been found and fixed
+along the way. The second tracks the specific points we want 100% confidence
+on in the <em>merged result</em>, one at a time: what's checked, how, and the
+result. Each section states a claim, the check that was run to confirm or
+refute it, and the actual output — not just an assertion.</p>
+<h2 id="import-hierarchy-per-hendrik-borgelts-comment-discussion-109">Import hierarchy (per Hendrik Borgelt's comment, Discussion #109)</h2>
+<p>Hendrik pointed at <code>dcat-ap-plus</code>'s own <a href="https://nfdi-de.github.io/dcat-ap-plus/latest/how-to-extend/">extension rules</a>
+as the requirement for "a correct import hierarchy." Checked directly, not
+assumed — five concrete rules, each checked against what this repo actually
+does:</p>
+<table>
+<thead>
+<tr>
+<th>Rule (their docs, verbatim)</th>
+<th>This repo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Import the full DCAT-AP+ schema in your LinkML schema's <code>imports</code> section"</td>
+<td><code>health_dcat_ap_plus.yaml</code> imports <code>dcatapplus:latest/schema/dcat_ap_plus</code> (the w3id permalink, full schema) — not a cherry-picked subset.</td>
+</tr>
+<tr>
+<td>Extend classes via <code>is_a</code></td>
+<td>Every ported class (<code>HealthDataset</code>, <code>HealthAgent</code>, <code>HealthCatalogue</code>, ...) is <code>is_a: &lt;base class&gt;</code> — the core mechanism of the whole port script, not an afterthought.</td>
+</tr>
+<tr>
+<td>"Create sub-slots using <code>is_a</code> on slots for stricter constraints"</td>
+<td>Not yet used — see open item below.</td>
+</tr>
+<tr>
+<td>Never modify <code>class_uri</code>/<code>slot_uri</code> on imported elements</td>
+<td>Confirmed by construction: every <code>slot_usage</code> override in the port script only ever sets <code>range</code>/<code>required</code>/<code>multivalued</code>/<code>values_from</code> — never <code>slot_uri</code>. <code>class_uri</code> on a <code>Health&lt;X&gt;</code> class is always the <em>same</em> URI as its base, never a modification of the base's own definition (checked in §1 Check a — one shared SHACL shape, not two).</td>
+</tr>
+<tr>
+<td>Avoid broadening cardinality on inherited properties</td>
+<td>Every tightening found goes one direction: optional→required, or narrower <code>range</code>. Never loosens an inherited <code>required: true</code> back to <code>false</code> (confirmed elsewhere this session to be a real LinkML limitation even if attempted — a subclass's <code>slot_usage</code> can't suppress an ancestor's own required-field check).</td>
+</tr>
+<tr>
+<td>Never add domain-specific classes directly to <code>dcat-ap-plus</code> itself</td>
+<td><code>repos/dcat-ap-plus</code> is a read-only clone (gitignored), never edited — every health-specific class lives in this repo's own <code>healthdcat_ap_non_public.yaml</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Open item, not yet acted on:</strong> the "sub-slots via <code>is_a</code> on slots" rule has
+no example in this port yet — worth watching for once the specialization
+repo starts adding roles/relations of its own, since none of the tightening
+done so far needed a new slot that specializes an <em>existing</em> slot via <code>is_a</code>
+(as opposed to a genuinely new top-level slot, which the port does use, e.g.
+<code>health_category</code>).</p>
+<h2 id="porting-healthdcat-aps-shacl-to-linkml">Porting HealthDCAT-AP's SHACL to LinkML</h2>
+<p><code>scripts/port_healthdcat_ap_shacl_to_linkml.py</code> — same method NFDI4Chem used
+to port plain DCAT-AP's SHACL to LinkML when building <code>chem-dcat-ap</code>: walk
+every <code>sh:NodeShape</code>, turn one with a <code>sh:targetClass</code> into a LinkML class,
+turn its <code>sh:property</code> shapes into slots. See the script's own docstring for
+the full three-bucket mechanism (profile subclass of an existing <code>dcat-ap-plus</code>
+class / genuinely new class / cardinality-tightening on an inherited slot).
+This section covers what it reads, what it doesn't, and what building it for
+real (not just trusting the mechanism) has turned up.</p>
+<p><strong>What's parsed, per tier:</strong> <code>&lt;tier&gt;-shapes.ttl</code> (mandatory constraints),
+<code>&lt;tier&gt;-shapes_recommended.ttl</code> (recommended, non-mandatory), <code>range.ttl</code>
+(class-range constraints, shared across tiers). Plus, as of this session,
+<code>mdr-vocabularies.shape.ttl</code> (see "Controlled-vocabulary bindings" below).</p>
+<p><strong>What's deliberately not parsed, and why that's actually fine — checked, not
+assumed:</strong>
+- <code>imports.ttl</code> / <code>mdr_imports.ttl</code> — read directly: pure <code>owl:imports</code>
+  manifests, lists of external ontology/vocabulary URLs (<code>prov-o.ttl</code>,
+  <code>dqv.ttl</code>, the EU health-category codelist endpoint, ...). Zero
+  <code>sh:NodeShape</code>/<code>sh:property</code> content — there is nothing structural in them
+  to miss.
+- <code>deprecateduris.ttl</code> — a deprecated→current URI mapping table, not shape
+  content.</p>
+<p><strong>Known issues found while building this, not visible from schema
+introspection alone — this is why building real instances and generated
+artifacts matters, not just trusting the mechanical walk:</strong></p>
+<ol>
+<li>
+<p><strong>Fixed — zero-slot stub classes.</strong> Four classes HealthDCAT-AP's shapes
+   reference as ranges (<code>Purpose</code>, <code>LegalBasis</code>, <code>PersonalData</code>,
+   <code>QualityCertificate</code> — via <code>has_purpose</code>/<code>has_legal_basis</code>/
+   <code>has_personal_data</code>/<code>has_quality_annotation</code> on <code>HealthDataset</code>) have no
+   <code>sh:NodeShape</code> of their own <em>anywhere</em> in HealthDCAT-AP's release —
+   confirmed by grepping every file, tier shapes and <code>mdr-vocabularies.shape.ttl</code>
+   both, for zero matches. Root cause, confirmed by asking rather than
+   assuming: these genuinely are pointers into external ontologies (DPV —
+   Data Privacy Vocabulary, DQV — Data Quality Vocabulary) that HealthDCAT-AP
+   references (<code>sh:class dpv:Purpose</code>) but never embeds a shape for. The port
+   correctly stubbed them as classes, but with <em>zero slots</em> — and a
+   zero-slot class can only ever be instantiated as <code>{}</code>, which
+   <code>linkml_runtime</code>'s own YAML loader unconditionally rejects ("Empty list
+   elements are not allowed" — <code>linkml_runtime/utils/yamlutils.py</code>,
+   <code>seq_constructor</code>). Since all four are <code>required: true</code> on <code>HealthDataset</code>,
+   this meant <strong><code>HealthDataset</code> was structurally unloadable via
+   <code>linkml-convert</code> no matter what data you provided.</strong> Fixed by giving each
+   stub an <code>id</code> slot — the correct fix, not a workaround: real usage is a
+   reference to an external controlled-vocabulary term (e.g. a DPV <code>Purpose</code>
+   URI), so <code>id</code> is what they actually need. Side benefit: with exactly one
+   slot (the identifier), LinkML treats references to them as bare identifier
+   strings rather than nested objects.</p>
+</li>
+<li>
+<p><strong>Fixed — <code>contact_point</code>'s range was never actually disconnected from
+   <code>HealthKind</code>; the port script's per-property walk just couldn't see the
+   connection.</strong> <code>Kind</code> (<code>vcard:Kind</code>, <code>Dataset.contact_point</code>'s range) is a
+   zero-slot stub in <code>dcat-ap-plus</code> itself, confirmed by reading its schema
+   directly. HealthDCAT-AP's own shapes tighten <code>contact_point</code>'s
+   <em>cardinality</em> only (<code>sh:minCount 1</code>, no <code>sh:class</code>/<code>sh:node</code>) — but
+   <em>separately</em> define <code>:Kind_Shape</code> (<code>sh:targetClass vcard:Kind</code>, requiring
+   <code>vcard:hasURL</code>/<code>vcard:hasEmail</code>), which the port already turns into
+   <code>HealthKind</code>. First write of this document claimed these two were
+   unconnected in the source and that narrowing <code>contact_point</code> to
+   <code>HealthKind</code> locally "would mean inventing a connection" — <strong>that was
+   wrong</strong>, caught when a user asked why a plain DCAT-AP property/class pair
+   was being blamed on <code>dcat-ap-plus</code> at all. In real SHACL semantics, a
+   <code>sh:targetClass</code>-scoped shape applies to <em>every</em> node of that type,
+   regardless of which property pointed to it — no explicit <code>sh:node</code>
+   chaining required. The connection genuinely exists in the source; the
+   port script's range resolution just only ever looked at <code>sh:class</code>/
+   <code>sh:node</code> on a property's <em>own</em> shape, never at whether some other,
+   independently-walked shape already targets that property's declared base
+   range. Fixed in <code>build_linkml</code>: when a fact has no explicit range
+   narrowing but the inherited slot's own base range is itself a class that
+   got profiled elsewhere in the same run, recover that as the range — not
+   an invention, a restatement of what <code>sh:targetClass</code> already implies.
+   <code>HealthDataset.contact_point</code> now correctly resolves to <code>HealthKind</code>, and
+   converts to real RDF end to end (confirmed via <code>linkml-convert</code>, not just
+   schema introspection).</p>
+</li>
+</ol>
+<p>Same fix also surfaced and corrected an unrelated, latent bug in the base
+   comparison logic: <code>base_slot()</code> compared a fact against
+   <code>induced_slot(name)</code> with <strong>no class context</strong>, silently falling back to
+   a slot's generic top-level definition (often just <code>range: string</code>, the
+   schema default) for any slot — like <code>contact_point</code>, like <code>had_role</code> —
+   whose real range is only ever set via per-class <code>slot_usage</code> in
+   <code>dcat-ap-plus</code> itself. Fixed by passing the class name through; verified
+   by diffing the full regenerated output line by line rather than trusting
+   the change was safe, since it also correctly dropped several now-redundant
+   <code>multivalued: true</code> restatements elsewhere (confirmed still correct by
+   full regeneration, <code>pytest</code>, and a real instance test, not assumed safe).</p>
+<ol>
+<li><strong>Found, and fixed at the port-repo level — a separate, pre-existing
+   LinkML code-gen limitation (same class as the <code>metadata_contributor</code>
+   quirk already documented in <code>HealthStudy-DCAT-AP</code>'s modeling guide).</strong>
+   <code>Dataset.frequency</code> is single-valued at the base; HealthDCAT-AP tightens
+   it to <code>multivalued: true</code> on <code>HealthDataset</code>, correctly expressed in
+   <code>slot_usage</code>. But the generated <code>HealthDataset.__post_init__</code> correctly
+   wraps the value into a list, then unconditionally calls
+   <code>super().__post_init__()</code> — <code>Dataset</code>'s own single-valued construction
+   logic — which re-processes the now-list value with
+   <code>Frequency(**as_dict(self.frequency))</code>, crashing (<code>TypeError: argument
+   after ** must be a mapping, not list</code>). Not a schema authoring mistake
+   (the <code>slot_usage</code> is correct and necessary) — a genuine gap in how
+   LinkML generates <code>__post_init__</code> for a slot whose range or
+   multivalued-ness a subclass narrows in either direction, worth raising
+   upstream with LinkML itself eventually. Confirmed not limited to this
+   one field either: the exact same crash reproduces on
+   <code>HealthDistribution.format</code> (a different class, different base,
+   confirmed independently) — this was always going to recur for every
+   <code>Health&lt;X&gt;</code> field the vocab-range fix (§6) touched, not just
+   <code>HealthDataset</code>'s.</li>
+</ol>
+<p><strong>Now fixed for real, not just worked around in tests.</strong>
+   <code>scripts/patch_post_init_shielding.py</code> runs as a permanent step of both
+   <code>just gen-python</code> and <code>just gen-project</code> (right after the dataclasses
+   are generated, before anything else uses them) — see the script's own
+   docstring for the full mechanism. In short: it derives, straight from
+   the schema (not a hand-maintained list), every class that narrows a
+   slot in a way the parent's own generated coercion can't safely
+   re-process, and rewrites that one <code>super().__post_init__(**kwargs)</code>
+   line into a block that saves the already-correct values, blanks them so
+   the parent's re-processing is a no-op, calls the parent, then restores
+   them. Deliberately not a global, import-time monkeypatch (considered
+   and rejected — see the session's own discussion): it only ever touches
+   each affected class's own generated method body, so constructing a
+   plain, un-profiled <code>dcat-ap-plus</code> class elsewhere in the same process is
+   completely unaffected. Confirmed the fix is real, not just papering
+   over the test: <code>tests/test_shacl_validation.py</code>'s own fixture-building
+   helper no longer needs <em>any</em> construction workaround for these fields —
+   <code>HealthDataset(**data)</code> now just works, exactly as a downstream
+   consumer would call it. The schema-derived scan also caught the same
+   pattern purely inside <code>dcat-ap-plus</code>'s own class hierarchy
+   (<code>Concept</code>, <code>ConceptScheme</code>, <code>PeriodOfTime</code>), unrelated to anything
+   this repo's port does — fixed for free by not hand-limiting the scan to
+   <code>Health&lt;X&gt;</code> classes.</p>
+<ol>
+<li>
+<p><strong>Found and fixed — a real inconsistency within HealthDCAT-AP's own
+   release.</strong> <code>range.ttl</code> and <code>mdr-vocabularies.shape.ttl</code> declare
+   <code>@prefix dcatap: &lt;http://data.europa.eu/r5r&gt;</code> — missing the trailing
+   slash that <code>&lt;tier&gt;-shapes.ttl</code>/<code>&lt;tier&gt;-shapes_recommended.ttl</code> <em>and</em>
+   <code>dcat-ap-plus</code>'s own schema (<code>dcatap: http://data.europa.eu/r5r/</code>) both
+   have. Confirmed by reading all four files' own <code>@prefix</code> lines directly,
+   not assumed. Per the Turtle spec this makes every <code>dcatap:X</code> term in
+   those two files expand to a malformed, concatenated URI (e.g.
+   <code>dcatap:availability</code> → <code>.../r5ravailability</code> instead of
+   <code>.../r5r/availability</code>), silently failing to match any real <code>dcat-ap-plus</code>
+   slot — caught because <code>HealthDistribution</code> ended up with a nonsense
+   <code>r5ravailability</code> slot instead of the real <code>availability</code> one. Corrected
+   before parsing (<code>parse_turtle_with_known_fixes</code> in the port script) since
+   the right namespace is unambiguous (3 of 4 sources agree) — worth
+   reporting upstream, but not a judgment call worth leaving broken locally.</p>
+</li>
+<li>
+<p><strong>Fixed — controlled-vocabulary bindings from <code>mdr-vocabularies.shape.ttl</code>
+   are now captured.</strong> This file (35 <code>NodeShape</code>s, all named
+   <code>*Restriction</code>/<code>*ShapeCV</code>) doesn't add classes or properties — confirmed:
+   none of the four stub classes above or their predicates appear in it
+   either — it adds <em>value-set</em> metadata to properties already ported:
+   "<code>dct:language</code>'s value must be <code>skos:inScheme &lt;the EU language NAL&gt;</code>,"
+   etc. Recorded via LinkML's own <code>values_from</code> slot metaslot (a value-set
+   <em>reference</em>, explicitly not an expanded enum — see its docstring in the
+   LinkML metamodel), not by fetching and inlining the actual external
+   vocabularies, which would be a separate, much larger undertaking. Example,
+   from the real generated output:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">HealthDataset</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">slot_usage</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">theme</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">values_from</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://publications.europa.eu/resource/authority/data-theme</span>
+<span class="w">    </span><span class="nt">health_theme</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">values_from</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme</span>
+</code></pre></div>
+<p>21 bindings resolved and applied (across <code>HealthDataset</code>, <code>HealthDistribution</code>,
+   <code>HealthCatalogue</code>, and two classes the tier shapes never touched directly
+   but this file does — <code>HealthDataService</code>, <code>HealthLicenseDocument</code>, created
+   the same way any other touched class is). 8 correctly <em>not</em> representable
+   this way, reported rather than silently dropped — spot-checked several
+   rather than assumed all fine: <code>dct:publisher</code>'s restriction points at
+   <em>another</em> <code>*_ShapeCV</code> (<code>HealthPublisherAgent_ShapeCV</code>), i.e. "conform to
+   this whole shape," not "come from this vocabulary" — a different,
+   recursive kind of constraint <code>values_from</code> can't represent; <code>dcat:theme</code>'s
+   second entry and <code>dcat:themeTaxonomy</code> are bare <code>sh:hasValue</code> business
+   rules ("must include theme HEAL"), not vocabulary membership; IANA
+   media-type restrictions (<code>dcat:mediaType</code>/<code>compressFormat</code>/<code>packageFormat</code>)
+   use <code>sh:pattern</code> (a regex), a different SHACL constraint type entirely —
+   confirmed by reading <code>IANARestriction</code>'s own shape, not assumed.</p>
+<p><strong>Coverage status:</strong> <code>non-public</code> tier done. <code>public</code>/<code>restricted</code> not yet
+ported — same file pattern (<code>--tier public</code>/<code>--tier restricted</code>), should
+carry over directly per the script's own design.</p>
+<p><strong>Evaluated, not adopted: <a href="https://github.com/mleist/shacl-linkml-tools">mleist/shacl-linkml-tools</a>.</strong>
+A general-purpose, bidirectional SHACL↔LinkML converter with a round-trip
+isomorphism test and real CI — and genuinely broader SHACL coverage than our
+script (<code>sh:in</code>, <code>sh:pattern</code>, value bounds, <code>sh:sparql</code>, <code>sh:or</code>/<code>sh:and</code>
+preserved as annotations). Not a replacement, though: it's a standalone
+one-file-in/one-file-out converter with no concept of merging against an
+already-imported base schema — no notion of "this class already exists in
+<code>dcat-ap-plus</code>, specialize it as <code>Health&lt;X&gt;</code> with the same <code>class_uri</code>,"
+which is the actual hard, valuable part of this port. It also doesn't
+mention <code>sh:extends</code> (the non-standard term <code>HealthAgent</code>'s shape uses) at
+all. Worth reading <code>shacl_reader.py</code> later for <code>sh:pattern</code>/<code>sh:in</code> handling
+ideas (we currently skip both — see the IANA case above) — not worth
+swapping in.</p>
+<h2 id="1-merge-resolution-does-dataset-really-get-the-health-attributes-and-do-agenticentityactivity-stay-untouched">1. Merge resolution: does <code>Dataset</code> really get the health attributes, and do <code>AgenticEntity</code>/<code>Activity</code> stay untouched?</h2>
+<p><strong>Claim:</strong> <code>HealthDataset</code> (the port's specialization of <code>Dataset</code>) carries the
+complete union of both schemas' properties — nothing from <code>dcat-ap-plus</code> is
+lost by specializing, and nothing outside <code>Dataset</code>/<code>Catalogue</code>/<code>Agent</code>/
+<code>Distribution</code>/<code>DatasetSeries</code>/<code>Kind</code> (the classes HealthDCAT-AP's SHACL
+actually constrains) is touched by the port at all.</p>
+<p><strong>Check a. — is the merge complete?</strong> <code>SchemaView.class_induced_slots</code>
+(LinkML's own authoritative resolver for "every slot a class has, own +
+inherited") on both classes:</p>
+<div class="highlight"><pre><span></span><code>Dataset (dcat-ap-plus):  39 own+inherited slots
+HealthDataset:           62 own+inherited slots
+Missing from HealthDataset: NONE
+</code></pre></div>
+<p>Confirmed at two more levels, not just the schema: the generated Python
+dataclass has all 62 as constructor fields (<code>title</code>, <code>publisher</code>,
+<code>contact_point</code>, ... sitting alongside <code>health_category</code>, <code>hdab</code>,
+<code>custodian</code>, ...); and the generated SHACL emits <strong>one single</strong> <code>NodeShape</code>
+for <code>dcat:Dataset</code> with 49 <code>sh:property</code> entries — because <code>HealthDataset</code>
+shares the exact same <code>class_uri: dcat:Dataset</code> as the base class, there is
+no separate "HealthDataset shape" a consumer could apply while missing the
+other. This is deliberate, not an accident of the port: it mirrors how
+<code>chem-dcat-ap</code> itself specializes <code>Dataset</code> (e.g.
+<code>SubstanceSampleCharacterizationDataset is_a Dataset, class_uri: dcat:Dataset</code>
+— confirmed by reading its schema directly), and it matches HealthDCAT-AP's
+own real design, which constrains <code>dcat:Dataset</code> directly rather than
+declaring a new RDF type.</p>
+<p><strong>Check b. — is anything outside the ported classes touched?</strong></p>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-n<span class="w"> </span><span class="s2">"AgenticEntity\|DataGeneratingActivity\|^  Activity:"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>src/health_dcat_ap_plus/schema/healthdcat_ap_non_public.yaml
+<span class="c1"># -&gt; no matches</span>
+</code></pre></div>
+<p>The generated HealthDCAT-AP layer (<code>healthdcat_ap_non_public.yaml</code>) never
+mentions <code>AgenticEntity</code>, <code>Activity</code>, or <code>DataGeneratingActivity</code> — they
+aren't reachable from HealthDCAT-AP's SHACL shapes at all (it constrains
+dataset/catalog/agent-level classes, not the Activity/provenance side), so
+the port script never had a reason to touch them. Confirmed directly via
+<code>SchemaView.get_class(...).from_schema</code>, which reports both classes as
+originating from <code>https://w3id.org/nfdi-de/dcat-ap-plus/</code> — the real,
+unmodified upstream schema, not a local shadow/override.</p>
+<p><strong>Result: confirmed.</strong> The merge is additive and complete on the <code>Dataset</code>
+side, and a strict no-op on the <code>AgenticEntity</code>/<code>Activity</code> side. This is the
+foundation the rest of this document's checks build on.</p>
+<p><strong>Check c. — real instances, not just schema introspection.</strong> Checks a-b
+above are schema-level (<code>class_induced_slots</code>, <code>from_schema</code>) — real enough,
+but not proof that a real instance actually exercises the provenance
+triangle DCAT-AP+ built for exactly this purpose: <code>Dataset.was_generated_by</code>
+(<code>prov:wasGeneratedBy</code>, → <code>DataGeneratingActivity</code>), <code>Dataset.is_about_entity</code>
+(<code>dcterms:subject</code>, → <code>EvaluatedEntity</code>), <code>Dataset.is_about_activity</code>
+(<code>dcterms:subject</code>, same predicate, → <code>EvaluatedActivity</code>). Built a real
+instance with all three populated and pushed it through <code>linkml-validate</code>
+and <code>linkml-convert</code> end to end (the two bugs this surfaced — the stub-class
+and <code>dcatap:</code> prefix issues — are documented in the Porting section above,
+where they belong; this section keeps just the result). Result:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">&lt;https://example.org/dataset/cancer-registry-2024&gt;</span> <span class="kt">a</span> <span class="nn">dcat</span><span class="p">:</span><span class="nt">Dataset</span> <span class="p">;</span>
+    <span class="nn">dcterms</span><span class="p">:</span><span class="nt">subject</span> <span class="nv">&lt;https://example.org/activity/diagnostic-reporting-process&gt;</span><span class="p">,</span>
+        <span class="nv">&lt;https://example.org/population/regional-cancer-patients-2024&gt;</span> <span class="p">;</span>
+    <span class="nn">prov</span><span class="p">:</span><span class="nt">wasGeneratedBy</span> <span class="nv">&lt;https://example.org/activity/cancer-registry-collection-2024&gt;</span> <span class="p">.</span>
+
+<span class="nv">&lt;https://example.org/activity/cancer-registry-collection-2024&gt;</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Activity</span> <span class="p">;</span> <span class="p">...</span>
+<span class="nv">&lt;https://example.org/activity/diagnostic-reporting-process&gt;</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Activity</span> <span class="p">;</span> <span class="p">...</span>
+<span class="nv">&lt;https://example.org/population/regional-cancer-patients-2024&gt;</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Entity</span> <span class="p">;</span> <span class="p">...</span>
+</code></pre></div>
+<p>Confirmed on <code>HealthDataset</code> specifically for validation (a full, entirely
+schema-valid <code>HealthDataset</code> instance carrying all three properties passes
+<code>linkml-validate</code> cleanly — proving the merge doesn't just leave these slots
+present but structurally usable together with the health-specific ones).
+The RDF conversion above is shown on plain <code>Dataset</code>; a full <code>HealthDataset</code>
+instance was also built and converts correctly for every field including
+<code>contact_point</code> (once genuinely blocked here, now fixed — §Porting #2) —
+it's not shown in full because one unrelated field, <code>frequency</code>, still hits
+the separate LinkML code-gen limitation documented at §Porting #3. Neither
+blocker touches <code>was_generated_by</code>/<code>is_about_entity</code>/<code>is_about_activity</code>
+themselves, which Check a already proved are inherited by <code>HealthDataset</code>
+completely unchanged, so the <code>Dataset</code>-level result above is equivalent
+evidence for <code>HealthDataset</code> too.</p>
+<p>Minor, unrelated finding while building the test data: <code>EvaluatedEntity.title</code>
+is single-valued while <code>EvaluatedActivity.title</code> (and <code>Dataset.title</code>,
+<code>DataGeneratingActivity.title</code>) are multivalued — an inconsistency worth
+knowing when authoring instances, not necessarily a bug worth raising.</p>
+<h2 id="2-agenticentity-vs-agent-confidence-in-the-intended-usage">2. <code>AgenticEntity</code> vs <code>Agent</code> — confidence in the intended usage</h2>
+<p><strong>Claim (per the maintainers, Discussion #109):</strong> <code>Agent</code> (<code>foaf:Agent</code>) is
+for "who published/created this dataset" (Entity-scoped, DCAT-AP proper);
+<code>AgenticEntity</code> (<code>prov:Agent</code>) is for "who was associated with the
+<em>activity</em> that produced it" (Activity-scoped, DCAT-AP+'s own PROV-O layer)
+— deliberately kept as two separate hierarchies rather than merged, to stay
+faithful to the PROV-O pattern rather than overloading <code>Agent</code>.</p>
+<p><strong>Check — is this structurally real, not just documentation?</strong></p>
+<div class="highlight"><pre><span></span><code>Dataset.publisher:  range=Agent          slot_uri=dcterms:publisher
+Dataset.creator:    range=Agent          slot_uri=dcterms:creator
+DataGeneratingActivity.carried_out_by: range=AgenticEntity  slot_uri=prov:wasAssociatedWith
+
+Agent:          class_uri=foaf:Agent, is_a=None, mixins=[]
+AgenticEntity:  class_uri=prov:Agent,  is_a=None, mixins=[ClassifierMixin]
+
+Agent ancestors:         [Agent]                       -- fully independent
+AgenticEntity ancestors: [AgenticEntity, ClassifierMixin]  -- no relation to Agent
+</code></pre></div>
+<p><code>class_ancestors</code> confirms there is no <code>is_a</code>/mixin relationship between the
+two at all — genuinely two separate hierarchies, exactly as described.</p>
+<p><strong>Check — does the HealthDCAT-AP port respect this, or blur it?</strong> The port
+introduced two agent-like classes (<code>hdab</code>/<code>custodian</code>/<code>publisher</code> are all
+Entity-scoped concepts — "who published/is responsible for this dataset,"
+not an Activity role):</p>
+<div class="highlight"><pre><span></span><code>HealthAgent:          is_a=Agent  (ancestors: [HealthAgent, Agent])
+HealthPublisherAgent: is_a=Agent  (ancestors: [HealthPublisherAgent, Agent])
+</code></pre></div>
+<p>Both correctly specialize <code>Agent</code>, not <code>AgenticEntity</code> — consistent with
+their real semantics.</p>
+<p><strong>Result: confirmed</strong>, both for the base schema and for the port.</p>
+<h2 id="3-id-and-other_identifier-on-agenticentity-orcidroridref-readiness">3. <code>id</code> and <code>other_identifier</code> on <code>AgenticEntity</code> — ORCID/ROR/IdRef readiness</h2>
+<p><strong>Claim:</strong> <code>AgenticEntity</code> has a required <code>id</code> (a real URI — an ORCID/ROR IRI
+can be used directly as the subject) plus an optional, multivalued
+<code>other_identifier</code> (range <code>Identifier</code>: <code>title</code> + <code>notation</code>) for a second
+scheme when an agent has more than one — e.g. ORCID as <code>id</code>, IdRef as
+<code>other_identifier</code>.</p>
+<p><strong>Check — schema-level.</strong></p>
+<div class="highlight"><pre><span></span><code>AgenticEntity.id:               range=uriorcurie  required=True
+AgenticEntity.other_identifier: range=Identifier   multivalued=True  slot_uri=adms:identifier
+Identifier class: slots=[notation, title, description], class_uri=adms:Identifier
+</code></pre></div>
+<p>Cross-checked against <code>dcat-ap-plus</code>'s own published docs
+(<a href="https://nfdi-de.github.io/dcat-ap-plus/latest/elements/classes/AgenticEntity/"><code>AgenticEntity</code></a>),
+not just the source YAML — matches exactly (<code>id</code>: required <code>Uriorcurie</code>;
+<code>other_identifier</code>: optional, range <code>Identifier</code>). Their docs also confirm
+<code>Device</code>/<code>Software</code> as the only currently-modeled <code>AgenticEntity</code> subclasses
+— matching Hendrik's own comment in Discussion #109 about why those two
+specifically ("some people argue about whether both concepts can be
+considered to be a <code>foaf:Agent</code> and <code>prov:agent</code>").</p>
+<p><strong>Check — a real instance, not just the schema.</strong> Built the exact ORCID+IdRef
+example from Discussion #109 and pushed it through validation and
+conversion:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">&lt;https://orcid.org/0000-0002-1825-0097&gt;</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Agent</span> <span class="p">;</span>
+    <span class="nn">dcterms</span><span class="p">:</span><span class="nt">title</span> <span class="s">"Josiah Carberry"</span> <span class="p">;</span>
+    <span class="nn">adms</span><span class="p">:</span><span class="nt">identifier</span> <span class="p">[</span> <span class="kt">a</span> <span class="nn">adms</span><span class="p">:</span><span class="nt">Identifier</span> <span class="p">;</span>
+            <span class="nn">dcterms</span><span class="p">:</span><span class="nt">title</span> <span class="s">"IdRef"</span> <span class="p">;</span>
+            <span class="nn">skos</span><span class="p">:</span><span class="nt">notation</span> <span class="s">"069774160"</span> <span class="p">]</span> <span class="p">.</span>
+</code></pre></div>
+<p>Matches the discussed pattern exactly: the ORCID URI is the subject itself
+(not a separate <code>id</code> property triple — <code>id</code>-as-subject is how LinkML
+identifier slots serialize, confirmed by every instance converted this
+session, not just this one), IdRef sits alongside as a secondary
+<code>adms:identifier</code>.</p>
+<p><strong>Result: confirmed</strong> for <code>AgenticEntity</code> itself.</p>
+<p><strong>A real gap this surfaced, worth flagging: <code>Agent</code> has <em>neither</em> <code>id</code> nor
+<code>other_identifier</code> at all — not even a thin version.</strong> Checked directly
+against <code>dcat-ap-plus</code>'s own class definition, not inferred: <code>Agent</code>'s
+entire slot list is <code>[name, type]</code>. This matters here specifically because
+<code>HealthAgent</code>/<code>HealthPublisherAgent</code> — the classes this port already built
+for <code>hdab</code>/<code>custodian</code>/<code>publisher</code> — specialize <code>Agent</code>, not <code>AgenticEntity</code>.
+Concretely: there is currently no way to record a ROR ID (or any identifier
+at all) for the Health Data Access Body or a dataset's custodian, even
+though those are exactly the kind of organizations you'd want to identify
+precisely. Worth deciding, not silently working around: either raise this
+with the <code>dcat-ap-plus</code> maintainers (a natural companion to the
+<code>Attribution</code>-has-no-<code>agent</code> and <code>Kind</code>-had-a-disconnected-shape findings —
+same pattern, a class shipped thinner than its real-world use needs), or add
+<code>id</code>/<code>other_identifier</code> locally on <code>HealthAgent</code>/<code>HealthPublisherAgent</code>
+specifically, the same way <code>contact_point</code> was locally recovered in §Porting</p>
+<h1 id="2-except-this-time-theres-no-existing-healthdcat-ap-shape-to-recover-it">2 — except this time there's no existing HealthDCAT-AP shape to recover it</h1>
+<p>from; it would be a genuinely new addition, which is a bigger call than a
+mechanical fix and shouldn't be made silently here.</p>
+<p><strong>Methodological note, worth remembering for the rest of this document and
+beyond:</strong> <code>SchemaView.induced_slot(name, class_name)</code> does <strong>not</strong> reliably
+signal "is this slot actually applicable to this class" — called with a
+slot name a class doesn't really use, it can still return a plausible-looking
+generic fallback instead of raising. This produced a real false trail while
+building this section (<code>Agent.id</code>/<code>Agent.other_identifier</code>/<code>Agent.contact_point</code>
+all appeared to "exist" via this call, with values that turned out to be
+generic top-level defaults, not real class-applicable slots). The reliable
+check is <code>class_induced_slots(class_name)</code> and checking <em>membership</em> in its
+result — used throughout §1 already, and used to catch this specific false
+trail once it looked suspicious.</p>
+<h2 id="4-qualified_attribution-entity-side-dataset-does-it-actually-work">4. <code>qualified_attribution</code> (Entity-side, <code>Dataset</code>) — does it actually work?</h2>
+<p><strong>Claim going in:</strong> <code>dcat-ap-plus</code>'s own <code>Attribution</code> class has only
+<code>title</code>/<code>description</code> — <code>agent</code>/<code>had_role</code> were never wired up, confirmed
+directly (§Porting also references this). Re-confirmed here: neither
+<code>Attribution</code> nor <code>qualified_attribution</code> appear anywhere in HealthDCAT-AP's
+own SHACL either — this is a generic <code>dcat-ap-plus</code> gap, not something
+HealthDCAT-AP could have fixed even if it wanted to.</p>
+<p><strong>A real architecture question this raised, resolved before fixing
+anything:</strong> <code>HealthStudy-DCAT-AP</code> already built and verified this exact fix
+(<code>DatasetAttribution</code>, <code>agent</code>, <code>had_role</code>) — but it can't just be copied
+over mechanically, because <em>where</em> it needed to attach differs. There,
+<code>ResearchDataset</code> (the class needing <code>qualified_attribution</code> narrowed) is
+hand-authored directly in the main schema, so adding a sibling class in the
+same file was trivial. Here, <code>HealthDataset</code> is <em>mechanically generated</em> by
+the port script into <code>healthdcat_ap_non_public.yaml</code> — LinkML has no clean
+way to layer more <code>slot_usage</code> onto an already-imported class from the
+hand-authored main schema, and hand-editing a file marked "generated, do not
+edit" would just get silently wiped on the next port run. Resolved by
+extending the port script itself with an explicit, clearly-labeled
+completion step (same pattern as the <code>dcatap:</code> prefix fix) — applied
+programmatically, survives regeneration, but honestly documented as <em>not</em>
+derived from HealthDCAT-AP's SHACL, unlike everything else the script
+produces.</p>
+<p><strong>Fixed, then corrected against HealthDCAT-AP's own real example.</strong> First
+pass reused <code>HealthStudy-DCAT-AP</code>'s exact design as-is (<code>agent</code>: <code>prov:agent</code>
+→ <code>AgenticEntity</code>, <code>had_role</code>: <code>dcat:hadRole</code> → <code>Role</code>), flagging the
+<code>AgenticEntity</code>-vs-<code>Agent</code> choice as an open, unresolved nuance. It wasn't
+just a nuance — checking HealthDCAT-AP's own real documentation example
+(release-7, <code>#provqualifiedAttribution</code>, fetched directly) turned up two
+real mismatches:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">&lt;https://fair.healthdata.be/dataset/...&gt;</span> <span class="kt">a</span> <span class="nn">dcat</span><span class="p">:</span><span class="nt">Dataset</span> <span class="p">;</span>
+    <span class="nn">prov</span><span class="p">:</span><span class="nt">qualifiedAttribution</span> <span class="p">[</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Attribution</span><span class="p">;</span>
+        <span class="nn">dcat</span><span class="p">:</span><span class="nt">hadRole</span> <span class="nv">&lt;https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#processor&gt;</span><span class="p">;</span>
+        <span class="nn">prov</span><span class="p">:</span><span class="nt">agent</span> <span class="p">[</span> <span class="kt">a</span> <span class="nn">foaf</span><span class="p">:</span><span class="nt">Agent</span><span class="p">,</span> <span class="nn">foaf</span><span class="p">:</span><span class="nt">Organization</span><span class="p">;</span> <span class="nn">dct</span><span class="p">:</span><span class="nt">type</span> <span class="nv">&lt;...&gt;</span><span class="p">;</span> <span class="nn">foaf</span><span class="p">:</span><span class="nt">name</span> <span class="s">"Germany processor"</span><span class="p">;</span> <span class="nn">foaf</span><span class="p">:</span><span class="nt">homepage</span> <span class="nv">&lt;...&gt;</span><span class="p">;</span> <span class="nn">foaf</span><span class="p">:</span><span class="nt">mbox</span> <span class="nv">&lt;...&gt;</span> <span class="p">]</span>
+    <span class="p">]</span> <span class="p">.</span>
+</code></pre></div>
+<ol>
+<li><code>prov:agent</code>'s value is typed <code>foaf:Agent, foaf:Organization</code> — no
+   <code>prov:Agent</code> at all. <code>qualified_attribution</code> is <code>Dataset</code>'s own
+   Entity-side mechanism, so its agent should be Entity-scoped (<code>Agent</code>),
+   matching <code>Dataset.publisher</code>/<code>creator</code>'s own range — not <code>AgenticEntity</code>
+   (Activity-scoped, correct for <code>Association</code>'s agent, wrong here). Split
+   into two separate slots: <code>attribution_agent</code> (<code>Agent</code>, for
+   <code>DatasetAttribution</code>) and <code>agent</code> (<code>AgenticEntity</code>, for <code>Association</code>,
+   §5) — conflating them under one shared slot was the original mistake,
+   inherited unquestioned from <code>HealthStudy-DCAT-AP</code>.</li>
+<li><code>dcat:hadRole</code>'s value is a bare URI into an external codelist (ISO
+   19115 <code>CI_RoleCode</code>), not a nested <code>dcat:Role</code> object with
+   <code>title</code>/<code>description</code>. Tried <code>range: Role</code> first — a bare URI failed
+   validation ("not of type object"). Tried <code>any_of: [{range: Role},
+   {range: uriorcurie}]</code> next — the bare URI then validated, but broke the
+   object form entirely, regardless of which alternative was listed first
+   (tested both orderings). A class-plus-scalar <code>any_of</code> union not reliably
+   supporting both shapes matches exactly what NFDI4Chem's own paper flagged
+   for union ranges in general — not a fluke. Settled on <code>range: uriorcurie</code>
+   with <code>values_from</code> pointing at the real ISO 19115 codelist — simpler than
+   forcing a union, and the <em>only</em> shape the one real example actually uses,
+   so there was no evidence the object form was ever needed in practice.
+   Renamed <code>had_role</code> → <code>attribution_had_role</code> along the way: the bare name
+   collided with <code>dcat-ap-plus</code>'s own pre-existing top-level <code>had_role</code> slot
+   (<code>ValueError: Conflicting URIs for item: had_role</code>, hit by actually
+   running it, not predicted).</li>
+</ol>
+<p>Corrected real instance, converted end to end:</p>
+<div class="highlight"><pre><span></span><code><span class="p">[]</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Attribution</span> <span class="p">;</span>
+    <span class="nn">dcat</span><span class="p">:</span><span class="nt">hadRole</span> <span class="nv">&lt;https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#processor&gt;</span> <span class="p">;</span>
+    <span class="nn">prov</span><span class="p">:</span><span class="nt">agent</span> <span class="p">[</span> <span class="kt">a</span> <span class="nn">foaf</span><span class="p">:</span><span class="nt">Agent</span> <span class="p">;</span> <span class="nn">foaf</span><span class="p">:</span><span class="nt">name</span> <span class="s">"Germany processor"</span> <span class="p">]</span> <span class="p">.</span>
+</code></pre></div>
+<p>Now a structural match to the real example (bare codelist URI, <code>foaf:Agent</code>
+typing) rather than a plausible-looking approximation. <code>multivalued: true</code>/
+<code>inlined_as_list: true</code> were restated explicitly on <code>HealthDataset</code>'s
+<code>qualified_attribution</code> <code>slot_usage</code> override, applying the lesson already
+learned in <code>HealthStudy-DCAT-AP</code> (a range-only override without restating
+those breaks the generated <code>__post_init__</code> even when the values don't
+actually change) — not rediscovered the hard way this time.</p>
+<p><strong>Result: confirmed</strong>, and now actually matching the one real example
+available, not just structurally plausible. Worth remembering: a design
+"already proven" in a sibling repo is proven against <em>that repo's</em> test
+data, not automatically against the real spec — worth re-checking against
+primary sources even when reusing a working pattern.</p>
+<h2 id="5-qualified_association-activity-side-symmetric-via-carried_out_byprovwasassociatedwith-readiness">5. <code>qualified_association</code> (Activity-side, symmetric via <code>carried_out_by</code>/<code>prov:wasAssociatedWith</code>) — readiness</h2>
+<p><strong>Claim going in:</strong> <code>dcat-ap-plus</code> has no <code>Association</code> class at all (only
+built the Entity-side <code>Attribution</code> pattern, and even that only as a stub —
+confirmed absent, not assumed, same grep-everything approach as the other
+findings in this document). Open question: does building <code>Association</code>
+belong in this merge layer, or is it specific enough to defer to the
+specialization repo?</p>
+<p><strong><code>Association</code> itself belongs here</strong> — the generic PROV-O completion, same
+reasoning as <code>DatasetAttribution</code> (§4). Built in the main hand-authored
+schema (not the port script's completion step, unlike <code>DatasetAttribution</code>
+— <code>Association</code> has no dependency on anything the port generates):
+<code>is_a: SupportiveEntity</code>, <code>class_uri: prov:Association</code>, <code>agent</code>
+(<code>prov:agent</code> → <code>AgenticEntity</code> — correctly Activity-scoped here, unlike
+<code>DatasetAttribution</code>'s Entity-scoped <code>attribution_agent</code>, per §4's
+correction) and <code>association_had_role</code> (<code>prov:hadRole</code> → <code>uriorcurie</code>,
+<code>values_from</code> the same ISO 19115 <code>CI_RoleCode</code> codelist — same fix as
+<code>attribution_had_role</code> in §4, same reason: a bare URI is what
+HealthDCAT-AP's real examples actually use, and a class-plus-scalar
+<code>any_of</code> union doesn't reliably validate both shapes).</p>
+<p><strong>A real gap caught by the user, not this document's own checks: the class
+existed, but the mechanism connecting anything to it didn't.</strong>
+<code>qualified_association</code> — the slot that actually makes <code>Association</code>
+reachable from an Activity — was never defined at all. The original framing
+here ("narrowing <code>qualified_association</code> onto a specific class doesn't
+belong in this merge layer") quietly slid into "so don't define the slot
+either," which doesn't follow: the slot itself needs no class to attach
+to — it's new, not an override of an existing <code>dcat-ap-plus</code> slot, so its
+<code>range: Association</code> can be set directly at the top level, with zero
+dependency on any Activity-side class existing yet. That's exactly the
+"ready to use, only needs specializing" schema the downstream repo needs,
+consistent with the user's own framing of what this merge layer is for.
+Fixed:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">qualified_association</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prov:qualifiedAssociation</span>
+<span class="w">  </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Association</span>
+<span class="w">  </span><span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">inlined_as_list</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<p>The specialization repo can now add <code>qualified_association</code> to any
+<code>is_a: DataGeneratingActivity</code> class's own <code>slots:</code> list and get the
+correct range immediately — no schema work needed there just to make the
+mechanism usable, only to define what its own Activity-side class actually
+looks like.</p>
+<p>Real instance, converted end to end:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">&lt;https://ror.org/00k4n6c32&gt;</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Agent</span> <span class="p">;</span>
+    <span class="nn">dcterms</span><span class="p">:</span><span class="nt">title</span> <span class="s">"Example Funding Agency"</span> <span class="p">.</span>
+
+<span class="p">[]</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Association</span> <span class="p">;</span>
+    <span class="nn">prov</span><span class="p">:</span><span class="nt">agent</span> <span class="nv">&lt;https://ror.org/00k4n6c32&gt;</span> <span class="p">;</span>
+    <span class="nn">prov</span><span class="p">:</span><span class="nt">hadRole</span> <span class="nv">&lt;https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder&gt;</span> <span class="p">.</span>
+</code></pre></div>
+<p><strong>Result: confirmed</strong>, and corrected on the actual scope question at the
+time: not "defer everything Activity-related," but "defer only what
+genuinely needs a class that doesn't exist yet." <code>Association</code> and
+<code>qualified_association</code> were both fully usable already; only the class
+that <em>references</em> <code>qualified_association</code> was left to the specialization
+repo.</p>
+<p><strong>That narrowest deferred piece was itself built here once a real need
+appeared</strong> — a request for a full worked example with <code>AgenticEntity</code>s on
+<code>Activity</code>s (PI/sponsor/funder), the same kind of thing this whole
+document keeps testing rather than assuming works.
+<code>AssociatedDataGeneratingActivity</code> (<code>health_dcat_ap_plus.yaml</code>) is
+<code>DataGeneratingActivity</code>, <code>is_a</code>, same <code>class_uri</code>, with
+<code>qualified_association</code> added to its own <code>slots:</code> — exactly as generic and
+health-agnostic as <code>Association</code> itself, so building it doesn't cross the
+line that was actually meant (no health-specific content, just the one
+slot that makes the already-generic mechanism reachable from a real
+Activity). Couldn't be done by narrowing <code>HealthDataset.was_generated_by</code>'s
+declared range directly onto it — <code>HealthDataset</code> lives in the generated
+<code>healthdcat_ap_non_public.yaml</code>, which doesn't import this file (only the
+reverse), and reopening an already-imported class's <code>slot_usage</code> throws
+"Conflicting URIs" regardless of which file tries it (confirmed elsewhere
+this session). Used directly instead:
+<code>tests/test_shacl_validation.py</code>'s fixture-construction helper
+pre-constructs each <code>was_generated_by</code> entry as a real
+<code>AssociatedDataGeneratingActivity</code> instance before <code>HealthDataset(**data)</code>
+runs — <code>_normalize_inlined_as_list</code>'s own <code>isinstance(list_entry,
+slot_type)</code> fast path (confirmed by reading its source directly) accepts
+an already-built subclass instance as-is, no schema-level range narrowing
+needed at all.</p>
+<p>Full worked example — <code>tests/data/problem/valid/HealthDataset-shacl-full.yaml</code>'s
+<code>was_generated_by</code>, three real ISO 19115 <code>CI_RoleCode</code> roles (not
+invented):</p>
+<div class="highlight"><pre><span></span><code><span class="nv">&lt;https://example.org/activity/cancer-registry-collection-2024&gt;</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Activity</span> <span class="p">;</span>
+    <span class="nn">dcterms</span><span class="p">:</span><span class="nt">title</span> <span class="s">"Cancer registry data collection process"</span> <span class="p">;</span>
+    <span class="nn">prov</span><span class="p">:</span><span class="nt">qualifiedAssociation</span>
+        <span class="p">[</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Association</span> <span class="p">;</span>
+            <span class="nn">prov</span><span class="p">:</span><span class="nt">agent</span> <span class="nv">&lt;https://orcid.org/0000-0002-1825-0097&gt;</span> <span class="p">;</span>
+            <span class="nn">prov</span><span class="p">:</span><span class="nt">hadRole</span> <span class="nv">&lt;https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator&gt;</span> <span class="p">],</span>
+        <span class="p">[</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Association</span> <span class="p">;</span>
+            <span class="nn">prov</span><span class="p">:</span><span class="nt">agent</span> <span class="nv">&lt;https://ror.org/00k4n6c32&gt;</span> <span class="p">;</span>
+            <span class="nn">prov</span><span class="p">:</span><span class="nt">hadRole</span> <span class="nv">&lt;https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor&gt;</span> <span class="p">],</span>
+        <span class="p">[</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Association</span> <span class="p">;</span>
+            <span class="nn">prov</span><span class="p">:</span><span class="nt">agent</span> <span class="nv">&lt;https://ror.org/03yrm5c26&gt;</span> <span class="p">;</span>
+            <span class="nn">prov</span><span class="p">:</span><span class="nt">hadRole</span> <span class="nv">&lt;https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder&gt;</span> <span class="p">]</span> <span class="p">.</span>
+
+<span class="nv">&lt;https://orcid.org/0000-0002-1825-0097&gt;</span> <span class="kt">a</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Agent</span> <span class="p">;</span>
+    <span class="nn">dcterms</span><span class="p">:</span><span class="nt">title</span> <span class="s">"Dr. Maria Santos"</span> <span class="p">.</span>
+</code></pre></div>
+<p>Checked against both shape sets in §6 as part of the same fixture, not
+separately: zero new violations against either — our own generated SHACL
+has no conflicting shape for <code>prov:Agent</code>/<code>prov:Association</code>/
+<code>prov:qualifiedAssociation</code> (<code>Association</code>/<code>AgenticEntity</code> are
+hand-authored, no base <code>dcat-ap-plus</code> class collides with them the way
+<code>Dataset</code>'s own fields did in §6), and HealthDCAT-AP's real shapes
+genuinely never reach the Activity side at all (the same finding already
+confirmed in §1 Check b) — so real Activity-side content adds nothing new
+to validate against there either.</p>
+<h2 id="6-real-shacl-validation-does-a-real-instance-actually-conform">6. Real SHACL validation — does a real instance actually conform?</h2>
+<p>Everything above verifies the <em>schema</em>: shapes of classes and slots, checked
+via <code>SchemaView</code> introspection and <code>linkml-validate</code>'s JSON-schema-derived
+checks. None of that can see what real SHACL enforces —
+<code>sh:nodeKind</code>/IRI-vs-literal, <code>sh:class</code> membership, <code>sh:hasValue</code>,
+cardinality nested inside sub-shapes. <code>tests/test_shacl_validation.py</code>
+closes that gap: it builds a comprehensive <code>HealthDataset</code> instance (a
+cancer registry dataset with agents, activities, entities, attribution,
+and qualified associations (PI/sponsor/funder, §5) —
+<a href="../tests/data/problem/valid/HealthDataset-shacl-full.yaml">tests/data/problem/valid/HealthDataset-shacl-full.yaml</a>),
+dumps it to real RDF via <code>rdflib_dumper.as_rdf_graph</code>, and runs <code>pyshacl</code>
+against it twice: once against our own generated SHACL, once against
+HealthDCAT-AP's real, official upstream <code>.ttl</code> shapes directly (cloned
+locally at <code>repos/healthdcat-ap</code>, per README.md) — two independent
+questions ("is our merge self-consistent?" and "does the dataset portion
+still conform to the spec it was ported from?").</p>
+<p>Both runs produce real violations. Rather than requiring conformance
+outright, the tests compare the exact set of violation <em>signatures</em>
+(severity, SHACL constraint component, result path) against an explicit,
+commented allowlist in the test file — a genuinely new violation fails the
+test (a real regression), and so does fixing a known one (a prompt to
+prune the allowlist), so the allowlist stays an accurate, living record of
+what's actually still broken. Two real, structural port bugs came out of
+the first run, not visible to any check above — <strong>both now fixed and
+verified</strong> (the real-shapes violation count dropped from 31 to 20; every
+<code>NodeKind</code>, <code>sh:hasValue</code>, and <code>contactPoint</code> finding below is confirmed
+gone from the allowlist):</p>
+<ul>
+<li><strong>Vocabulary-bound slots kept class-object ranges.</strong> Every
+  <code>values_from</code>-bound slot this repo ported (<code>theme</code>, <code>health_category</code>,
+  <code>health_theme</code>, <code>access_rights</code>, <code>frequency</code>, <code>has_coding_system</code>,
+  <code>language</code>, <code>type</code>, <code>conforms_to</code>) ranged over a nested class (<code>Concept</code>,
+  <code>RightsStatement</code>, <code>Frequency</code>, <code>Standard</code>, ...) inherited from
+  <code>dcat-ap-plus</code> or added by the port, instead of the bare IRI the real
+  shapes require (<code>sh:nodeKind sh:IRI</code>, confirmed directly in
+  <code>non-public-shapes.ttl</code>/<code>mdr-vocabularies.shape.ttl</code> — 25 of 27
+  vocabulary-bound property shapes there carry it; the 2 real exceptions,
+  <code>dct:publisher</code> and <code>prov:wasGeneratedBy</code>, correctly stay nested/inlined
+  objects and were confirmed <em>not</em> touched by the fix). Same lesson as
+  <code>attribution_had_role</code> in §4, except it turns out that fix should have
+  generalized to every vocabulary-bound field, not just that one —
+  <code>values_from</code> correctly recorded <em>which</em> vocabulary to point to, but
+  never corrected the range to match. <strong>Fixed</strong> in
+  <code>parse_vocabulary_restrictions</code>/<code>main()</code> (the port script): every
+  vocabulary binding whose source property shape also carries
+  <code>sh:nodeKind sh:IRI</code> now forces <code>range: uriorcurie</code> in the generated
+  <code>slot_usage</code>. Two sharper instances of the same family, also now
+  resolvable since the range supports a plain IRI: <code>dct:accessRights</code>
+  requires <code>sh:hasValue &lt;.../access-right/NON_PUBLIC&gt;</code> exactly (the test
+  fixture now supplies it directly), and <code>dcat:theme</code> must include the
+  fixed <code>.../data-theme/HEAL</code> term specifically (ditto).</li>
+<li><strong><code>HealthAgent</code>/<code>HealthPublisherAgent</code> reused the wrong contact-point
+  predicate.</strong> <code>hdab</code>/<code>custodian</code>/<code>publisher</code> reused <code>dcat-ap-plus</code>'s own
+  <code>contact_point</code> slot, hardwired to <code>dcat:contactPoint</code> (confirmed via
+  <code>SchemaView.induced_slot</code>) — root cause: <code>cv:contactPoint</code>'s local name
+  snake-cases to the exact same <code>contact_point</code>, and <code>build_linkml</code>'s
+  classless slot-lookup fallback (needed because <code>HealthAgent</code> isn't a real
+  <code>dcat-ap-plus</code> class) matched that name to the wrong, unrelated slot. The
+  real <code>HealthAgent_Shape</code> requires <code>cv:contactPoint</code>
+  (<code>http://data.europa.eu/m8g/</code> Core Vocabulary predicate) instead — a
+  different predicate for Agent-typed contact points than for
+  Dataset/Distribution's own. Same class of issue as the
+  <code>attribution_had_role</code> rename in §4: a <code>dcat-ap-plus</code> slot reused where
+  it doesn't actually apply. <strong>Fixed</strong> via a <code>PROPERTY_RENAME</code> map (same
+  pattern as <code>CLASS_RENAME</code>) — <code>cv:contactPoint</code> now resolves to its own
+  <code>agent_contact_point</code> slot, correctly <code>slot_uri: cv:contactPoint</code>.</li>
+</ul>
+<p>Regenerating after both fixes surfaced one new, deeper finding — visible
+only against our own generated shapes, not the real ones: <code>HealthDataset</code>
+shares <code>dcat:Dataset</code>'s own <code>class_uri</code> with <code>dcat-ap-plus</code>'s unmodified
+base <code>Dataset</code> class (the whole point of the "<code>Health&lt;X&gt;</code> profile"
+pattern — same real-world type, tighter shape). Confirmed directly by
+querying our generated SHACL: <code>sh:targetClass dcat:Dataset</code> now carries
+<em>two</em> <code>sh:property</code> shapes for <code>dct:accessRights</code> (and
+<code>accrualPeriodicity</code>/<code>language</code>/<code>theme</code>/<code>type</code>) — <code>dcat-ap-plus</code>'s own
+original <code>RightsStatement</code>-classed one, untouched, plus <code>HealthDataset</code>'s
+new <code>uriorcurie</code>/<code>nodeKind</code>-IRI one — and a bare IRI can't satisfy both at
+once. Every earlier profile narrowing (e.g. <code>contact_point</code> →
+<code>HealthKind</code>) was a subclass tightening, compatible with the base shape;
+this is the first one where the override is a genuinely different,
+mutually exclusive value shape (object vs. scalar) on the <em>same</em>
+<code>class_uri</code>, which "layer a stricter shape on top" can't reconcile by
+itself.</p>
+<p><strong>Investigated further, not treated as a one-off.</strong> Querying every
+<code>(sh:targetClass, sh:path)</code> pair in our generated SHACL for more than one
+disagreeing value-shape combination turns up 26 such conflicts — 17 of
+them freshly caused by the vocab-range fix, spanning five classes, not
+just <code>HealthDataset</code>: <code>Catalog/language</code>, <code>Catalog/publisher</code>,
+<code>Catalog/spatial</code>, <code>DataService/accessRights</code>, <code>DataService/format</code>,
+<code>Dataset/accessRights</code>, <code>Dataset/accrualPeriodicity</code>, <code>Dataset/conformsTo</code>,
+<code>Dataset/language</code>, <code>Dataset/spatial</code>, <code>Dataset/type</code>, <code>Dataset/theme</code>,
+<code>Distribution/availability</code>, <code>Distribution/format</code>,
+<code>Distribution/language</code>, <code>Distribution/status</code>. So this isn't a one-off:
+it will recur every time a future <code>Health&lt;X&gt;</code> tightening swaps a value's
+shape (object → scalar) rather than just narrowing it — and that's exactly
+the pattern HealthDCAT-AP's real spec uses for essentially every
+controlled-vocabulary field.</p>
+<p>The important question was <em>why</em> — is <code>dcat-ap-plus</code> wrong to model these
+as nested objects, or is this real, and if real, does it mean our own
+generated SHACL should be made clean? Checked directly, not assumed:
+<code>dcat-ap-plus</code>'s own schema gives <code>Dataset.access_rights</code> <code>range:
+RightsStatement</code> and <code>Dataset.frequency</code> <code>range: Frequency</code> with no
+rationale comment either way — this is <code>dcat-ap-plus</code> faithfully
+reflecting <em>plain DCAT-AP's own</em> standard convention (DCAT-AP itself
+genuinely models <code>dct:accessRights</code>/<code>dct:accrualPeriodicity</code> as objects).
+HealthDCAT-AP's real spec then requires bare IRIs for the same predicates
+— a real divergence between the two specs, not a mistake either one made.
+And critically: HealthDCAT-AP's own real, official validation set
+(<code>non-public-shapes.ttl</code> etc., exactly what §6's real-shapes test
+validates against) is never combined with plain DCAT-AP's own generic
+<code>shapes.ttl</code> in practice — the real-shapes test is already clean, and
+stays clean regardless of this finding. The conflict exists <em>only</em> in our
+own self-generated SHACL, the one place that naively unions
+<code>dcat-ap-plus</code>'s base <code>Dataset</code> shape with <code>HealthDataset</code>'s override —
+something the real validation ecosystem never actually does either.</p>
+<p>Given that, the options considered:</p>
+<ol>
+<li><strong>Give <code>Health&lt;X&gt;</code> its own <code>class_uri</code>.</strong> Rejected — HealthDCAT-AP's
+   real <code>Dataset_Shape</code> targets plain <code>dcat:Dataset</code>, not a health-specific
+   subtype (confirmed directly in <code>non-public-shapes.ttl</code>). A different
+   <code>class_uri</code> would make our own output non-conformant to the actual
+   spec — strictly worse than the cosmetic self-SHACL noise it would fix.</li>
+<li><strong>Drop <code>is_a: Dataset</code>, keep the same <code>class_uri</code>.</strong> Doesn't help —
+   <code>Dataset</code> stays present in the compiled schema regardless (imported,
+   referenced elsewhere), so <code>linkml generate shacl</code> still emits its shape
+   independently. Checked directly, changes nothing.</li>
+<li><strong>Custom SHACL generation that resolves one shape per real <code>class_uri</code></strong>
+   (most-specific class wins). Buildable, but not more <em>correct</em> — real
+   SHACL has no override semantics, so a resolved single-shape output
+   wouldn't reflect what an actual SHACL processor does if it received
+   both shape sources together. It would just be us inventing our own
+   resolution rule to make a self-test quieter.</li>
+<li><strong>Stop expecting our self-generated SHACL to be globally clean; let it
+   be a self-consistency smell test, and treat the real-shapes test as the
+   authoritative signal.</strong> Matches what the real ecosystem already does
+   (HealthDCAT-AP's own shapes are self-sufficient, never stacked with
+   plain DCAT-AP's), costs nothing to implement, and is already backed by
+   a passing test.</li>
+</ol>
+<p><strong>Chosen: option 4.</strong> This isn't a bug to fix — it's a correctly-surfaced
+structural fact about how HealthDCAT-AP relates to DCAT-AP, and the
+authoritative check (the real-shapes test) already reflects it correctly.
+<code>KNOWN_OWN_SHAPES_VIOLATIONS</code> stays the honest, permanent record of it
+rather than papering over it with an invented resolution rule.</p>
+<p><strong>A third real, structural port bug, found the same way</strong>:
+<code>HealthAgent</code>/<code>HealthPublisherAgent</code> (case 2 in the port script's own
+docstring — a synthetic class with no <code>sh:targetClass</code> match) never got a
+<code>class_uri</code> at all. Root cause: <code>:HealthAgent_Shape</code> in the real shapes has
+no <code>sh:targetClass</code> of its own — only <code>sh:extends :Agent_Shape</code> — so it's a
+pure value-shape, reused via <code>sh:node</code> from <code>hdab</code>/<code>custodian</code>/<code>publisher</code>,
+not an independently-targeted RDF type. The port correctly resolved
+<code>is_a: Agent</code> from the <code>sh:extends</code>, but <code>class_uri</code> was only ever set from
+<code>sh:targetClass</code>, which is absent here — so <code>HealthAgent</code> silently fell
+back to LinkML's own auto-generated <code>class_uri</code>
+(<code>health_dcat_ap_plus:HealthAgent</code>) instead of inheriting <code>foaf:Agent</code> from
+its parent, the same "profile, same <code>class_uri</code> as base" pattern used
+everywhere else in this port. Real instances of <code>hdab</code>/<code>custodian</code> never
+actually typed as <code>foaf:Agent</code> at all — confirmed via real SHACL validation
+(<code>HealthAgent_Shape</code> requires it; the dumped RDF never provided it, and
+<code>ClassConstraintComponent "hdab"</code> was in <code>KNOWN_REAL_SHAPES_VIOLATIONS</code>).
+<strong>Fixed</strong>: <code>build_linkml</code> now falls back to the resolved parent's own
+<code>class_uri</code> when a class has an <code>is_a</code> (via <code>sh:extends</code>) but no
+<code>sh:targetClass</code> of its own. Verified: the <code>hdab</code> finding is gone from the
+real-shapes test.</p>
+<p>Fixing it introduced one expected instance of the <em>same</em> class_uri-sharing
+fact from above, this time in our own shapes: <code>HealthAgent</code>/
+<code>HealthPublisherAgent</code> now correctly share <code>class_uri: foaf:Agent</code> with
+<code>dcat-ap-plus</code>'s own base <code>Agent</code> — which is what makes a real <code>hdab</code>/
+<code>custodian</code> value actually type as <code>foaf:Agent</code>, as it should — but that
+also means <code>Agent</code>'s merged <code>foaf:Agent</code> shape now carries
+<code>HealthAgent</code>'s required <code>agent_contact_point</code> constraint too, which bleeds
+onto <em>every</em> <code>foaf:Agent</code>-typed node in the graph, including
+<code>DatasetAttribution.attribution_agent</code>'s plain <code>Agent</code> value (§4), which
+has nothing to do with <code>HealthAgent</code> and shouldn't need a contact point.
+Tracked as <code>MinCountConstraintComponent "contactPoint"</code> in
+<code>KNOWN_OWN_SHAPES_VIOLATIONS</code> — the same accepted limitation as everything
+else in that section, not a new category of problem.</p>
+<p><strong>Two more findings from the same investigation, both fully diagnosed as
+non-bugs</strong> (not schema or port issues, and not fixed, since there's nothing
+to fix):</p>
+<ul>
+<li>The <code>MinCountConstraintComponent "value"</code> finding on <code>is_about_entity</code>
+  isn't about <code>EvaluatedEntity</code> at all — confirmed directly: neither
+  <code>EvaluatedEntity</code> nor <code>Entity</code> declares a <code>value</code> slot. <code>dcat-ap-plus</code>'s
+  own <code>QualitativeAttribute</code> class does (<code>required: true</code>), and shares the
+  exact same <code>class_uri: prov:Entity</code> with <code>Entity</code>/<code>EvaluatedEntity</code>/
+  <code>AnalysisSourceData</code> (four distinct <code>dcat-ap-plus</code> classes, confirmed by
+  grep) — the same class_uri-sharing mechanism as everything above, except
+  this instance is entirely internal to <code>dcat-ap-plus</code>'s own base schema,
+  with nothing to do with HealthDCAT-AP or this port at all.</li>
+<li>The whole <code>DatatypeConstraintComponent</code> cluster in
+  <code>KNOWN_OWN_SHAPES_VIOLATIONS</code> (title/description/... and separately
+  startDate/maxTypicalAge/...) is diagnosed too, in two unrelated causes,
+  neither a schema bug: (a) <code>rdflib.Literal("x") != rdflib.Literal("x",
+  datatype=XSD.string)</code> in rdflib itself, confirmed directly — <code>.datatype</code>
+  is <code>None</code> vs. explicit — so <code>rdflib_dumper</code>'s plain-string output never
+  satisfies <code>sh:datatype xsd:string</code> even though RDF 1.1 says an untyped
+  literal <em>is</em> an <code>xsd:string</code>; and (b), for fields that already carry the
+  exactly-correct explicit datatype and still fail (<code>maxTypicalAge</code> etc.):
+  <code>linkml generate shacl</code> numbers <code>sh:order</code> per source class, restarting
+  at 1 for <code>HealthDataset</code>'s own additions, and once merged onto the same
+  <code>dcat:Dataset</code> shape subject (the class_uri-sharing fact again),
+  <code>sh:order</code> values collide across unrelated properties — confirmed
+  directly, <code>dcat:landingPage</code> and <code>healthdcatap:maxTypicalAge</code> both carry
+  <code>sh:order 15</code> on the merged shape — and <code>pyshacl</code> visibly mishandles the
+  collision. Reproduced in a self-contained, 948-triple extract of just
+  <code>dcat:Dataset</code>'s own shape closure, independent of the rest of the
+  schema, ruling out any other cause.</li>
+</ul>
+<p><strong>A fourth and fifth real, structural port bug</strong>, both fixed the same way,
+found while building out a fuller test fixture:</p>
+<ul>
+<li><strong>The <code>dcterms:relation</code>/<code>dcterms:source</code>/<code>dcterms:conformsTo</code> predicate
+  collision, now fixed.</strong> <code>dcat-ap-plus</code> reuses each of these predicate
+  URIs across several of its own slots (<code>dcterms:relation</code> alone maps to
+  <code>has_qualitative_attribute</code> / <code>has_quantitative_attribute</code> /
+  <code>related_resource</code> / <code>relation</code>), and the port script's URI→slot-name
+  resolution (a single classless dict, one slot name remembered per URI)
+  could only pick one, arbitrarily. <code>property_name_for</code> now resolves
+  against the <em>current shape's own class</em> first — checked directly, all
+  three URIs resolve unambiguously against <code>Dataset</code>'s own induced slots
+  (<code>related_resource</code>, <code>source</code>, <code>conforms_to</code> respectively) — falling
+  back to the classless dict only when the class doesn't resolve it either
+  (a genuinely new HealthDCAT-AP class with no <code>dcat-ap-plus</code> counterpart).
+  <code>HealthDataset.relation</code>/<code>source_metadata</code> are renamed to
+  <code>related_resource</code>/<code>source</code> accordingly (the fixture and
+  <code>tests/test_shacl_validation.py</code> updated to match); <code>linked_schemas</code> is
+  renamed to <code>conforms_to</code>, correctly picking up the vocab-range fix along
+  the way (it's one of the <code>values_from</code>-bound fields from §6's first
+  fix).</li>
+<li><strong><code>sh:severity sh:Warning</code> cardinality getting promoted to a hard LinkML
+  <code>required</code>, now fixed.</strong> Found chasing why <code>source</code>'s newly-correct
+  resolution left it <code>required: true</code> despite <code>dct:source</code> not appearing
+  anywhere in HealthDCAT-AP's <em>required</em>-tier files at all — it turned out
+  to live only in <code>non-public-shapes_recommended.ttl</code>, <code>sh:severity
+  sh:Warning</code>. <code>parse_shapes</code> never tracked <code>sh:severity</code> at all (only the
+  separate <code>mdr-vocabularies.shape.ttl</code> parser did, for its own
+  <code>recommended_only</code> comments) — every <code>sh:minCount</code> from the
+  <code>*_recommended.ttl</code> files was mechanically promoted into a hard
+  <code>required</code>, regardless of severity. Confirmed with real numbers, not
+  assumed: <code>HealthDataset</code>'s own required-field count dropped from ~30 to
+  16 once fixed (<code>access_rights</code>, <code>applicable_legislation</code>, <code>contact_point</code>,
+  <code>dataset_distribution</code>, <code>description</code>, <code>has_structured_data</code>, <code>hdab</code>,
+  <code>health_category</code>, <code>id</code>, <code>identifier</code>, <code>keyword</code>, <code>provenance</code>, <code>theme</code>,
+  <code>title</code>, <code>type</code>, <code>was_generated_by</code>) — spot-checked several of the
+  now-optional ones directly against both real shape files (<code>dct:source</code>,
+  <code>dpv:hasPurpose</code>, <code>healthdcatap:minTypicalAge</code>, <code>healthdcatap:analytics</code>)
+  to confirm each really is <code>sh:Warning</code>-only, not a fix that silently
+  loosened something genuinely required.</li>
+</ul>
+<p>One genuine bug in HealthDCAT-AP's own upstream shapes, not ours: in
+<code>non-public-shapes.ttl</code>, <code>Dataset_Shape</code>'s conditional constraint ("if
+<code>hasStructuredData</code> is true, must have <code>hasVariables</code>") is a bare <code>sh:or</code>
+used directly as an <code>sh:property</code> value with no <code>sh:path</code> — not a
+well-formed SHACL PropertyShape, which makes strict processors (<code>pyshacl</code>
+included, in <code>advanced</code> mode) reject the whole file. The test works around
+it (drops just that triple, asserting there's exactly one such offender so
+a future upstream change would be caught) rather than fixing it — not our
+file to fix. Worth raising with Mohamed Chouaiech (the file's listed
+author) alongside the already-known <code>dcatap:</code> prefix typo (missing trailing
+slash in <code>deprecateduris.ttl</code>/<code>range.ttl</code>/<code>mdr-vocabularies.shape.ttl</code>,
+confirmed fixed in the vendored <code>HealthDCAT-AP_validator</code> copies of the
+same files but not the top-level release ones), whenever that conversation
+happens.</p>
+<p>The rest of the allowlisted violations are either already-known separate
+bugs reconfirmed independently (<code>vcard:hasEmail</code> must be an IRI, not a
+string literal — same finding as §1 Check c, now caught by real shapes too;
+the <code>temporal_resolution</code> list-repr-into-literal bug, same class as the
+<code>frequency</code> multivalued-narrowing crash worked around in the test's own
+fixture-construction helper) or test-fixture artifacts, not schema bugs
+(the DPV/DQV <code>sh:class</code> membership checks need the real ontologies loaded
+for reasoning, which this fixture doesn't attempt; most of the
+<code>skos:inScheme</code> "non-EU managed concept" warnings are exactly what real
+vocabulary term IRIs would resolve, expected to mostly disappear once the
+vocab-range bug above is fixed and the fixture switches from fabricated
+<code>skos:Concept</code> blank nodes to real term IRIs).</p>
+<p><strong>Result: five real, structural port bugs found that no prior check in
+this document could see — all five fixed and verified (real-shapes
+violations: 31 → 20 → 19 → 20, the last uptick a single benign, expected
+<code>sh:Warning</code> finding, not a regression) — plus two findings fully
+diagnosed as non-bugs (one entirely internal to <code>dcat-ap-plus</code>'s own base
+schema, one a two-cause rdflib/pyshacl tooling nuance), one confirmed
+upstream bug (not ours), and one settled architectural question, all
+formalized as a permanent regression test</strong> (<code>just test</code> runs it; the
+upstream-shapes half skips gracefully if <code>repos/healthdcat-ap</code> isn't
+cloned locally) so future port-script or schema changes get checked
+against real SHACL automatically instead of ad hoc.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        
+
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        with emoji by
+        <a href="https://github.com/twitter/twemoji" target="_blank" rel="noopener">
+          Twemoji
+        </a>
+      </div>
+      
+<div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "header.autohide", "navigation.expand", "navigation.instant", "navigation.instant.progress", "navigation.tracking", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../assets/pymdownx-extras/extra-loader-B5CKpNQx.js"></script>
+      
+    
+  </body>
+</html>
