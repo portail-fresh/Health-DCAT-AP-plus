@@ -1,0 +1,480 @@
+# GENERATED FILE -- do not hand-edit.
+# Ported from HealthDCAT-AP's non-public SHACL shapes by
+# scripts/port_healthdcat_ap_shacl_to_linkml.py -- re-run that script to
+# regenerate after editing it or after HealthDCAT-AP publishes a new release.
+# Source: repos\healthdcat-ap\public\releases\release-7\html\shacl
+# healthdcat-ap commit: e90053e73b3c5252706efa16afd4da424875e1b1
+# Generated: 2026-08-21
+id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public
+name: healthdcat_ap_non_public
+title: HealthDCAT-AP (non-public tier), ported from SHACL
+description: LinkML port of HealthDCAT-AP's non-public-tier SHACL shapes, generated mechanically (not
+  hand-modeled) by scripts/port_healthdcat_ap_shacl_to_linkml.py, the same targetClass/sh:property-walking
+  method NFDI4Chem used to port plain DCAT-AP's SHACL when building chem-dcat-ap.
+license: MIT
+prefixes:
+  health_dcat_ap_plus: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/
+  linkml: https://w3id.org/linkml/
+  dcatapplus: https://w3id.org/nfdi-de/dcat-ap-plus/
+  healthdcatap: http://healthdataportal.eu/ns/health#
+  dcterms: http://purl.org/dc/terms/
+  dcat: http://www.w3.org/ns/dcat#
+  prov: http://www.w3.org/ns/prov#
+  skos: http://www.w3.org/2004/02/skos/core#
+  adms: http://www.w3.org/ns/adms#
+  foaf: http://xmlns.com/foaf/0.1/
+  vcard: http://www.w3.org/2006/vcard/ns#
+  locn: http://www.w3.org/ns/locn#
+  odrl: http://www.w3.org/ns/odrl/2/
+  spdx: http://spdx.org/rdf/terms#
+  cv: http://data.europa.eu/m8g/
+  dqv: http://www.w3.org/ns/dqv#
+  dpv: https://w3id.org/dpv#
+  csvw: http://www.w3.org/ns/csvw#
+  time: http://www.w3.org/2006/time#
+  geodcatap: http://data.europa.eu/930/
+  dcatap: http://data.europa.eu/r5r/
+default_prefix: health_dcat_ap_plus
+default_range: string
+imports:
+- linkml:types
+- dcatapplus:latest/schema/dcat_ap_plus
+classes:
+  HealthCatalogue:
+    is_a: Catalogue
+    class_uri: dcat:Catalog
+    slot_usage:
+      applicable_legislation:
+        required: true
+      language:
+        values_from:
+        - http://publications.europa.eu/resource/authority/language
+        range: uriorcurie
+      publisher:
+        values_from:
+        - http://publications.europa.eu/resource/authority/corporate-body
+        range: uriorcurie
+        comments:
+        - Recommended alignment (HealthDCAT-AP's own SHACL marks this sh:Warning, not sh:Violation) --
+          not strictly enforced.
+      geographical_coverage:
+        values_from:
+        - http://publications.europa.eu/resource/authority/country
+        - http://publications.europa.eu/resource/authority/place
+        - http://publications.europa.eu/resource/authority/continent
+        - http://sws.geonames.org
+        range: uriorcurie
+        comments:
+        - Recommended alignment (HealthDCAT-AP's own SHACL marks this sh:Warning, not sh:Violation) --
+          not strictly enforced.
+  Column:
+    class_uri: csvw:Column
+    slots:
+    - datatype
+    - description
+    - name
+    - property_url
+    - titles
+    slot_usage:
+      name:
+        required: true
+        multivalued: true
+      description:
+        required: true
+        multivalued: true
+  ContactPoint:
+    class_uri: cv:ContactPoint
+    slots:
+    - contact_page
+    - email
+    - opening_hours
+    - special_opening_hours_specification
+    - telephone
+  HealthDataset:
+    is_a: Dataset
+    class_uri: dcat:Dataset
+    slots:
+    - alternative
+    - analytics
+    - custodian
+    - has_code_values
+    - has_coding_system
+    - has_legal_basis
+    - has_personal_data
+    - has_purpose
+    - has_quality_annotation
+    - has_structured_data
+    - has_variables
+    - hdab
+    - health_category
+    - health_theme
+    - max_typical_age
+    - min_typical_age
+    - number_of_records
+    - number_of_unique_individuals
+    - population_coverage
+    - retention_period
+    slot_usage:
+      access_rights:
+        required: true
+        values_from:
+        - http://publications.europa.eu/resource/authority/access-right
+        range: uriorcurie
+      applicable_legislation:
+        required: true
+      dataset_distribution:
+        range: HealthDistribution
+        required: true
+      identifier:
+        required: true
+      publisher:
+        range: HealthPublisherAgent
+      sample:
+        range: HealthDistribution
+      theme:
+        required: true
+        values_from:
+        - http://publications.europa.eu/resource/authority/data-theme
+        range: uriorcurie
+      contact_point:
+        range: HealthKind
+        required: true
+      keyword:
+        required: true
+      type:
+        required: true
+        values_from:
+        - http://publications.europa.eu/resource/authority/dataset-type
+        range: uriorcurie
+        comments:
+        - Recommended alignment (HealthDCAT-AP's own SHACL marks this sh:Warning, not sh:Violation) --
+          not strictly enforced.
+      provenance:
+        required: true
+      frequency:
+        multivalued: true
+        values_from:
+        - http://publications.europa.eu/resource/authority/frequency
+        range: uriorcurie
+      source:
+        range: HealthDataset
+      temporal_resolution:
+        multivalued: true
+      language:
+        values_from:
+        - http://publications.europa.eu/resource/authority/language
+        range: uriorcurie
+      geographical_coverage:
+        values_from:
+        - http://publications.europa.eu/resource/authority/country
+        - http://publications.europa.eu/resource/authority/place
+        - http://publications.europa.eu/resource/authority/continent
+        - http://sws.geonames.org
+        range: uriorcurie
+        comments:
+        - Recommended alignment (HealthDCAT-AP's own SHACL marks this sh:Warning, not sh:Violation) --
+          not strictly enforced.
+      health_category:
+        values_from:
+        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories
+        range: uriorcurie
+      has_coding_system:
+        values_from:
+        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system
+        range: uriorcurie
+      conforms_to:
+        values_from:
+        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard
+        range: uriorcurie
+      health_theme:
+        values_from:
+        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme
+        range: uriorcurie
+      qualified_attribution:
+        range: DatasetAttribution
+        multivalued: true
+        inlined_as_list: true
+  HealthDatasetSeries:
+    is_a: DatasetSeries
+    class_uri: dcat:DatasetSeries
+    slot_usage:
+      applicable_legislation:
+        required: true
+  HealthDistribution:
+    is_a: Distribution
+    class_uri: dcat:Distribution
+    slot_usage:
+      applicable_legislation:
+        required: true
+      format:
+        values_from:
+        - http://publications.europa.eu/resource/authority/file-type
+        range: uriorcurie
+      language:
+        values_from:
+        - http://publications.europa.eu/resource/authority/language
+        range: uriorcurie
+      status:
+        values_from:
+        - http://publications.europa.eu/resource/authority/distribution-status
+        range: uriorcurie
+      availability:
+        values_from:
+        - http://publications.europa.eu/resource/authority/planned-availability
+        range: uriorcurie
+  HealthAgent:
+    is_a: Agent
+    class_uri: foaf:Agent
+    slots:
+    - agent_contact_point
+  HealthPublisherAgent:
+    is_a: Agent
+    class_uri: foaf:Agent
+    slots:
+    - agent_contact_point
+    - description
+  HealthKind:
+    is_a: Kind
+    class_uri: vcard:Kind
+    slots:
+    - has_email
+    - has_url
+  Table:
+    class_uri: csvw:Table
+    slots:
+    - column
+    - keyword
+    - title
+    - url
+    slot_usage:
+      title:
+        required: true
+        multivalued: true
+      keyword:
+        multivalued: true
+  TableGroup:
+    class_uri: csvw:TableGroup
+    slots:
+    - table
+  TemporalEntity:
+    class_uri: time:TemporalEntity
+    slots:
+    - description
+    - frequency
+    slot_usage:
+      description:
+        required: true
+        multivalued: true
+      frequency:
+        range: uriorcurie
+        multivalued: true
+        values_from:
+        - http://publications.europa.eu/resource/authority/frequency
+  HealthLicenseDocument:
+    is_a: LicenseDocument
+    class_uri: dcterms:LicenseDocument
+    slot_usage:
+      type:
+        values_from:
+        - http://purl.org/adms/licencetype/1.0
+        range: uriorcurie
+  HealthDataService:
+    is_a: DataService
+    class_uri: dcat:DataService
+    slot_usage:
+      access_rights:
+        values_from:
+        - http://publications.europa.eu/resource/authority/access-right
+        range: uriorcurie
+      format:
+        values_from:
+        - http://publications.europa.eu/resource/authority/file-type
+        range: uriorcurie
+  LegalBasis:
+    description: 'External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined
+      by a sh:NodeShape anywhere in HealthDCAT-AP''s own release -- confirmed, not assumed: it doesn''t
+      appear in the tier shapes files or in mdr-vocabularies.shape.ttl (which this port does parse, for
+      controlled-vocabulary bindings on other properties -- see script docstring); it''s a pointer into
+      an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just id: real usage is a reference
+      to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a locally-described
+      object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime''s own
+      YAML loader rejects outright (''Empty list elements are not allowed''), making a slotless required
+      range unusable in practice, not just thin.'
+    slots:
+    - id
+    class_uri: dpv:LegalBasis
+  PersonalData:
+    description: 'External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined
+      by a sh:NodeShape anywhere in HealthDCAT-AP''s own release -- confirmed, not assumed: it doesn''t
+      appear in the tier shapes files or in mdr-vocabularies.shape.ttl (which this port does parse, for
+      controlled-vocabulary bindings on other properties -- see script docstring); it''s a pointer into
+      an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just id: real usage is a reference
+      to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a locally-described
+      object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime''s own
+      YAML loader rejects outright (''Empty list elements are not allowed''), making a slotless required
+      range unusable in practice, not just thin.'
+    slots:
+    - id
+    class_uri: dpv:PersonalData
+  Purpose:
+    description: 'External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined
+      by a sh:NodeShape anywhere in HealthDCAT-AP''s own release -- confirmed, not assumed: it doesn''t
+      appear in the tier shapes files or in mdr-vocabularies.shape.ttl (which this port does parse, for
+      controlled-vocabulary bindings on other properties -- see script docstring); it''s a pointer into
+      an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just id: real usage is a reference
+      to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a locally-described
+      object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime''s own
+      YAML loader rejects outright (''Empty list elements are not allowed''), making a slotless required
+      range unusable in practice, not just thin.'
+    slots:
+    - id
+    class_uri: dpv:Purpose
+  QualityCertificate:
+    description: 'External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined
+      by a sh:NodeShape anywhere in HealthDCAT-AP''s own release -- confirmed, not assumed: it doesn''t
+      appear in the tier shapes files or in mdr-vocabularies.shape.ttl (which this port does parse, for
+      controlled-vocabulary bindings on other properties -- see script docstring); it''s a pointer into
+      an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just id: real usage is a reference
+      to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a locally-described
+      object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime''s own
+      YAML loader rejects outright (''Empty list elements are not allowed''), making a slotless required
+      range unusable in practice, not just thin.'
+    slots:
+    - id
+    class_uri: dqv:QualityCertificate
+  DatasetAttribution:
+    is_a: Attribution
+    class_uri: prov:Attribution
+    slots:
+    - attribution_agent
+    - attribution_had_role
+slots:
+  titles:
+    slot_uri: csvw:titles
+    required: true
+    multivalued: true
+  datatype:
+    slot_uri: csvw:datatype
+    required: true
+  property_url:
+    slot_uri: csvw:propertyUrl
+  email:
+    slot_uri: cv:email
+    multivalued: true
+  contact_page:
+    slot_uri: cv:contactPage
+    multivalued: true
+  telephone:
+    slot_uri: cv:telephone
+    multivalued: true
+  opening_hours:
+    slot_uri: cv:openingHours
+    range: TemporalEntity
+    multivalued: true
+  special_opening_hours_specification:
+    slot_uri: cv:specialOpeningHoursSpecification
+    range: TemporalEntity
+    multivalued: true
+  has_purpose:
+    slot_uri: dpv:hasPurpose
+    range: Purpose
+    multivalued: true
+  hdab:
+    slot_uri: healthdcatap:hdab
+    range: HealthAgent
+    required: true
+  custodian:
+    slot_uri: geodcatap:custodian
+    range: HealthAgent
+  health_category:
+    slot_uri: healthdcatap:healthCategory
+    range: Concept
+    required: true
+    multivalued: true
+  health_theme:
+    slot_uri: healthdcatap:healthTheme
+    range: Concept
+    multivalued: true
+  has_legal_basis:
+    slot_uri: dpv:hasLegalBasis
+    range: LegalBasis
+    multivalued: true
+  has_personal_data:
+    slot_uri: dpv:hasPersonalData
+    range: PersonalData
+    multivalued: true
+  has_quality_annotation:
+    slot_uri: dqv:hasQualityAnnotation
+    range: QualityCertificate
+    multivalued: true
+  has_structured_data:
+    slot_uri: healthdcatap:hasStructuredData
+    range: boolean
+    required: true
+  has_variables:
+    slot_uri: healthdcatap:hasVariables
+    range: TableGroup
+    multivalued: true
+  analytics:
+    slot_uri: healthdcatap:analytics
+    range: HealthDistribution
+    multivalued: true
+  has_code_values:
+    slot_uri: healthdcatap:hasCodeValues
+    multivalued: true
+  has_coding_system:
+    slot_uri: healthdcatap:hasCodingSystem
+    range: Standard
+    multivalued: true
+  min_typical_age:
+    slot_uri: healthdcatap:minTypicalAge
+    range: nonNegativeInteger
+  max_typical_age:
+    slot_uri: healthdcatap:maxTypicalAge
+    range: nonNegativeInteger
+  number_of_records:
+    slot_uri: healthdcatap:numberOfRecords
+    range: nonNegativeInteger
+  number_of_unique_individuals:
+    slot_uri: healthdcatap:numberOfUniqueIndividuals
+    range: nonNegativeInteger
+  population_coverage:
+    slot_uri: healthdcatap:populationCoverage
+    multivalued: true
+  alternative:
+    slot_uri: dcterms:alternative
+    multivalued: true
+  retention_period:
+    slot_uri: healthdcatap:retentionPeriod
+    range: PeriodOfTime
+  agent_contact_point:
+    slot_uri: cv:contactPoint
+    range: ContactPoint
+    required: true
+  has_url:
+    slot_uri: vcard:hasURL
+  has_email:
+    slot_uri: vcard:hasEmail
+  url:
+    slot_uri: csvw:url
+  column:
+    slot_uri: csvw:column
+    range: Column
+    required: true
+    multivalued: true
+  table:
+    slot_uri: csvw:table
+    range: Table
+    required: true
+    multivalued: true
+  attribution_agent:
+    slot_uri: prov:agent
+    range: Agent
+    required: true
+    inlined: true
+  attribution_had_role:
+    slot_uri: dcat:hadRole
+    range: uriorcurie
+    required: true
+    values_from:
+    - https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml
