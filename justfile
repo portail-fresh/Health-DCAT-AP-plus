@@ -2,7 +2,7 @@
 
 # On Windows the "bash" shell from Git for Windows is used.
 # If Git is installed in a non-standard location, edit the path below.
-set windows-shell := ["C:/Program Files/Git/bin/bash", "-cu"]
+set windows-shell := ["C:/Users/remy.ben-messaoud/AppData/Local/Programs/Git/bin/bash", "-cu"]
 
 # ============ Variables used in recipes ============
 
@@ -117,7 +117,7 @@ site: gen-project gen-doc
 # Deploy documentation site to Github Pages
 [group('deployment')]
 deploy: site
-  mkd-gh-deploy
+  uv run mkdocs gh-deploy
 
 # Run all tests
 [group('model development')]
@@ -323,8 +323,17 @@ import "project.justfile"
 # ====== Override recipes from above with custom versions =======
 
 # Uncomment the following line to allow duplicate recipe names
-#set allow-duplicate-recipes
+set allow-duplicate-recipes
 
 # Overriding recipes from the root justfile by adding a recipe with the same
 # name in an imported file is not possible until a known issue in just is fixed,
 # https://github.com/casey/just/issues/2540 - So we need to override them here.
+
+# _gen-yaml only copies health_dcat_ap_plus.yaml itself to distrib_schema_path
+# -- but it imports healthdcat_ap_non_public via a bare, same-directory
+# relative name, so a schema loader resolving the *published* copy (e.g. via
+# the w3id permalink) needs that sibling file published right next to it too,
+# not just present in the source tree. Copy it here rather than teaching
+# _gen-yaml about every current/future sibling schema file individually.
+_add-artifacts:
+  cp {{source_schema_dir}}/healthdcat_ap_non_public.yaml {{distrib_schema_path}}/healthdcat_ap_non_public.yaml

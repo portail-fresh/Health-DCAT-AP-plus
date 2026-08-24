@@ -1,8 +1,8 @@
 # Auto generated from health_dcat_ap_plus.yaml by pythongen.py version: 0.0.1
-# Generation date: 2026-08-24T13:41:08
+# Generation date: 2026-08-24T16:10:37
 # Schema: Health-DCAT-AP-Plus
 #
-# id: https://w3id.org/portail-fresh/Health-DCAT-AP-Plus
+# id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus
 # description: A schema combining HealthDCAT-AP's health-dataset metadata tiers with DCAT-AP+'s PROV-O provenance extensions (DataGeneratingActivity, Entity, AgenticEntity, Plan).
 # license: MIT
 
@@ -81,7 +81,7 @@ ELI = CurieNamespace('eli', 'http://data.europa.eu/eli/ontology#')
 EPOS = CurieNamespace('epos', 'https://www.epos-eu.org/epos-dcat-ap#')
 FOAF = CurieNamespace('foaf', 'http://xmlns.com/foaf/0.1/')
 GEODCATAP = CurieNamespace('geodcatap', 'http://data.europa.eu/930/')
-HEALTH_DCAT_AP_PLUS = CurieNamespace('health_dcat_ap_plus', 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/')
+HEALTH_DCAT_AP_PLUS = CurieNamespace('health_dcat_ap_plus', 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/')
 HEALTHDCATAP = CurieNamespace('healthdcatap', 'http://healthdataportal.eu/ns/health#')
 LINKML = CurieNamespace('linkml', 'https://w3id.org/linkml/')
 LOCN = CurieNamespace('locn', 'http://www.w3.org/ns/locn#')

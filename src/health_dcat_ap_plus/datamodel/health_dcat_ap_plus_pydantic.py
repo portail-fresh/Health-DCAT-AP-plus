@@ -71,7 +71,7 @@ linkml_meta = LinkMLMeta({'default_prefix': 'health_dcat_ap_plus',
      'description': "A schema combining HealthDCAT-AP's health-dataset metadata "
                     "tiers with DCAT-AP+'s PROV-O provenance extensions "
                     '(DataGeneratingActivity, Entity, AgenticEntity, Plan).',
-     'id': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus',
+     'id': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus',
      'imports': ['linkml:types',
                  'dcatapplus:latest/schema/dcat_ap_plus',
                  'healthdcat_ap_non_public'],
@@ -100,7 +100,7 @@ linkml_meta = LinkMLMeta({'default_prefix': 'health_dcat_ap_plus',
                   'geodcatap': {'prefix_prefix': 'geodcatap',
                                 'prefix_reference': 'http://data.europa.eu/930/'},
                   'health_dcat_ap_plus': {'prefix_prefix': 'health_dcat_ap_plus',
-                                          'prefix_reference': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/'},
+                                          'prefix_reference': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/'},
                   'healthdcatap': {'prefix_prefix': 'healthdcatap',
                                    'prefix_reference': 'http://healthdataportal.eu/ns/health#'},
                   'linkml': {'prefix_prefix': 'linkml',
@@ -121,7 +121,7 @@ linkml_meta = LinkMLMeta({'default_prefix': 'health_dcat_ap_plus',
                            'prefix_reference': 'http://www.w3.org/2006/time#'},
                   'vcard': {'prefix_prefix': 'vcard',
                             'prefix_reference': 'http://www.w3.org/2006/vcard/ns#'}},
-     'see_also': ['https://portail-fresh.github.io/Health-DCAT-AP-Plus'],
+     'see_also': ['https://portail-fresh.github.io/Health-DCAT-AP-plus'],
      'source_file': 'src/health_dcat_ap_plus/schema/health_dcat_ap_plus.yaml',
      'title': 'Health-DCAT-AP-Plus'} )
 
@@ -6504,7 +6504,7 @@ class TimeInstant(SupportiveEntity):
 
 class HealthCatalogue(Catalogue):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Catalog',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'applicable_legislation': {'name': 'applicable_legislation',
                                                    'required': True},
                         'geographical_coverage': {'comments': ['Recommended alignment '
@@ -6662,7 +6662,7 @@ class HealthCatalogue(Catalogue):
 
 class Column(ConfiguredBaseModel):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'csvw:Column',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'description': {'multivalued': True,
                                         'name': 'description',
                                         'required': True},
@@ -6718,7 +6718,7 @@ class Column(ConfiguredBaseModel):
 
 class ContactPoint(ConfiguredBaseModel):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'cv:ContactPoint',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public'})
 
     contact_page: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['ContactPoint'], 'slot_uri': 'cv:contactPage'} })
     email: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['ContactPoint'], 'slot_uri': 'cv:email'} })
@@ -6730,7 +6730,7 @@ class ContactPoint(ConfiguredBaseModel):
 
 class HealthDataset(Dataset):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Dataset',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'access_rights': {'name': 'access_rights',
                                           'range': 'uriorcurie',
                                           'required': True,
@@ -7013,7 +7013,7 @@ class HealthDataset(Dataset):
 
 class HealthDatasetSeries(DatasetSeries):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:DatasetSeries',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'applicable_legislation': {'name': 'applicable_legislation',
                                                    'required': True}}})
 
@@ -7124,7 +7124,7 @@ class HealthDatasetSeries(DatasetSeries):
 
 class HealthDistribution(Distribution):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Distribution',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'applicable_legislation': {'name': 'applicable_legislation',
                                                    'required': True},
                         'availability': {'name': 'availability',
@@ -7271,7 +7271,7 @@ class HealthDistribution(Distribution):
 
 class HealthAgent(Agent):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'foaf:Agent',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public'})
 
     agent_contact_point: ContactPoint = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthAgent', 'HealthPublisherAgent'],
          'slot_uri': 'cv:contactPoint'} })
@@ -7283,7 +7283,7 @@ class HealthAgent(Agent):
 
 class HealthPublisherAgent(Agent):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'foaf:Agent',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public'})
 
     agent_contact_point: ContactPoint = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthAgent', 'HealthPublisherAgent'],
          'slot_uri': 'cv:contactPoint'} })
@@ -7335,7 +7335,7 @@ class HealthPublisherAgent(Agent):
 
 class HealthKind(Kind):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'vcard:Kind',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public'})
 
     has_email: Optional[str] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthKind'], 'slot_uri': 'vcard:hasEmail'} })
     has_url: Optional[str] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthKind'], 'slot_uri': 'vcard:hasURL'} })
@@ -7343,7 +7343,7 @@ class HealthKind(Kind):
 
 class Table(ConfiguredBaseModel):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'csvw:Table',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'keyword': {'multivalued': True, 'name': 'keyword'},
                         'title': {'multivalued': True,
                                   'name': 'title',
@@ -7395,14 +7395,14 @@ class Table(ConfiguredBaseModel):
 
 class TableGroup(ConfiguredBaseModel):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'csvw:TableGroup',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public'})
 
     table: list[Table] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['TableGroup'], 'slot_uri': 'csvw:table'} })
 
 
 class TemporalEntity(ConfiguredBaseModel):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'time:TemporalEntity',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'description': {'multivalued': True,
                                         'name': 'description',
                                         'required': True},
@@ -7458,7 +7458,7 @@ class TemporalEntity(ConfiguredBaseModel):
 
 class HealthLicenseDocument(LicenseDocument):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcterms:LicenseDocument',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'type': {'name': 'type',
                                  'range': 'uriorcurie',
                                  'values_from': ['http://purl.org/adms/licencetype/1.0']}}})
@@ -7564,7 +7564,7 @@ class HealthLicenseDocument(LicenseDocument):
 
 class HealthDataService(DataService):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:DataService',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public',
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'access_rights': {'name': 'access_rights',
                                           'range': 'uriorcurie',
                                           'values_from': ['http://publications.europa.eu/resource/authority/access-right']},
@@ -7694,7 +7694,7 @@ class LegalBasis(ConfiguredBaseModel):
     External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape anywhere in HealthDCAT-AP's own release -- confirmed, not assumed: it doesn't appear in the tier shapes files or in mdr-vocabularies.shape.ttl (which this port does parse, for controlled-vocabulary bindings on other properties -- see script docstring); it's a pointer into an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just id: real usage is a reference to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a locally-described object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime's own YAML loader rejects outright ('Empty list elements are not allowed'), making a slotless required range unusable in practice, not just thin.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dpv:LegalBasis',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public'})
 
     id: str = Field(default=..., description="""A slot to provide an URI for an entity within this schema.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -7717,7 +7717,7 @@ class PersonalData(ConfiguredBaseModel):
     External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape anywhere in HealthDCAT-AP's own release -- confirmed, not assumed: it doesn't appear in the tier shapes files or in mdr-vocabularies.shape.ttl (which this port does parse, for controlled-vocabulary bindings on other properties -- see script docstring); it's a pointer into an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just id: real usage is a reference to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a locally-described object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime's own YAML loader rejects outright ('Empty list elements are not allowed'), making a slotless required range unusable in practice, not just thin.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dpv:PersonalData',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public'})
 
     id: str = Field(default=..., description="""A slot to provide an URI for an entity within this schema.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -7740,7 +7740,7 @@ class Purpose(ConfiguredBaseModel):
     External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape anywhere in HealthDCAT-AP's own release -- confirmed, not assumed: it doesn't appear in the tier shapes files or in mdr-vocabularies.shape.ttl (which this port does parse, for controlled-vocabulary bindings on other properties -- see script docstring); it's a pointer into an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just id: real usage is a reference to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a locally-described object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime's own YAML loader rejects outright ('Empty list elements are not allowed'), making a slotless required range unusable in practice, not just thin.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dpv:Purpose',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public'})
 
     id: str = Field(default=..., description="""A slot to provide an URI for an entity within this schema.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -7763,7 +7763,7 @@ class QualityCertificate(ConfiguredBaseModel):
     External vocabulary term referenced by a HealthDCAT-AP shape but not itself defined by a sh:NodeShape anywhere in HealthDCAT-AP's own release -- confirmed, not assumed: it doesn't appear in the tier shapes files or in mdr-vocabularies.shape.ttl (which this port does parse, for controlled-vocabulary bindings on other properties -- see script docstring); it's a pointer into an external ontology (DPV/DQV) HealthDCAT-AP never embeds. Carries just id: real usage is a reference to an external controlled-vocabulary term (e.g. a DPV Purpose/LegalBasis URI), not a locally-described object -- and a slotless class can only ever be instantiated as {}, which linkml_runtime's own YAML loader rejects outright ('Empty list elements are not allowed'), making a slotless required range unusable in practice, not just thin.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dqv:QualityCertificate',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public'})
 
     id: str = Field(default=..., description="""A slot to provide an URI for an entity within this schema.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -7783,7 +7783,7 @@ class QualityCertificate(ConfiguredBaseModel):
 
 class DatasetAttribution(Attribution):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Attribution',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_non_public'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public'})
 
     attribution_agent: Agent = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['DatasetAttribution'], 'slot_uri': 'prov:agent'} })
     attribution_had_role: str = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['DatasetAttribution'],
@@ -7876,7 +7876,7 @@ class Association(SupportiveEntity):
     This class, and the ready-to-use qualified_association slot below (already correctly ranged at Association), are built here even though this repo's own port never touches the Activity side at all (HealthDCAT-AP's SHACL doesn't reach it -- confirmed in Section 1 Check b of architecture-verification.md) and there's no Health<X> profile of Activity to narrow anything onto: this is exactly the kind of generic, domain-agnostic completion the merge layer exists to provide, so the downstream specialization repo gets a schema it only has to specialize, not one it has to finish first.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Association',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus'})
 
     agent: AgenticEntity = Field(default=..., description="""The agent responsible in a qualified Association -- PROV-O's own prov:agent. Activity-scoped (AgenticEntity, prov:Agent), matching carried_out_by's own range -- distinct from DatasetAttribution's attribution_agent (Entity-scoped, Agent/foaf:Agent), confirmed correct by HealthDCAT-AP's own real qualifiedAttribution example, which types its agent value `a foaf:Agent, foaf:Organization`, never prov:Agent.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Association'], 'slot_uri': 'prov:agent'} })
     association_had_role: str = Field(default=..., description="""The role an agent played in a qualified Association -- PROV-O's own prov:hadRole, distinct from DatasetAttribution's had_role (dcat:hadRole, already defined by dcat-ap-plus and reused as-is): Association needed its own slot since dcat-ap-plus's had_role is hardwired to the dcat: predicate, not prov:. Range is a plain uriorcurie into an external codelist, not a nested Role object with title/description -- matches HealthDCAT-AP's own real qualifiedAttribution example (a bare ISO 19115 CI_RoleCode URI, not an inline dcat:Role), and avoids a real LinkML limitation found by testing: a class-plus-scalar any_of union between Role and uriorcurie doesn't reliably validate both shapes (see DatasetAttribution's own had_role in the port script for the fuller writeup of that test).""", json_schema_extra = { "linkml_meta": {'domain_of': ['Association'],
@@ -7969,7 +7969,7 @@ class AssociatedDataGeneratingActivity(DataGeneratingActivity):
     Can't be done by narrowing HealthDataset.was_generated_by's range directly onto this class from either file: HealthDataset lives in the generated healthdcat_ap_non_public.yaml, which doesn't import this file (this file imports it, not the reverse, so it can't see Association/qualified_association), and this file can't reopen HealthDataset's own already-imported slot_usage either (confirmed elsewhere this session: reopening an imported class throws \"Conflicting URIs\"). Used directly instead, by constructing real instances of this class in place of plain DataGeneratingActivity ones -- isinstance-compatible since it's a real subclass, so LinkML's own inlined-list construction (_normalize_inlined_as_list) accepts an already-built instance as-is without needing to touch was_generated_by's declared range at all. See tests/test_shacl_validation.py for the real instance.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Activity',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-Plus'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus'})
 
     qualified_association: Optional[list[Association]] = Field(default=None, description="""The qualified form of carried_out_by/prov:wasAssociatedWith. Ready to use, not yet used by anything in this repo: reference this slot from whichever Activity-side class the specialization repo defines (its own is_a: DataGeneratingActivity class, the way HealthDataset already narrows qualified_attribution to DatasetAttribution here) and its range is already correctly set -- no further schema work needed there just to make the mechanism usable.""", json_schema_extra = { "linkml_meta": {'domain_of': ['AssociatedDataGeneratingActivity'],
          'slot_uri': 'prov:qualifiedAssociation'} })

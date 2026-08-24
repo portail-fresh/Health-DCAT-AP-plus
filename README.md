@@ -38,7 +38,7 @@ the same way.
 
 ## Documentation Website
 
-[https://portail-fresh.github.io/Health-DCAT-AP-Plus](https://portail-fresh.github.io/Health-DCAT-AP-Plus)
+[https://portail-fresh.github.io/Health-DCAT-AP-plus](https://portail-fresh.github.io/Health-DCAT-AP-plus)
 
 ## Repository Structure
 

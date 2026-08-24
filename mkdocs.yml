@@ -67,8 +67,8 @@ nav:
 exclude_docs: |
   /templates-linkml/
 
-site_url: https://portail-fresh.github.io/Health-DCAT-AP-Plus
-repo_url: https://github.com/portail-fresh/Health-DCAT-AP-Plus
+site_url: https://portail-fresh.github.io/Health-DCAT-AP-plus
+repo_url: https://github.com/portail-fresh/Health-DCAT-AP-plus
 
 # Uncomment this block to enable use of Google Analytics.
 # Replace the property value with your own ID.
