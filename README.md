@@ -70,6 +70,6 @@ It builds directly on [nfdi-de/dcat-ap-plus](https://github.com/nfdi-de/dcat-ap-
 pioneered by [nfdi-de/chem-dcat-ap](https://github.com/nfdi-de/chem-dcat-ap)
 to bring in [HealthDCAT-AP](https://code.europa.eu/healthdataeu/healthdcat-ap)
 (EU Commission / EHDS), which has no LinkML form of its own. See also the
-sibling project [HealthStudy-DCAT-AP](https://github.com/portail-fresh/HealthStudy-DCAT-AP),
+sibling project [ResHealth-DCAT-AP](https://github.com/portail-fresh/ResHealth-DCAT-AP),
 which specializes `dcat-ap-plus` for research-study metadata rather than
 health-dataset metadata.
