@@ -58,49 +58,19 @@ SH = Namespace("http://www.w3.org/ns/shacl#")
 Signature = Tuple[str, str, str]
 
 
-# Fields HealthDataset.__post_init__ narrows from Dataset's own nested-class
-# range to a bare uriorcurie. HealthDataset's own __post_init__ correctly
-# coerces each to its new (uriorcurie, possibly list) shape *before*
-# unconditionally calling super().__post_init__(**kwargs) -- Dataset's own,
-# still nested-class-range coercion for the same fields, which then crashes
-# on the already-correct value: a direct `RightsStatement(**as_dict(...))`/
-# `Frequency(**as_dict(...))`/`LinguisticSystem(**as_dict(...))` call for
-# access_rights/frequency/language (TypeError: ...argument after ** must be
-# a mapping, not URIorCURIE -- checked directly: jsonasobj2.as_dict() is a
-# harmless passthrough on a plain scalar, so this is Python itself rejecting
-# `**` on a non-mapping at the call site, not reachable via an as_dict()
-# patch the way the old single-vs-multivalued frequency crash was), and a
-# ValueError from _normalize_inlined_as_list's own key-matching logic for
-# theme/type (it re-wraps each already-plain-IRI value as
-# Concept(preferred_label=<the IRI>) and then complains the "key" doesn't
-# match, since a bare IRI was never meant to round-trip through that
-# nested-object helper at all). Real, pre-existing LinkML code-gen
-# limitation (a subclass narrowing a slot's range or multivalued-ness via
-# slot_usage doesn't stop the parent's own __post_init__ from re-processing
-# it under its own, different assumption) -- not something this repo's
-# schema or port script caused or can fix structurally.
-_DATASET_FIELDS_NARROWED_BY_HEALTHDATASET = (
-    "access_rights",
-    "frequency",
-    "language",
-    "theme",
-    "type",
-    "conforms_to",
-)
-
-
 def _build_test_dataset_graph() -> Graph:
     """Build the fixture's RDF graph via the real dataclass -> rdflib_dumper path.
 
-    Works around the __post_init__ re-processing bug described above by
-    monkeypatching Dataset.__post_init__ itself, for the duration of one
-    construction call only: temporarily blank out the three affected fields
-    right before Dataset's own __post_init__ runs (so its stale coercion
-    for them becomes a harmless no-op on None), then restore
-    HealthDataset's own already-correct values immediately after -- letting
-    Dataset's coercion for every *other* field it still legitimately owns
-    (creator, geographical_coverage, has_version, ...) run completely
-    unaffected.
+    No construction workaround needed here anymore: HealthDataset (and every
+    other Health<X> class that narrows a slot's range/multivalued-ness via
+    slot_usage) used to crash on construction, because the parent class's
+    own generated __post_init__ unconditionally re-processed the
+    already-correctly-narrowed value under its own, stale assumption.
+    scripts/patch_post_init_shielding.py now fixes this at the generated
+    source level, as a permanent step of `just gen-python`/`just
+    gen-project` -- see that script's own docstring for the full mechanism.
+    Confirmed directly: constructing HealthDataset(**data) here needs
+    nothing beyond plain dataclass construction.
     """
     data = yaml.safe_load(FIXTURE_PATH.read_text(encoding="utf-8"))
 
@@ -114,27 +84,13 @@ def _build_test_dataset_graph() -> Graph:
     # -- see its own docstring there): _normalize_inlined_as_list's own
     # isinstance(list_entry, slot_type) fast path (confirmed by reading its
     # source directly, not assumed) preserves an already-built instance
-    # exactly as-is, so no further shielding is needed here the way the
-    # other narrowed fields above need it.
+    # exactly as-is. This one isn't a __post_init__-shielding case at all --
+    # was_generated_by's own range is unchanged, this is about substituting
+    # a subclass instance for a field the schema deliberately doesn't
+    # narrow (see AssociatedDataGeneratingActivity's own docstring).
     data["was_generated_by"] = [dm.AssociatedDataGeneratingActivity(**entry) for entry in data["was_generated_by"]]
 
-    real_dataset_post_init = dm.Dataset.__post_init__
-
-    def _patched_dataset_post_init(self, *args, **kwargs):
-        saved = {name: getattr(self, name) for name in _DATASET_FIELDS_NARROWED_BY_HEALTHDATASET}
-        for name in saved:
-            setattr(self, name, None)
-        try:
-            real_dataset_post_init(self, *args, **kwargs)
-        finally:
-            for name, value in saved.items():
-                setattr(self, name, value)
-
-    dm.Dataset.__post_init__ = _patched_dataset_post_init
-    try:
-        obj = dm.HealthDataset(**data)
-    finally:
-        dm.Dataset.__post_init__ = real_dataset_post_init
+    obj = dm.HealthDataset(**data)
 
     sv = SchemaView(str(SCHEMA_PATH))
     return rdflib_dumper.as_rdf_graph(obj, schemaview=sv)
@@ -347,13 +303,18 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Violation", "ClassConstraintComponent", "hasPurpose"),
         ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
         ("Violation", "ClassConstraintComponent", "subject"),
-        # Already-known, separate, pre-existing LinkML code-gen bug (same
-        # class as the frequency/access_rights/theme/type/language
-        # __post_init__ re-processing crash worked around in
-        # _build_test_dataset_graph): HealthDataset.temporal_resolution
-        # ends up serialized as a Python list's repr baked into one
-        # xsd:duration literal ("['P1D']") instead of one duration value --
-        # not yet root-caused, tracked separately, not fixed here.
+        # Re-diagnosed after scripts/patch_post_init_shielding.py: the value
+        # itself is fixed (confirmed directly -- dcat:temporalResolution now
+        # dumps as a clean Literal("P1D", datatype=xsd:duration), not the
+        # list-repr-into-literal corruption this was originally attributed
+        # to), but the violation signature persists for an unrelated reason:
+        # dcat:temporalResolution has two separate property shapes on the
+        # merged dcat:Dataset node both claiming sh:order 29 (confirmed by
+        # querying the shapes graph directly) -- the same sh:order-collision
+        # family already diagnosed for maxTypicalAge/landingPage above, just
+        # a same-predicate collision this time instead of a cross-predicate
+        # one. Not a schema bug; a pyshacl quirk downstream of the
+        # class_uri-sharing pattern this whole section already accepts.
         ("Violation", "DatatypeConstraintComponent", "temporalResolution"),
         # Diagnosed, not a schema bug -- confirmed by direct, isolated
         # reproduction (not assumed): rdflib.Literal("x") != rdflib.Literal(

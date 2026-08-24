@@ -129,25 +129,50 @@ artifacts matters, not just trusting the mechanical walk:**
    `multivalued: true` restatements elsewhere (confirmed still correct by
    full regeneration, `pytest`, and a real instance test, not assumed safe).
 
-3. **Found, not fixed — a separate, pre-existing LinkML code-gen limitation
-   (same class as the `metadata_contributor` quirk already documented in
-   `HealthStudy-DCAT-AP`'s modeling guide).** `Dataset.frequency` is
-   single-valued at the base; HealthDCAT-AP tightens it to `multivalued: true`
-   on `HealthDataset`, correctly expressed in `slot_usage`. But the generated
-   `HealthDataset.__post_init__` correctly wraps the value into a list, then
-   unconditionally calls `super().__post_init__()` — `Dataset`'s own
-   single-valued construction logic — which re-processes the now-list value
-   with `Frequency(**as_dict(self.frequency))`, crashing
-   (`TypeError: argument after ** must be a mapping, not list`). Not a schema
-   authoring mistake (the `slot_usage` is correct and necessary), not
-   something this session's fixes caused (confirmed: `frequency`'s
-   `multivalued: true` restatement is present, untouched, before and after)
-   — a genuine gap in how LinkML generates `__post_init__` for a slot whose
-   multivalued-ness a subclass narrows in either direction. `HealthDataset`
-   is loadable via `linkml-convert` for every other field (`contact_point`
-   included, per the fix above) but not yet fully instantiable end to end
-   because of this one slot — worth raising upstream (with LinkML itself,
-   not `dcat-ap-plus`) rather than working around locally.
+3. **Found, and fixed at the port-repo level — a separate, pre-existing
+   LinkML code-gen limitation (same class as the `metadata_contributor`
+   quirk already documented in `HealthStudy-DCAT-AP`'s modeling guide).**
+   `Dataset.frequency` is single-valued at the base; HealthDCAT-AP tightens
+   it to `multivalued: true` on `HealthDataset`, correctly expressed in
+   `slot_usage`. But the generated `HealthDataset.__post_init__` correctly
+   wraps the value into a list, then unconditionally calls
+   `super().__post_init__()` — `Dataset`'s own single-valued construction
+   logic — which re-processes the now-list value with
+   `Frequency(**as_dict(self.frequency))`, crashing (`TypeError: argument
+   after ** must be a mapping, not list`). Not a schema authoring mistake
+   (the `slot_usage` is correct and necessary) — a genuine gap in how
+   LinkML generates `__post_init__` for a slot whose range or
+   multivalued-ness a subclass narrows in either direction, worth raising
+   upstream with LinkML itself eventually. Confirmed not limited to this
+   one field either: the exact same crash reproduces on
+   `HealthDistribution.format` (a different class, different base,
+   confirmed independently) — this was always going to recur for every
+   `Health<X>` field the vocab-range fix (§6) touched, not just
+   `HealthDataset`'s.
+
+   **Now fixed for real, not just worked around in tests.**
+   `scripts/patch_post_init_shielding.py` runs as a permanent step of both
+   `just gen-python` and `just gen-project` (right after the dataclasses
+   are generated, before anything else uses them) — see the script's own
+   docstring for the full mechanism. In short: it derives, straight from
+   the schema (not a hand-maintained list), every class that narrows a
+   slot in a way the parent's own generated coercion can't safely
+   re-process, and rewrites that one `super().__post_init__(**kwargs)`
+   line into a block that saves the already-correct values, blanks them so
+   the parent's re-processing is a no-op, calls the parent, then restores
+   them. Deliberately not a global, import-time monkeypatch (considered
+   and rejected — see the session's own discussion): it only ever touches
+   each affected class's own generated method body, so constructing a
+   plain, un-profiled `dcat-ap-plus` class elsewhere in the same process is
+   completely unaffected. Confirmed the fix is real, not just papering
+   over the test: `tests/test_shacl_validation.py`'s own fixture-building
+   helper no longer needs *any* construction workaround for these fields —
+   `HealthDataset(**data)` now just works, exactly as a downstream
+   consumer would call it. The schema-derived scan also caught the same
+   pattern purely inside `dcat-ap-plus`'s own class hierarchy
+   (`Concept`, `ConceptScheme`, `PeriodOfTime`), unrelated to anything
+   this repo's port does — fixed for free by not hand-limiting the scan to
+   `Health<X>` classes.
 
 4. **Found and fixed — a real inconsistency within HealthDCAT-AP's own
    release.** `range.ttl` and `mdr-vocabularies.shape.ttl` declare

@@ -158,6 +158,7 @@ gen-diagram-svg: gen-diagram
 # Generate the Python data models (dataclasses & pydantic)
 gen-python:
   uv run gen-project -d  {{pymodel}} -I python {{source_schema_path}}
+  uv run python scripts/patch_post_init_shielding.py {{pymodel}}/{{schema_name}}.py --schema {{source_schema_path}}
   uv run gen-pydantic {{gen_pydantic_args}} {{source_schema_path}} > {{pymodel}}/{{schema_name}}_pydantic.py
 
 # Generate project files including Python data model
@@ -166,6 +167,14 @@ gen-project:
   uv run gen-project {{config_yaml}} -d {{dest}} {{source_schema_path}}
   mkdir -p {{pymodel}}
   mv {{dest}}/*.py {{pymodel}}/
+  # Post-process the generated dataclasses -- see gen-python and
+  # scripts/patch_post_init_shielding.py's own docstring for why this is a
+  # necessary step of generation, not an optional extra. Duplicated here
+  # (rather than depending on gen-python as a recipe) because this
+  # target's own `gen-project {{config_yaml}} -d {{dest}}` call
+  # regenerates the same file from scratch, which would otherwise
+  # overwrite gen-python's already-patched one.
+  uv run python scripts/patch_post_init_shielding.py {{pymodel}}/{{schema_name}}.py --schema {{source_schema_path}}
   uv run gen-pydantic {{gen_pydantic_args}} {{source_schema_path}} > {{pymodel}}/{{schema_name}}_pydantic.py
 
   @# Some generators ignore config_yaml or cannot create directories, so we run them separately.

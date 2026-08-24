@@ -1,5 +1,5 @@
 # Auto generated from health_dcat_ap_plus.yaml by pythongen.py version: 0.0.1
-# Generation date: 2026-08-21T14:40:38
+# Generation date: 2026-08-24T13:41:08
 # Schema: Health-DCAT-AP-Plus
 #
 # id: https://w3id.org/portail-fresh/Health-DCAT-AP-Plus
@@ -1336,7 +1336,12 @@ class EvaluatedEntity(Entity):
 
         self._normalize_inlined_as_list(slot_name="other_identifier", slot_type=Identifier, key_name="notation", keyed=False)
 
+        __post_init_shield = {n: getattr(self, n) for n in ("was_generated_by",)}
+        for __n in __post_init_shield:
+            setattr(self, __n, None)
         super().__post_init__(**kwargs)
+        for __n, __v in __post_init_shield.items():
+            setattr(self, __n, __v)
 
 
 @dataclass(repr=False)
@@ -1729,7 +1734,12 @@ class Concept(SupportiveEntity):
         if self.description is not None and not isinstance(self.description, str):
             self.description = str(self.description)
 
+        __post_init_shield = {n: getattr(self, n) for n in ("preferred_label",)}
+        for __n in __post_init_shield:
+            setattr(self, __n, None)
         super().__post_init__(**kwargs)
+        for __n, __v in __post_init_shield.items():
+            setattr(self, __n, __v)
 
 
 @dataclass(repr=False)
@@ -1757,7 +1767,12 @@ class ConceptScheme(SupportiveEntity):
         if self.description is not None and not isinstance(self.description, str):
             self.description = str(self.description)
 
+        __post_init_shield = {n: getattr(self, n) for n in ("title",)}
+        for __n in __post_init_shield:
+            setattr(self, __n, None)
         super().__post_init__(**kwargs)
+        for __n, __v in __post_init_shield.items():
+            setattr(self, __n, __v)
 
 
 @dataclass(repr=False)
@@ -1934,7 +1949,12 @@ class LicenseDocument(SupportiveEntity):
         if self.description is not None and not isinstance(self.description, str):
             self.description = str(self.description)
 
+        __post_init_shield = {n: getattr(self, n) for n in ("type",)}
+        for __n in __post_init_shield:
+            setattr(self, __n, None)
         super().__post_init__(**kwargs)
+        for __n, __v in __post_init_shield.items():
+            setattr(self, __n, __v)
 
 
 @dataclass(repr=False)
@@ -2050,7 +2070,12 @@ class PeriodOfTime(SupportiveEntity):
         if self.description is not None and not isinstance(self.description, str):
             self.description = str(self.description)
 
+        __post_init_shield = {n: getattr(self, n) for n in ("beginning", "end", "end_date", "start_date")}
+        for __n in __post_init_shield:
+            setattr(self, __n, None)
         super().__post_init__(**kwargs)
+        for __n, __v in __post_init_shield.items():
+            setattr(self, __n, __v)
 
 
 @dataclass(repr=False)
@@ -2301,7 +2326,12 @@ class HealthCatalogue(Catalogue):
             self.geographical_coverage = [self.geographical_coverage] if self.geographical_coverage is not None else []
         self.geographical_coverage = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.geographical_coverage]
 
+        __post_init_shield = {n: getattr(self, n) for n in ("language", "publisher", "geographical_coverage")}
+        for __n in __post_init_shield:
+            setattr(self, __n, None)
         super().__post_init__(**kwargs)
+        for __n, __v in __post_init_shield.items():
+            setattr(self, __n, __v)
 
 
 @dataclass(repr=False)
@@ -2602,7 +2632,12 @@ class HealthDataset(Dataset):
 
         self._normalize_inlined_as_list(slot_name="qualified_attribution", slot_type=DatasetAttribution, key_name="attribution_had_role", keyed=False)
 
+        __post_init_shield = {n: getattr(self, n) for n in ("access_rights", "theme", "type", "frequency", "temporal_resolution", "language", "geographical_coverage", "health_category", "has_coding_system", "conforms_to", "health_theme")}
+        for __n in __post_init_shield:
+            setattr(self, __n, None)
         super().__post_init__(**kwargs)
+        for __n, __v in __post_init_shield.items():
+            setattr(self, __n, __v)
 
 
 @dataclass(repr=False)
@@ -2660,7 +2695,12 @@ class HealthDistribution(Distribution):
         if self.availability is not None and not isinstance(self.availability, URIorCURIE):
             self.availability = URIorCURIE(self.availability)
 
+        __post_init_shield = {n: getattr(self, n) for n in ("format", "language", "status", "availability")}
+        for __n in __post_init_shield:
+            setattr(self, __n, None)
         super().__post_init__(**kwargs)
+        for __n, __v in __post_init_shield.items():
+            setattr(self, __n, __v)
 
 
 @dataclass(repr=False)
@@ -2833,7 +2873,12 @@ class HealthLicenseDocument(LicenseDocument):
             self.type = [self.type] if self.type is not None else []
         self.type = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.type]
 
+        __post_init_shield = {n: getattr(self, n) for n in ("type",)}
+        for __n in __post_init_shield:
+            setattr(self, __n, None)
         super().__post_init__(**kwargs)
+        for __n, __v in __post_init_shield.items():
+            setattr(self, __n, __v)
 
 
 @dataclass(repr=False)
@@ -2858,7 +2903,12 @@ class HealthDataService(DataService):
             self.format = [self.format] if self.format is not None else []
         self.format = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.format]
 
+        __post_init_shield = {n: getattr(self, n) for n in ("access_rights", "format")}
+        for __n in __post_init_shield:
+            setattr(self, __n, None)
         super().__post_init__(**kwargs)
+        for __n, __v in __post_init_shield.items():
+            setattr(self, __n, __v)
 
 
 @dataclass(repr=False)
@@ -4142,4 +4192,3 @@ slots.HealthDataService_access_rights = Slot(uri=DCTERMS.accessRights, name="Hea
 
 slots.HealthDataService_format = Slot(uri=DCTERMS.format, name="HealthDataService_format", curie=DCTERMS.curie('format'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataService_format, domain=HealthDataService, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
-
