@@ -35,6 +35,17 @@ jobs:
         with:
           persist-credentials: false
 
+      # Real SHACL validation (tests/test_shacl_validation.py) needs
+      # HealthDCAT-AP's own real, official shape files -- gitignored,
+      # documented in README.md, shallow-cloned here so
+      # test_dataset_conforms_to_real_healthdcat_ap_shacl actually runs in
+      # CI instead of silently skipping (its pytest.mark.skipif checks for
+      # exactly this directory). repos/dcat-ap-plus is deliberately not
+      # cloned here too -- only scripts/port_healthdcat_ap_shacl_to_linkml.py
+      # needs it, and that script doesn't run as part of `just test`.
+      - name: Clone HealthDCAT-AP shapes
+        run: git clone --depth 1 https://code.europa.eu/healthdataeu/healthdcat-ap.git repos/healthdcat-ap
+
       # https://github.com/astral-sh/setup-uv
       - name: Install uv
         uses: astral-sh/setup-uv@v8.1.0
