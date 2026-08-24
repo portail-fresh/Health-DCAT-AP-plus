@@ -429,6 +429,10 @@
          <lastmod>2026-08-24</lastmod>
     </url>
     <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/agent/</loc>
+         <lastmod>2026-08-24</lastmod>
+    </url>
+    <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/agent_contact_point/</loc>
          <lastmod>2026-08-24</lastmod>
     </url>
@@ -485,6 +489,10 @@
          <lastmod>2026-08-24</lastmod>
     </url>
     <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/catalogue/</loc>
+         <lastmod>2026-08-24</lastmod>
+    </url>
+    <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/centroid/</loc>
          <lastmod>2026-08-24</lastmod>
     </url>
@@ -493,7 +501,15 @@
          <lastmod>2026-08-24</lastmod>
     </url>
     <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/checksum/</loc>
+         <lastmod>2026-08-24</lastmod>
+    </url>
+    <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/checksum_value/</loc>
+         <lastmod>2026-08-24</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/column/</loc>
          <lastmod>2026-08-24</lastmod>
     </url>
     <url>
@@ -573,11 +589,19 @@
          <lastmod>2026-08-24</lastmod>
     </url>
     <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/frequency/</loc>
+         <lastmod>2026-08-24</lastmod>
+    </url>
+    <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/from_CV/</loc>
          <lastmod>2026-08-24</lastmod>
     </url>
     <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/geographical_coverage/</loc>
+         <lastmod>2026-08-24</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/geometry/</loc>
          <lastmod>2026-08-24</lastmod>
     </url>
     <url>
@@ -682,6 +706,10 @@
     </url>
     <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/id/</loc>
+         <lastmod>2026-08-24</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/identifier/</loc>
          <lastmod>2026-08-24</lastmod>
     </url>
     <url>
@@ -878,6 +906,10 @@
     </url>
     <url>
          <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/status/</loc>
+         <lastmod>2026-08-24</lastmod>
+    </url>
+    <url>
+         <loc>https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/table/</loc>
          <lastmod>2026-08-24</lastmod>
     </url>
     <url>
