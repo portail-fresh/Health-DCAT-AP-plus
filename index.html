@@ -275,6 +275,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="." class="md-nav__link md-nav__link--active">
         
   
@@ -291,6 +309,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#healthx-classes-vs-plain-dcat-ap-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health&lt;X&gt; classes vs. plain DCAT-AP classes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -311,6 +359,33 @@
     
   
     Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture-verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Verification
   
 
     
@@ -370,6 +445,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#healthx-classes-vs-plain-dcat-ap-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health&lt;X&gt; classes vs. plain DCAT-AP classes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -394,6 +488,16 @@
 <ul>
 <li>Auto-generated <a href="elements/">schema documentation</a></li>
 </ul>
+<h2 id="healthx-classes-vs-plain-dcat-ap-classes"><code>Health&lt;X&gt;</code> classes vs. plain DCAT-AP classes</h2>
+<p>For each class HealthDCAT-AP adds constraints to — <code>Dataset</code>, <code>Catalogue</code>, <code>Distribution</code>, <code>Agent</code>, and a few others — this schema provides a <code>Health&lt;X&gt;</code> version (<code>HealthDataset</code>, <code>HealthCatalogue</code>, <code>HealthDistribution</code>, <code>HealthAgent</code>, ...) alongside the plain one it comes from. Each <code>Health&lt;X&gt;</code> class is a superset of its base: every field the base class has, plus the additional health-specific fields and stricter requirements HealthDCAT-AP defines (e.g. <code>HealthDataset</code> adds <code>health_category</code>, <code>hdab</code>, tiered <code>access_rights</code>, and more, several of which it also requires).</p>
+<p><strong>Important: <code>Health&lt;X&gt;</code> and its base class describe the same real-world RDF type, not two different ones.</strong> <code>HealthDataset</code> and <code>Dataset</code> both convert to <code>a dcat:Dataset</code> — there is no separate "this is a health dataset" RDF type to check for. This is deliberate: it matches how HealthDCAT-AP's own official specification is written (it constrains <code>dcat:Dataset</code> directly, rather than inventing a new class), and it means a consumer can't tell a <code>HealthDataset</code> apart from a plain <code>Dataset</code> by <code>rdf:type</code> alone — only by which fields are actually present, or by validating against HealthDCAT-AP's SHACL shapes.</p>
+<p><strong>Which one to use:</strong></p>
+<ul>
+<li>If the data needs to conform to HealthDCAT-AP (the EU/EHDS health-dataset profile) — use the <code>Health&lt;X&gt;</code> class. It's the only one with the required health-specific fields, and the only one that validates cleanly against HealthDCAT-AP's shapes.</li>
+<li>If it doesn't — the plain <code>dcat-ap-plus</code> class remains fully valid. There's no need or benefit to using <code>Health&lt;X&gt;</code> for non-health data; it would just require populating fields that don't apply.</li>
+<li>Both can be mixed freely in the same catalogue — nothing about using one forces the other, and there's no RDF-level conflict between them.</li>
+</ul>
+<p>For the full reasoning and verification evidence behind this design (including why a shared <code>class_uri</code> was chosen over a distinct one), see <a href="architecture-verification/"><code>docs/architecture-verification.md</code></a>.</p>
 
 
 
