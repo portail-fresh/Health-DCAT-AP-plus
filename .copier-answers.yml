@@ -13,6 +13,6 @@ license: MIT
 project_description: A schema combining HealthDCAT-AP's health-dataset metadata tiers
     with DCAT-AP+'s PROV-O provenance extensions (DataGeneratingActivity, Entity,
     AgenticEntity, Plan).
-project_name: Health-DCAT-AP-Plus
+project_name: Health-DCAT-AP-plus
 project_slug: health_dcat_ap_plus
 

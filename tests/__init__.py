@@ -1,1 +1,1 @@
-"""Tests for Health-DCAT-AP-Plus."""
+"""Tests for Health-DCAT-AP-plus."""

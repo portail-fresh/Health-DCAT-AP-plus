@@ -1,6 +1,6 @@
 # Auto generated from health_dcat_ap_plus.yaml by pythongen.py version: 0.0.1
-# Generation date: 2026-08-24T16:10:37
-# Schema: Health-DCAT-AP-Plus
+# Generation date: 2026-08-25T09:06:29
+# Schema: Health-DCAT-AP-plus
 #
 # id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus
 # description: A schema combining HealthDCAT-AP's health-dataset metadata tiers with DCAT-AP+'s PROV-O provenance extensions (DataGeneratingActivity, Entity, AgenticEntity, Plan).

@@ -1,8 +1,8 @@
-name: Health-DCAT-AP-Plus
+name: Health-DCAT-AP-plus
 description: A schema combining HealthDCAT-AP's health-dataset metadata tiers with
   DCAT-AP+'s PROV-O provenance extensions (DataGeneratingActivity, Entity, AgenticEntity,
   Plan).
-title: Health-DCAT-AP-Plus
+title: Health-DCAT-AP-plus
 see_also:
 - https://portail-fresh.github.io/Health-DCAT-AP-plus
 id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus
@@ -9995,7 +9995,7 @@ classes:
     class_uri: prov:Attribution
 metamodel_version: 1.11.0
 source_file: health_dcat_ap_plus.yaml
-source_file_date: '2026-08-24T16:08:05'
+source_file_date: '2026-08-25T09:03:27'
 source_file_size: 8289
-generation_date: '2026-08-24T16:14:42'
+generation_date: '2026-08-25T09:04:05'
 

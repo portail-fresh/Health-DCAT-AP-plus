@@ -1,5 +1,5 @@
 ---
-site_name: "Health-DCAT-AP-Plus"
+site_name: "Health-DCAT-AP-plus"
 theme:
   # https://www.mkdocs.org/user-guide/configuration/#theme
   name: material

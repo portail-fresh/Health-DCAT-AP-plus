@@ -76,7 +76,7 @@ linkml_meta = LinkMLMeta({'default_prefix': 'health_dcat_ap_plus',
                  'dcatapplus:latest/schema/dcat_ap_plus',
                  'healthdcat_ap_non_public'],
      'license': 'MIT',
-     'name': 'Health-DCAT-AP-Plus',
+     'name': 'Health-DCAT-AP-plus',
      'prefixes': {'adms': {'prefix_prefix': 'adms',
                            'prefix_reference': 'http://www.w3.org/ns/adms#'},
                   'csvw': {'prefix_prefix': 'csvw',
@@ -123,7 +123,7 @@ linkml_meta = LinkMLMeta({'default_prefix': 'health_dcat_ap_plus',
                             'prefix_reference': 'http://www.w3.org/2006/vcard/ns#'}},
      'see_also': ['https://portail-fresh.github.io/Health-DCAT-AP-plus'],
      'source_file': 'src/health_dcat_ap_plus/schema/health_dcat_ap_plus.yaml',
-     'title': 'Health-DCAT-AP-Plus'} )
+     'title': 'Health-DCAT-AP-plus'} )
 
 class DatasetThemes(str, Enum):
     AGRI = "AGRI"

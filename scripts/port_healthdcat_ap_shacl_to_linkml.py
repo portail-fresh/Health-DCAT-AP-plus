@@ -125,7 +125,7 @@ TIER_FILES = {
 # how the rest of this schema family (dcat-ap-plus, chem-dcat-ap, HealthStudy-DCAT-AP)
 # writes them.
 PREFIXES = {
-    "health_dcat_ap_plus": "https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/",
+    "health_dcat_ap_plus": "https://w3id.org/portail-fresh/Health-DCAT-AP-plus/",
     "linkml": "https://w3id.org/linkml/",
     "dcatapplus": "https://w3id.org/nfdi-de/dcat-ap-plus/",
     "healthdcatap": "http://healthdataportal.eu/ns/health#",
@@ -861,7 +861,7 @@ def main() -> None:
     header_lines.append(f"# Generated: {dt.date.today().isoformat()}")
 
     schema = {
-        "id": f"https://w3id.org/portail-fresh/Health-DCAT-AP-Plus/healthdcat_ap_{args.tier.replace('-', '_')}",
+        "id": f"https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_{args.tier.replace('-', '_')}",
         "name": f"healthdcat_ap_{args.tier.replace('-', '_')}",
         "title": f"HealthDCAT-AP ({args.tier} tier), ported from SHACL",
         "description": (

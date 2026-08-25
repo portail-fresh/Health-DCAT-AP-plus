@@ -1,4 +1,4 @@
-"""Data model package for Health-DCAT-AP-Plus."""
+"""Data model package for Health-DCAT-AP-plus."""
 
 from pathlib import Path
 from .health_dcat_ap_plus import *  # noqa: F403

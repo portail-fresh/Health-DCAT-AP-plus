@@ -1,4 +1,4 @@
-# Examples of using Health-DCAT-AP-Plus
+# Examples of using Health-DCAT-AP-plus
 
 This folder contains examples using the datamodel.
 
