@@ -4,7 +4,7 @@
 # regenerate after editing it or after HealthDCAT-AP publishes a new release.
 # Source: repos\healthdcat-ap\public\releases\release-7\html\shacl
 # healthdcat-ap commit: e90053e73b3c5252706efa16afd4da424875e1b1
-# Generated: 2026-08-21
+# Generated: 2026-08-25
 id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public
 name: healthdcat_ap_non_public
 title: HealthDCAT-AP (non-public tier), ported from SHACL
@@ -45,6 +45,7 @@ classes:
     class_uri: dcat:Catalog
     slot_usage:
       applicable_legislation:
+        range: uriorcurie
         required: true
       language:
         values_from:
@@ -121,6 +122,7 @@ classes:
         - http://publications.europa.eu/resource/authority/access-right
         range: uriorcurie
       applicable_legislation:
+        range: uriorcurie
         required: true
       dataset_distribution:
         range: HealthDistribution
@@ -132,10 +134,10 @@ classes:
       sample:
         range: HealthDistribution
       theme:
+        range: uriorcurie
         required: true
         values_from:
         - http://publications.europa.eu/resource/authority/data-theme
-        range: uriorcurie
       contact_point:
         range: HealthKind
         required: true
@@ -199,12 +201,14 @@ classes:
     class_uri: dcat:DatasetSeries
     slot_usage:
       applicable_legislation:
+        range: uriorcurie
         required: true
   HealthDistribution:
     is_a: Distribution
     class_uri: dcat:Distribution
     slot_usage:
       applicable_legislation:
+        range: uriorcurie
         required: true
       format:
         values_from:
@@ -358,11 +362,13 @@ slots:
     required: true
   property_url:
     slot_uri: csvw:propertyUrl
+    range: uriorcurie
   email:
     slot_uri: cv:email
     multivalued: true
   contact_page:
     slot_uri: cv:contactPage
+    range: uriorcurie
     multivalued: true
   telephone:
     slot_uri: cv:telephone
@@ -388,7 +394,7 @@ slots:
     range: HealthAgent
   health_category:
     slot_uri: healthdcatap:healthCategory
-    range: Concept
+    range: uriorcurie
     required: true
     multivalued: true
   health_theme:
@@ -453,10 +459,13 @@ slots:
     required: true
   has_url:
     slot_uri: vcard:hasURL
+    range: uriorcurie
   has_email:
     slot_uri: vcard:hasEmail
+    range: uriorcurie
   url:
     slot_uri: csvw:url
+    range: uriorcurie
   column:
     slot_uri: csvw:column
     range: Column
