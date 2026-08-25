@@ -208,7 +208,12 @@ def _assert_known_violations(actual: FrozenSet[Signature], known: FrozenSet[Sign
 # fixing the vocab-range and cv:contactPoint bugs (see KNOWN_REAL_SHAPES_VIOLATIONS
 # below and docs/architecture-verification.md section 6) -- both fixes are
 # real, verified wins (the real-shapes run dropped from 31 to 20 violations,
-# every NodeKind/hasValue/contactPoint finding from before resolved).
+# every NodeKind/hasValue/contactPoint finding from before resolved). Count
+# held flat at 30 after the 2026-08-25 sh:nodeKind sh:IRI range fix -- one
+# fixed (hasEmail's literal-vs-IRI quirk), one newly surfaced
+# (applicableLegislation, now correctly typed enough to hit the same
+# already-accepted class_uri-sharing pattern the others already do) -- see
+# each entry's own comment, not a regression.
 # ---------------------------------------------------------------------------
 KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
     {
@@ -242,6 +247,16 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Violation", "ClassConstraintComponent", "language"),
         ("Violation", "ClassConstraintComponent", "theme"),
         ("Violation", "ClassConstraintComponent", "type"),
+        # Same class_uri-sharing family as the six above, newly surfaced
+        # 2026-08-25 after fixing the port script's sh:nodeKind sh:IRI gap
+        # (see the parse_shapes fix and its own comment): applicable_legislation
+        # was previously unranged (silently fell to the schema default,
+        # string) so this ClassConstraintComponent conflict against
+        # dcat-ap-plus's own class-object range for the same predicate was
+        # never actually checked. Now that it's correctly uriorcurie, it's
+        # checked and hits the exact same already-understood, already-accepted
+        # structural pattern as the others -- not a new category of problem.
+        ("Violation", "ClassConstraintComponent", "applicableLegislation"),
         # FIXED (was here as a real, structural port bug): dcterms:relation/
         # source/conformsTo were ported under the wrong dcat-ap-plus slot,
         # because dcat-ap-plus reuses each predicate URI across several of
@@ -330,7 +345,16 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Violation", "DatatypeConstraintComponent", "name"),
         ("Violation", "DatatypeConstraintComponent", "hasCodeValues"),
         ("Violation", "DatatypeConstraintComponent", "populationCoverage"),
-        ("Violation", "DatatypeConstraintComponent", "hasEmail"),
+        # FIXED 2026-08-25 (was here as a real, structural port bug, not this
+        # untyped-literal quirk at all): vcard:hasEmail on Kind_Shape has
+        # sh:nodeKind sh:IRI with no sh:datatype/sh:class/sh:node -- a case
+        # parse_shapes' range-detection never handled, so it silently fell
+        # back to the schema default (string) instead of uriorcurie. Fixed
+        # in parse_shapes directly (same sh:nodeKind sh:IRI idiom
+        # parse_vocabulary_restrictions already used for values_from-bound
+        # slots, generalized to the non-vocabulary case) -- also caught
+        # has_url, contact_page, property_url, and applicable_legislation,
+        # which had the exact same gap.
         # Diagnosed, not a schema bug -- a different cause from the string
         # ones above (these already carry the exactly-correct explicit
         # datatype in the dump -- xsd:date/xsd:boolean/xsd:nonNegativeInteger
@@ -364,15 +388,28 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
 # cv:contactPoint fixes (every NodeKind bare-IRI, sh:hasValue NON_PUBLIC/HEAL,
 # and contactPoint finding gone) -> 19 after also fixing HealthAgent's
 # missing foaf:Agent class_uri (the ClassConstraintComponent "hdab" finding
-# is gone). See docs/architecture-verification.md section 6.
+# is gone) -> 18 after fixing the sh:nodeKind sh:IRI range gap (hasEmail).
+# See docs/architecture-verification.md section 6.
 # ---------------------------------------------------------------------------
 KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
     {
         # mdr-vocabularies.shape.ttl's own "must conform to X_Restriction"
-        # node-shape check (skos:inScheme membership) still fires -- expected,
-        # test-fixture artifact, not a schema bug: these are illustrative
-        # term IRIs, not real EU/HealthDCAT-AP authority-table entries with
-        # a genuine skos:inScheme triple. Same root cause as the
+        # node-shape check (skos:inScheme membership) still fires -- NOT
+        # because these are fake/illustrative term IRIs (corrected
+        # 2026-08-25: every one of them was checked directly and does
+        # resolve to a real EU/HealthDCAT-AP authority-table entry, with a
+        # genuine skos:inScheme triple published at its own URL -- e.g.
+        # curl -H "Accept: text/turtle" the data-theme/HEAL term directly
+        # and the triple is right there). The real reason: pyshacl doesn't
+        # dereference/fetch remote URIs during validation at all -- it only
+        # sees triples actually present in the graph being validated, and
+        # our dumped instance data only contains a bare-URI *reference* to
+        # each term, not that term's own describing triples. Fixable by
+        # loading a real ont_graph of the specific terms used into the
+        # pyshacl.validate() call (not done here -- would need either a live
+        # fetch, a CI-flakiness risk given w3id.org's own observed
+        # intermittency, or a curated local snapshot to stay deterministic;
+        # a real option, just not taken yet). Same root cause as the
         # ClassConstraintComponent findings just below.
         ("Violation", "NodeConstraintComponent", "healthCategory"),
         ("Violation", "NodeConstraintComponent", "healthTheme"),
@@ -415,10 +452,11 @@ KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Violation", "ClassConstraintComponent", "hasPersonalData"),
         ("Violation", "ClassConstraintComponent", "hasPurpose"),
         ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
-        # Already-known from the self-shapes pass, now independently
-        # reconfirmed: the plain Dataset-level contact_point's
-        # vcard:hasEmail must be an IRI (mailto:...), not a string literal.
-        ("Violation", "NodeKindConstraintComponent", "hasEmail"),
+        # FIXED 2026-08-25: vcard:hasEmail's range is now uriorcurie (see
+        # KNOWN_OWN_SHAPES_VIOLATIONS' own comment on the parse_shapes fix),
+        # and the fixture's existing "mailto:data-access@example.org" value
+        # was already correctly formatted -- it just wasn't being checked as
+        # an IRI before.
     }
 )
 

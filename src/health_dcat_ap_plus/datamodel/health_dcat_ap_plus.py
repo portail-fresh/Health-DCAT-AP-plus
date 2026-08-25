@@ -1,5 +1,5 @@
 # Auto generated from health_dcat_ap_plus.yaml by pythongen.py version: 0.0.1
-# Generation date: 2026-08-25T09:06:29
+# Generation date: 2026-08-25T17:01:12
 # Schema: Health-DCAT-AP-plus
 #
 # id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus
@@ -2303,7 +2303,7 @@ class HealthCatalogue(Catalogue):
 
     description: Union[str, list[str]] = None
     title: Union[str, list[str]] = None
-    applicable_legislation: Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]] = empty_dict()
+    applicable_legislation: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
     publisher: Union[str, URIorCURIE] = None
     language: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
     geographical_coverage: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
@@ -2311,7 +2311,9 @@ class HealthCatalogue(Catalogue):
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.applicable_legislation):
             self.MissingRequiredField("applicable_legislation")
-        self._normalize_inlined_as_list(slot_name="applicable_legislation", slot_type=LegalResource, key_name="id", keyed=True)
+        if not isinstance(self.applicable_legislation, list):
+            self.applicable_legislation = [self.applicable_legislation] if self.applicable_legislation is not None else []
+        self.applicable_legislation = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.applicable_legislation]
 
         if self._is_empty(self.publisher):
             self.MissingRequiredField("publisher")
@@ -2326,7 +2328,7 @@ class HealthCatalogue(Catalogue):
             self.geographical_coverage = [self.geographical_coverage] if self.geographical_coverage is not None else []
         self.geographical_coverage = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.geographical_coverage]
 
-        __post_init_shield = {n: getattr(self, n) for n in ("language", "publisher", "geographical_coverage")}
+        __post_init_shield = {n: getattr(self, n) for n in ("applicable_legislation", "language", "publisher", "geographical_coverage")}
         for __n in __post_init_shield:
             setattr(self, __n, None)
         super().__post_init__(**kwargs)
@@ -2347,7 +2349,7 @@ class Column(YAMLRoot):
     description: Union[str, list[str]] = None
     name: Union[str, list[str]] = None
     titles: Union[str, list[str]] = None
-    property_url: Optional[str] = None
+    property_url: Optional[Union[str, URIorCURIE]] = None
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.datatype):
@@ -2373,8 +2375,8 @@ class Column(YAMLRoot):
             self.titles = [self.titles] if self.titles is not None else []
         self.titles = [v if isinstance(v, str) else str(v) for v in self.titles]
 
-        if self.property_url is not None and not isinstance(self.property_url, str):
-            self.property_url = str(self.property_url)
+        if self.property_url is not None and not isinstance(self.property_url, URIorCURIE):
+            self.property_url = URIorCURIE(self.property_url)
 
         super().__post_init__(**kwargs)
 
@@ -2388,7 +2390,7 @@ class ContactPoint(YAMLRoot):
     class_name: ClassVar[str] = "ContactPoint"
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.ContactPoint
 
-    contact_page: Optional[Union[str, list[str]]] = empty_list()
+    contact_page: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
     email: Optional[Union[str, list[str]]] = empty_list()
     opening_hours: Optional[Union[Union[dict, "TemporalEntity"], list[Union[dict, "TemporalEntity"]]]] = empty_list()
     special_opening_hours_specification: Optional[Union[Union[dict, "TemporalEntity"], list[Union[dict, "TemporalEntity"]]]] = empty_list()
@@ -2397,7 +2399,7 @@ class ContactPoint(YAMLRoot):
     def __post_init__(self, *_: str, **kwargs: Any):
         if not isinstance(self.contact_page, list):
             self.contact_page = [self.contact_page] if self.contact_page is not None else []
-        self.contact_page = [v if isinstance(v, str) else str(v) for v in self.contact_page]
+        self.contact_page = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.contact_page]
 
         if not isinstance(self.email, list):
             self.email = [self.email] if self.email is not None else []
@@ -2431,7 +2433,7 @@ class HealthDataset(Dataset):
     hdab: Union[dict, "HealthAgent"] = None
     health_category: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
     access_rights: Union[str, URIorCURIE] = None
-    applicable_legislation: Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]] = empty_dict()
+    applicable_legislation: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
     dataset_distribution: Union[Union[dict, "HealthDistribution"], list[Union[dict, "HealthDistribution"]]] = None
     identifier: Union[str, list[str]] = None
     theme: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
@@ -2495,13 +2497,13 @@ class HealthDataset(Dataset):
 
         if self._is_empty(self.applicable_legislation):
             self.MissingRequiredField("applicable_legislation")
-        self._normalize_inlined_as_list(slot_name="applicable_legislation", slot_type=LegalResource, key_name="id", keyed=True)
+        if not isinstance(self.applicable_legislation, list):
+            self.applicable_legislation = [self.applicable_legislation] if self.applicable_legislation is not None else []
+        self.applicable_legislation = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.applicable_legislation]
 
         if self._is_empty(self.dataset_distribution):
             self.MissingRequiredField("dataset_distribution")
-        if not isinstance(self.dataset_distribution, list):
-            self.dataset_distribution = [self.dataset_distribution] if self.dataset_distribution is not None else []
-        self.dataset_distribution = [v if isinstance(v, HealthDistribution) else HealthDistribution(**as_dict(v)) for v in self.dataset_distribution]
+        self._normalize_inlined_as_list(slot_name="dataset_distribution", slot_type=HealthDistribution, key_name="applicable_legislation", keyed=False)
 
         if self._is_empty(self.identifier):
             self.MissingRequiredField("identifier")
@@ -2543,9 +2545,7 @@ class HealthDataset(Dataset):
             self.alternative = [self.alternative] if self.alternative is not None else []
         self.alternative = [v if isinstance(v, str) else str(v) for v in self.alternative]
 
-        if not isinstance(self.analytics, list):
-            self.analytics = [self.analytics] if self.analytics is not None else []
-        self.analytics = [v if isinstance(v, HealthDistribution) else HealthDistribution(**as_dict(v)) for v in self.analytics]
+        self._normalize_inlined_as_list(slot_name="analytics", slot_type=HealthDistribution, key_name="applicable_legislation", keyed=False)
 
         if self.custodian is not None and not isinstance(self.custodian, HealthAgent):
             self.custodian = HealthAgent(**as_dict(self.custodian))
@@ -2604,9 +2604,7 @@ class HealthDataset(Dataset):
         if self.publisher is not None and not isinstance(self.publisher, HealthPublisherAgent):
             self.publisher = HealthPublisherAgent(**as_dict(self.publisher))
 
-        if not isinstance(self.sample, list):
-            self.sample = [self.sample] if self.sample is not None else []
-        self.sample = [v if isinstance(v, HealthDistribution) else HealthDistribution(**as_dict(v)) for v in self.sample]
+        self._normalize_inlined_as_list(slot_name="sample", slot_type=HealthDistribution, key_name="applicable_legislation", keyed=False)
 
         if not isinstance(self.frequency, list):
             self.frequency = [self.frequency] if self.frequency is not None else []
@@ -2632,7 +2630,7 @@ class HealthDataset(Dataset):
 
         self._normalize_inlined_as_list(slot_name="qualified_attribution", slot_type=DatasetAttribution, key_name="attribution_had_role", keyed=False)
 
-        __post_init_shield = {n: getattr(self, n) for n in ("access_rights", "theme", "type", "frequency", "temporal_resolution", "language", "geographical_coverage", "health_category", "has_coding_system", "conforms_to", "health_theme")}
+        __post_init_shield = {n: getattr(self, n) for n in ("access_rights", "applicable_legislation", "theme", "type", "frequency", "temporal_resolution", "language", "geographical_coverage", "has_coding_system", "conforms_to", "health_theme")}
         for __n in __post_init_shield:
             setattr(self, __n, None)
         super().__post_init__(**kwargs)
@@ -2651,14 +2649,21 @@ class HealthDatasetSeries(DatasetSeries):
 
     description: Union[str, list[str]] = None
     title: Union[str, list[str]] = None
-    applicable_legislation: Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]] = empty_dict()
+    applicable_legislation: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.applicable_legislation):
             self.MissingRequiredField("applicable_legislation")
-        self._normalize_inlined_as_list(slot_name="applicable_legislation", slot_type=LegalResource, key_name="id", keyed=True)
+        if not isinstance(self.applicable_legislation, list):
+            self.applicable_legislation = [self.applicable_legislation] if self.applicable_legislation is not None else []
+        self.applicable_legislation = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.applicable_legislation]
 
+        __post_init_shield = {n: getattr(self, n) for n in ("applicable_legislation",)}
+        for __n in __post_init_shield:
+            setattr(self, __n, None)
         super().__post_init__(**kwargs)
+        for __n, __v in __post_init_shield.items():
+            setattr(self, __n, __v)
 
 
 @dataclass(repr=False)
@@ -2671,7 +2676,7 @@ class HealthDistribution(Distribution):
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.HealthDistribution
 
     access_URL: Union[dict[Union[str, ResourceId], Union[dict, Resource]], list[Union[dict, Resource]]] = empty_dict()
-    applicable_legislation: Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]] = empty_dict()
+    applicable_legislation: Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]] = None
     format: Optional[Union[str, URIorCURIE]] = None
     language: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
     status: Optional[Union[str, URIorCURIE]] = None
@@ -2680,7 +2685,9 @@ class HealthDistribution(Distribution):
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.applicable_legislation):
             self.MissingRequiredField("applicable_legislation")
-        self._normalize_inlined_as_list(slot_name="applicable_legislation", slot_type=LegalResource, key_name="id", keyed=True)
+        if not isinstance(self.applicable_legislation, list):
+            self.applicable_legislation = [self.applicable_legislation] if self.applicable_legislation is not None else []
+        self.applicable_legislation = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.applicable_legislation]
 
         if self.format is not None and not isinstance(self.format, URIorCURIE):
             self.format = URIorCURIE(self.format)
@@ -2695,7 +2702,7 @@ class HealthDistribution(Distribution):
         if self.availability is not None and not isinstance(self.availability, URIorCURIE):
             self.availability = URIorCURIE(self.availability)
 
-        __post_init_shield = {n: getattr(self, n) for n in ("format", "language", "status", "availability")}
+        __post_init_shield = {n: getattr(self, n) for n in ("applicable_legislation", "format", "language", "status", "availability")}
         for __n in __post_init_shield:
             setattr(self, __n, None)
         super().__post_init__(**kwargs)
@@ -2758,15 +2765,15 @@ class HealthKind(Kind):
     class_name: ClassVar[str] = "HealthKind"
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.HealthKind
 
-    has_email: Optional[str] = None
-    has_url: Optional[str] = None
+    has_email: Optional[Union[str, URIorCURIE]] = None
+    has_url: Optional[Union[str, URIorCURIE]] = None
 
     def __post_init__(self, *_: str, **kwargs: Any):
-        if self.has_email is not None and not isinstance(self.has_email, str):
-            self.has_email = str(self.has_email)
+        if self.has_email is not None and not isinstance(self.has_email, URIorCURIE):
+            self.has_email = URIorCURIE(self.has_email)
 
-        if self.has_url is not None and not isinstance(self.has_url, str):
-            self.has_url = str(self.has_url)
+        if self.has_url is not None and not isinstance(self.has_url, URIorCURIE):
+            self.has_url = URIorCURIE(self.has_url)
 
         super().__post_init__(**kwargs)
 
@@ -2783,7 +2790,7 @@ class Table(YAMLRoot):
     column: Union[Union[dict, Column], list[Union[dict, Column]]] = None
     title: Union[str, list[str]] = None
     keyword: Optional[Union[str, list[str]]] = empty_list()
-    url: Optional[str] = None
+    url: Optional[Union[str, URIorCURIE]] = None
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.column):
@@ -2800,8 +2807,8 @@ class Table(YAMLRoot):
             self.keyword = [self.keyword] if self.keyword is not None else []
         self.keyword = [v if isinstance(v, str) else str(v) for v in self.keyword]
 
-        if self.url is not None and not isinstance(self.url, str):
-            self.url = str(self.url)
+        if self.url is not None and not isinstance(self.url, URIorCURIE):
+            self.url = URIorCURIE(self.url)
 
         super().__post_init__(**kwargs)
 
@@ -3465,13 +3472,13 @@ slots.datatype = Slot(uri=CSVW.datatype, name="datatype", curie=CSVW.curie('data
                    model_uri=HEALTH_DCAT_AP_PLUS.datatype, domain=None, range=str)
 
 slots.property_url = Slot(uri=CSVW.propertyUrl, name="property_url", curie=CSVW.curie('propertyUrl'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.property_url, domain=None, range=Optional[str])
+                   model_uri=HEALTH_DCAT_AP_PLUS.property_url, domain=None, range=Optional[Union[str, URIorCURIE]])
 
 slots.email = Slot(uri=CV.email, name="email", curie=CV.curie('email'),
                    model_uri=HEALTH_DCAT_AP_PLUS.email, domain=None, range=Optional[Union[str, list[str]]])
 
 slots.contact_page = Slot(uri=CV.contactPage, name="contact_page", curie=CV.curie('contactPage'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.contact_page, domain=None, range=Optional[Union[str, list[str]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.contact_page, domain=None, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
 
 slots.telephone = Slot(uri=CV.telephone, name="telephone", curie=CV.curie('telephone'),
                    model_uri=HEALTH_DCAT_AP_PLUS.telephone, domain=None, range=Optional[Union[str, list[str]]])
@@ -3492,7 +3499,7 @@ slots.custodian = Slot(uri=GEODCATAP.custodian, name="custodian", curie=GEODCATA
                    model_uri=HEALTH_DCAT_AP_PLUS.custodian, domain=None, range=Optional[Union[dict, HealthAgent]])
 
 slots.health_category = Slot(uri=HEALTHDCATAP.healthCategory, name="health_category", curie=HEALTHDCATAP.curie('healthCategory'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.health_category, domain=None, range=Union[Union[dict, Concept], list[Union[dict, Concept]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.health_category, domain=None, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
 
 slots.health_theme = Slot(uri=HEALTHDCATAP.healthTheme, name="health_theme", curie=HEALTHDCATAP.curie('healthTheme'),
                    model_uri=HEALTH_DCAT_AP_PLUS.health_theme, domain=None, range=Optional[Union[Union[dict, Concept], list[Union[dict, Concept]]]])
@@ -3546,13 +3553,13 @@ slots.agent_contact_point = Slot(uri=CV.contactPoint, name="agent_contact_point"
                    model_uri=HEALTH_DCAT_AP_PLUS.agent_contact_point, domain=None, range=Union[dict, ContactPoint])
 
 slots.has_url = Slot(uri=VCARD.hasURL, name="has_url", curie=VCARD.curie('hasURL'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.has_url, domain=None, range=Optional[str])
+                   model_uri=HEALTH_DCAT_AP_PLUS.has_url, domain=None, range=Optional[Union[str, URIorCURIE]])
 
 slots.has_email = Slot(uri=VCARD.hasEmail, name="has_email", curie=VCARD.curie('hasEmail'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.has_email, domain=None, range=Optional[str])
+                   model_uri=HEALTH_DCAT_AP_PLUS.has_email, domain=None, range=Optional[Union[str, URIorCURIE]])
 
 slots.url = Slot(uri=CSVW.url, name="url", curie=CSVW.curie('url'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.url, domain=None, range=Optional[str])
+                   model_uri=HEALTH_DCAT_AP_PLUS.url, domain=None, range=Optional[Union[str, URIorCURIE]])
 
 slots.column = Slot(uri=CSVW.column, name="column", curie=CSVW.curie('column'),
                    model_uri=HEALTH_DCAT_AP_PLUS.column, domain=None, range=Union[Union[dict, Column], list[Union[dict, Column]]])
@@ -4074,7 +4081,7 @@ slots.Software_other_identifier = Slot(uri=ADMS.identifier, name="Software_other
                    model_uri=HEALTH_DCAT_AP_PLUS.Software_other_identifier, domain=Software, range=Optional[Union[Union[dict, "Identifier"], list[Union[dict, "Identifier"]]]])
 
 slots.HealthCatalogue_applicable_legislation = Slot(uri=DCATAP.applicableLegislation, name="HealthCatalogue_applicable_legislation", curie=DCATAP.curie('applicableLegislation'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthCatalogue_applicable_legislation, domain=HealthCatalogue, range=Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthCatalogue_applicable_legislation, domain=HealthCatalogue, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
 
 slots.HealthCatalogue_language = Slot(uri=DCTERMS.language, name="HealthCatalogue_language", curie=DCTERMS.curie('language'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthCatalogue_language, domain=HealthCatalogue, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
@@ -4095,7 +4102,7 @@ slots.HealthDataset_access_rights = Slot(uri=DCTERMS.accessRights, name="HealthD
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_access_rights, domain=HealthDataset, range=Union[str, URIorCURIE])
 
 slots.HealthDataset_applicable_legislation = Slot(uri=DCATAP.applicableLegislation, name="HealthDataset_applicable_legislation", curie=DCATAP.curie('applicableLegislation'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_applicable_legislation, domain=HealthDataset, range=Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_applicable_legislation, domain=HealthDataset, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
 
 slots.HealthDataset_dataset_distribution = Slot(uri=DCAT.distribution, name="HealthDataset_dataset_distribution", curie=DCAT.curie('distribution'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_dataset_distribution, domain=HealthDataset, range=Union[Union[dict, "HealthDistribution"], list[Union[dict, "HealthDistribution"]]])
@@ -4155,10 +4162,10 @@ slots.HealthDataset_qualified_attribution = Slot(uri=PROV.qualifiedAttribution, 
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_qualified_attribution, domain=HealthDataset, range=Optional[Union[Union[dict, "DatasetAttribution"], list[Union[dict, "DatasetAttribution"]]]])
 
 slots.HealthDatasetSeries_applicable_legislation = Slot(uri=DCATAP.applicableLegislation, name="HealthDatasetSeries_applicable_legislation", curie=DCATAP.curie('applicableLegislation'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDatasetSeries_applicable_legislation, domain=HealthDatasetSeries, range=Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDatasetSeries_applicable_legislation, domain=HealthDatasetSeries, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
 
 slots.HealthDistribution_applicable_legislation = Slot(uri=DCATAP.applicableLegislation, name="HealthDistribution_applicable_legislation", curie=DCATAP.curie('applicableLegislation'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDistribution_applicable_legislation, domain=HealthDistribution, range=Union[dict[Union[str, LegalResourceId], Union[dict, LegalResource]], list[Union[dict, LegalResource]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDistribution_applicable_legislation, domain=HealthDistribution, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
 
 slots.HealthDistribution_format = Slot(uri=DCTERMS.format, name="HealthDistribution_format", curie=DCTERMS.curie('format'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDistribution_format, domain=HealthDistribution, range=Optional[Union[str, URIorCURIE]])

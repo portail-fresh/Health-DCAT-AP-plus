@@ -6506,6 +6506,7 @@ class HealthCatalogue(Catalogue):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Catalog',
          'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'applicable_legislation': {'name': 'applicable_legislation',
+                                                   'range': 'uriorcurie',
                                                    'required': True},
                         'geographical_coverage': {'comments': ['Recommended alignment '
                                                                "(HealthDCAT-AP's own "
@@ -6530,7 +6531,7 @@ class HealthCatalogue(Catalogue):
                                       'range': 'uriorcurie',
                                       'values_from': ['http://publications.europa.eu/resource/authority/corporate-body']}}})
 
-    applicable_legislation: list[LegalResource] = Field(default=..., description="""The legislation that mandates the creation or management of the Catalog.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
+    applicable_legislation: list[str] = Field(default=..., description="""The legislation that mandates the creation or management of the Catalog.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
                        'DataService',
                        'Dataset',
                        'DatasetSeries',
@@ -6736,6 +6737,7 @@ class HealthDataset(Dataset):
                                           'required': True,
                                           'values_from': ['http://publications.europa.eu/resource/authority/access-right']},
                         'applicable_legislation': {'name': 'applicable_legislation',
+                                                   'range': 'uriorcurie',
                                                    'required': True},
                         'conforms_to': {'name': 'conforms_to',
                                         'range': 'uriorcurie',
@@ -6830,7 +6832,7 @@ class HealthDataset(Dataset):
     access_rights: str = Field(default=..., description="""Information that indicates whether the Dataset is publicly accessible, has access restrictions or is not public.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'],
          'slot_uri': 'dcterms:accessRights',
          'values_from': ['http://publications.europa.eu/resource/authority/access-right']} })
-    applicable_legislation: list[LegalResource] = Field(default=..., description="""The legislation that mandates the creation or management of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
+    applicable_legislation: list[str] = Field(default=..., description="""The legislation that mandates the creation or management of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
                        'DataService',
                        'Dataset',
                        'DatasetSeries',
@@ -7015,9 +7017,10 @@ class HealthDatasetSeries(DatasetSeries):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:DatasetSeries',
          'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'applicable_legislation': {'name': 'applicable_legislation',
+                                                   'range': 'uriorcurie',
                                                    'required': True}}})
 
-    applicable_legislation: list[LegalResource] = Field(default=..., description="""The legislation that mandates the creation or management of the Dataset Series.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
+    applicable_legislation: list[str] = Field(default=..., description="""The legislation that mandates the creation or management of the Dataset Series.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
                        'DataService',
                        'Dataset',
                        'DatasetSeries',
@@ -7126,6 +7129,7 @@ class HealthDistribution(Distribution):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Distribution',
          'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'applicable_legislation': {'name': 'applicable_legislation',
+                                                   'range': 'uriorcurie',
                                                    'required': True},
                         'availability': {'name': 'availability',
                                          'range': 'uriorcurie',
@@ -7142,7 +7146,7 @@ class HealthDistribution(Distribution):
 
     access_URL: list[Resource] = Field(default=..., description="""A URL that gives access to a Distribution of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'dcat:accessURL'} })
     access_service: Optional[list[DataService]] = Field(default=None, description="""A data service that gives access to the distribution of the dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Distribution'], 'slot_uri': 'dcat:accessService'} })
-    applicable_legislation: list[LegalResource] = Field(default=..., description="""The legislation that mandates the creation or management of the Distribution.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
+    applicable_legislation: list[str] = Field(default=..., description="""The legislation that mandates the creation or management of the Distribution.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue',
                        'DataService',
                        'Dataset',
                        'DatasetSeries',

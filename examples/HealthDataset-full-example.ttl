@@ -13,6 +13,13 @@
 # AssociatedDataGeneratingActivity instances into was_generated_by (a
 # deliberate design choice, not a bug -- see that class's own docstring in
 # health_dcat_ap_plus.yaml).
+#
+# Every external vocabulary/ontology term below (EU Publications Office
+# authority tables, HealthDCAT-AP's own vocabularies, DPV, DPV-PD) was
+# checked directly to confirm it resolves to a real, existing term, not
+# assumed -- see the fixture YAML's own comments for exactly what was
+# verified and how. applicable_legislation now points at the real ELI for
+# Regulation (EU) 2025/327 (the EHDS Regulation itself), not a placeholder.
 @prefix adms: <http://www.w3.org/ns/adms#> .
 @prefix cv: <http://data.europa.eu/m8g/> .
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
@@ -32,9 +39,9 @@
             cv:contactPoint [ a cv:ContactPoint ;
                     cv:email "custodian@example.org" ] ;
             foaf:name "Regional Cancer Registry Authority" ] ;
-    dcatap:applicableLegislation <https://example.org/legislation/eu-2025-327> ;
+    dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2025/327/oj> ;
     healthdcatap:analytics [ a dcat:Distribution ;
-            dcatap:applicableLegislation <https://example.org/legislation/eu-2025-327> ;
+            dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2025/327/oj> ;
             dcat:accessURL <https://example.org/dataset/cancer-registry-2024/analytics> ] ;
     healthdcatap:hasCodeValues "ICD-O-3" ;
     healthdcatap:hasCodingSystem <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD_O_3> ;
@@ -71,12 +78,12 @@
     dcterms:title "Regional cancer incidence registry 2024" ;
     dcterms:type <http://publications.europa.eu/resource/authority/dataset-type/EXPLOITABLE> ;
     adms:sample [ a dcat:Distribution ;
-            dcatap:applicableLegislation <https://example.org/legislation/eu-2025-327> ;
+            dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2025/327/oj> ;
             dcat:accessURL <https://example.org/dataset/cancer-registry-2024/sample> ] ;
     dcat:contactPoint [ a vcard:Kind ;
-            vcard:hasEmail "mailto:data-access@example.org" ] ;
+            vcard:hasEmail <mailto:data-access@example.org> ] ;
     dcat:distribution [ a dcat:Distribution ;
-            dcatap:applicableLegislation <https://example.org/legislation/eu-2025-327> ;
+            dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2025/327/oj> ;
             dcat:accessURL <https://example.org/dataset/cancer-registry-2024/download> ] ;
     dcat:keyword "cancer",
         "registry" ;
@@ -100,11 +107,11 @@
             prov:agent <https://orcid.org/0000-0002-1825-0097> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ],
         [ a prov:Association ;
-            prov:agent <https://ror.org/00k4n6c32> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
-        [ a prov:Association ;
             prov:agent <https://ror.org/03yrm5c26> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ] .
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ],
+        [ a prov:Association ;
+            prov:agent <https://ror.org/00k4n6c32> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ] .
 
 <https://example.org/activity/diagnostic-reporting-process> a prov:Activity ;
     dcterms:title "Diagnostic reporting and coding process" .
@@ -134,6 +141,4 @@
 
 <https://ror.org/03yrm5c26> a prov:Agent ;
     dcterms:title "European Health Research Council" .
-
-<https://example.org/legislation/eu-2025-327> a <eli:LegalResource> .
 

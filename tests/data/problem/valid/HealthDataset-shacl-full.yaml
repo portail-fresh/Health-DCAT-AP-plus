@@ -23,8 +23,13 @@ contact_point:
 # (sh:hasValue, non-public-shapes.ttl) -- confirmed directly, see
 # docs/architecture-verification.md section 6.
 access_rights: http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC
+# Real ELI (European Legislation Identifier) for Regulation (EU) 2025/327,
+# the EHDS (European Health Data Space) Regulation itself -- confirmed
+# resolvable directly, not assumed. Previously a fake example.org URI with
+# "eu-2025-327" already baked into the id, suggesting this was always meant
+# to be EHDS -- just missing the real identifier.
 applicable_legislation:
-  - id: https://example.org/legislation/eu-2025-327
+  - http://data.europa.eu/eli/reg/2025/327/oj
 documentation:
   - id: https://example.org/doc/methodology
 landing_page:
@@ -46,17 +51,17 @@ sample:
   - access_URL:
       - id: https://example.org/dataset/cancer-registry-2024/sample
     applicable_legislation:
-      - id: https://example.org/legislation/eu-2025-327
+      - http://data.europa.eu/eli/reg/2025/327/oj
 dataset_distribution:
   - access_URL:
       - id: https://example.org/dataset/cancer-registry-2024/download
     applicable_legislation:
-      - id: https://example.org/legislation/eu-2025-327
+      - http://data.europa.eu/eli/reg/2025/327/oj
 analytics:
   - access_URL:
       - id: https://example.org/dataset/cancer-registry-2024/analytics
     applicable_legislation:
-      - id: https://example.org/legislation/eu-2025-327
+      - http://data.europa.eu/eli/reg/2025/327/oj
 hdab:
   name:
     - National Health Data Access Body
@@ -82,6 +87,20 @@ has_personal_data:
   - https://w3id.org/dpv/dpv-pd#MedicalHealthInsurance
 has_purpose:
   - https://w3id.org/dpv#MedicalResearchPurpose
+# Deliberately kept local (example.org), not swapped for an external
+# registry ID: checked directly, there is no shared global registry of
+# "quality certificates" the way there is for legislation (ELI) or DPV
+# concepts -- a quality certificate is an assertion a specific organization
+# makes about a specific dataset, inherently instance-specific. The real
+# shape requires sh:class dqv:QualityCertificate, which needs an explicit
+# rdf:type triple on the value -- currently missing because
+# QualityCertificate is one of the auto-stubbed, single-slot (id-only)
+# classes, and LinkML/rdflib_dumper collapses a single-identifier-slot class
+# to a bare URI reference rather than a typed object (see
+# docs/architecture-verification.md's stub-class section). Not fixed here:
+# doing so would change that collapsing behavior for every other bare-URI
+# reference built the same way, a bigger design call than this fixture
+# should make unilaterally.
 has_quality_annotation:
   - https://example.org/quality-certificate/iso-27001
 has_structured_data: true
@@ -89,6 +108,11 @@ has_code_values:
   - ICD-O-3
 has_coding_system:
   - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD_O_3
+# Deliberately kept local: checked directly, HealthDCAT-AP's own real shape
+# for dct:conformsTo only *recommends* aligning with a concept from
+# .../authority/standard (its own message says "if no match is found,
+# inform the vocabulary maintainer") -- a dataset-specific schema like this
+# one is an expected, tolerated case, not a violation to work around.
 conforms_to:
   - https://example.org/schemas/cancer-registry-v1
 max_typical_age: 99

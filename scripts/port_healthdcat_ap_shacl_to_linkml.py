@@ -371,6 +371,21 @@ def parse_shapes(graph, uri_to_slot, uri_to_class, base_sv):
                     fact.is_class_like = True
                 elif sh_datatype is not None:
                     fact.range_name = XSD_TYPE_NAME.get(sh_datatype, local_name(str(sh_datatype)))
+                elif graph.value(prop_shape, SH.nodeKind) == SH.IRI:
+                    # A property shape can be IRI-typed with *no*
+                    # sh:class/sh:node/sh:datatype at all -- e.g.
+                    # vcard:hasEmail on Kind_Shape (sh:nodeKind sh:IRI only).
+                    # Missed by every branch above, so it silently fell
+                    # through to LinkML's schema default_range (string) --
+                    # found by running the real generated RDF through
+                    # HealthDCAT-AP's own real shapes and seeing a
+                    # NodeKindConstraintComponent violation on hasEmail, not
+                    # predicted. Same "bare URI, no object shape" idiom
+                    # parse_vocabulary_restrictions already uses for
+                    # values_from-bound slots (see its own docstring) --
+                    # this is the same check for the general, non-vocabulary
+                    # case.
+                    fact.range_name = "uriorcurie"
 
             severity = graph.value(prop_shape, SH.severity)
             recommended_only = severity is not None and str(severity).endswith("Warning")
