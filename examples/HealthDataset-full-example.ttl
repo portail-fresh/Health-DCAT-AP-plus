@@ -14,12 +14,14 @@
 # deliberate design choice, not a bug -- see that class's own docstring in
 # health_dcat_ap_plus.yaml).
 #
-# Every external vocabulary/ontology term below (EU Publications Office
-# authority tables, HealthDCAT-AP's own vocabularies, DPV, DPV-PD) was
-# checked directly to confirm it resolves to a real, existing term, not
-# assumed -- see the fixture YAML's own comments for exactly what was
-# verified and how. applicable_legislation now points at the real ELI for
-# Regulation (EU) 2025/327 (the EHDS Regulation itself), not a placeholder.
+# Every external vocabulary/ontology term below was checked directly
+# against its own real source, not assumed -- see the fixture YAML's own
+# comments and tests/data/real_vocabulary_terms.ttl for exactly what was
+# verified and how (including which terms turned out to be genuinely
+# invented and were replaced, and which resolve but currently have no
+# real published content at their own source). applicable_legislation
+# points at the real ELI for Regulation (EU) 2025/327, the EHDS Regulation
+# itself.
 @prefix adms: <http://www.w3.org/ns/adms#> .
 @prefix cv: <http://data.europa.eu/m8g/> .
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
@@ -98,20 +100,20 @@
     prov:wasGeneratedBy <https://example.org/activity/cancer-registry-collection-2024> ;
     foaf:page <https://example.org/doc/methodology> ;
     dpv:hasLegalBasis dpv:LegalObligation ;
-    dpv:hasPersonalData <https://w3id.org/dpv/dpv-pd#MedicalHealthInsurance> ;
-    dpv:hasPurpose dpv:MedicalResearchPurpose .
+    dpv:hasPersonalData <https://w3id.org/dpv/pd#MedicalHealth> ;
+    dpv:hasPurpose dpv:ScientificResearch .
 
 <https://example.org/activity/cancer-registry-collection-2024> a prov:Activity ;
     dcterms:title "Cancer registry data collection process" ;
     prov:qualifiedAssociation [ a prov:Association ;
-            prov:agent <https://orcid.org/0000-0002-1825-0097> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ],
+            prov:agent <https://ror.org/00k4n6c32> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
         [ a prov:Association ;
             prov:agent <https://ror.org/03yrm5c26> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ],
         [ a prov:Association ;
-            prov:agent <https://ror.org/00k4n6c32> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ] .
+            prov:agent <https://orcid.org/0000-0002-1825-0097> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ] .
 
 <https://example.org/activity/diagnostic-reporting-process> a prov:Activity ;
     dcterms:title "Diagnostic reporting and coding process" .

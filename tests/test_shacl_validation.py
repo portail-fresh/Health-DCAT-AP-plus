@@ -164,6 +164,26 @@ def _real_healthdcat_ap_shapes_graph() -> Graph:
     return g
 
 
+REAL_VOCABULARY_TERMS_PATH = Path(__file__).parent / "data" / "real_vocabulary_terms.ttl"
+
+
+def _real_vocabulary_terms_graph() -> Graph:
+    """Load the curated snapshot of real external vocabulary/DPV term triples.
+
+    See tests/data/real_vocabulary_terms.ttl's own header for what this is,
+    why it's a static checked-in snapshot rather than a live fetch, and
+    which fixture terms it deliberately does NOT cover (their real sources
+    currently return empty RDF, not fake terms but nothing real to load).
+    Only merged into the *real*-shapes validation below, not
+    _build_test_dataset_graph()'s own output -- these are validation aids
+    about external resources, not part of our own dataset's data, and
+    shouldn't leak into the published example.
+    """
+    g = Graph()
+    g.parse(str(REAL_VOCABULARY_TERMS_PATH), format="turtle")
+    return g
+
+
 def _violation_signatures(results_graph: Graph) -> FrozenSet[Signature]:
     """Reduce a pyshacl results graph to a stable (severity, component, path) set.
 
@@ -388,37 +408,43 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
 # cv:contactPoint fixes (every NodeKind bare-IRI, sh:hasValue NON_PUBLIC/HEAL,
 # and contactPoint finding gone) -> 19 after also fixing HealthAgent's
 # missing foaf:Agent class_uri (the ClassConstraintComponent "hdab" finding
-# is gone) -> 18 after fixing the sh:nodeKind sh:IRI range gap (hasEmail).
-# See docs/architecture-verification.md section 6.
+# is gone) -> 18 after fixing the sh:nodeKind sh:IRI range gap (hasEmail) ->
+# 12 after merging in tests/data/real_vocabulary_terms.ttl, a curated
+# snapshot of the real describing triples for the fixture's external
+# vocabulary/DPV terms (see that file's own header, and
+# _real_vocabulary_terms_graph's docstring, for what it covers and why 4 of
+# the 11 external terms used still can't be fixed this way -- their real
+# sources currently return empty RDF, not fake terms, just nothing real to
+# load yet). See docs/architecture-verification.md section 6.
 # ---------------------------------------------------------------------------
 KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
     {
         # mdr-vocabularies.shape.ttl's own "must conform to X_Restriction"
-        # node-shape check (skos:inScheme membership) still fires -- NOT
-        # because these are fake/illustrative term IRIs (corrected
-        # 2026-08-25: every one of them was checked directly and does
-        # resolve to a real EU/HealthDCAT-AP authority-table entry, with a
-        # genuine skos:inScheme triple published at its own URL -- e.g.
-        # curl -H "Accept: text/turtle" the data-theme/HEAL term directly
-        # and the triple is right there). The real reason: pyshacl doesn't
-        # dereference/fetch remote URIs during validation at all -- it only
-        # sees triples actually present in the graph being validated, and
-        # our dumped instance data only contains a bare-URI *reference* to
-        # each term, not that term's own describing triples. Fixable by
-        # loading a real ont_graph of the specific terms used into the
-        # pyshacl.validate() call (not done here -- would need either a live
-        # fetch, a CI-flakiness risk given w3id.org's own observed
-        # intermittency, or a curated local snapshot to stay deterministic;
-        # a real option, just not taken yet). Same root cause as the
+        # node-shape check (skos:inScheme membership) still fires for these
+        # three specifically -- NOT because they're fake/illustrative term
+        # IRIs (their real sources were checked directly, same as
+        # theme/accessRights/accrualPeriodicity/language, which *are* now
+        # fixed via the vocabulary snapshot) but because
+        # healthcategories/ONCOLOGY, health-theme/CANCER, and
+        # coding-system/ICD_O_3 currently resolve to a genuinely empty RDF
+        # document at their own real URI on HealthDCAT-AP's own
+        # "acceptance" (pre-production) vocabulary server -- there's
+        # nothing real to load for these yet. Revisit once/if that server
+        # publishes real content. Same root cause as the
         # ClassConstraintComponent findings just below.
         ("Violation", "NodeConstraintComponent", "healthCategory"),
         ("Violation", "NodeConstraintComponent", "healthTheme"),
-        ("Violation", "NodeConstraintComponent", "theme"),
-        ("Violation", "NodeConstraintComponent", "accessRights"),
-        ("Violation", "NodeConstraintComponent", "accrualPeriodicity"),
         ("Violation", "NodeConstraintComponent", "hasCodingSystem"),
-        ("Violation", "NodeConstraintComponent", "language"),
+        # Deliberately not aligned with an external vocabulary term: checked
+        # directly, HealthDCAT-AP's own real shape for dct:conformsTo only
+        # *recommends* aligning with a concept from .../authority/standard
+        # (its own message: "if no match is found, inform the vocabulary
+        # maintainer") -- a dataset-specific schema like this fixture's is
+        # an expected, tolerated case, not a violation to work around.
         ("Violation", "NodeConstraintComponent", "conformsTo"),
+        # Same empty-vocabulary-server cause as healthCategory/healthTheme/
+        # hasCodingSystem above -- dataset-type/EXPLOITABLE also resolves to
+        # an empty RDF document at its own real URI.
         ("Warning", "NodeConstraintComponent", "type"),
         ("Violation", "MinCountConstraintComponent", "inScheme"),
         ("Violation", "HasValueConstraintComponent", "inScheme"),
@@ -429,28 +455,25 @@ KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # a hard LinkML `required`, see the severity-awareness fix above).
         # This fixture simply doesn't supply the optional source field.
         ("Warning", "MinCountConstraintComponent", "source"),
-        # NEW, but the same test-fixture-artifact family, not a new bug:
         # range.ttl carries its own, independent sh:class requirement for
         # these three HealthDCAT-AP-specific predicates (dcterms:Standard /
         # skos:Concept), separate from mdr-vocabularies.shape.ttl's
-        # skos:inScheme check above. Previously satisfied by accident --
-        # the old fixture used nested Concept/Standard objects that
-        # self-asserted their own rdf:type; now that the range is
-        # (correctly) a bare IRI, nothing in this fixture asserts a type on
-        # it at all. Needs the real vocabulary graph loaded, or explicit
-        # rdf:type triples on the term IRIs, neither of which this fixture
-        # attempts.
+        # skos:inScheme check above -- same empty-vocabulary-server cause,
+        # not fixable by the snapshot until HealthDCAT-AP's own server has
+        # real content to fetch.
         ("Violation", "ClassConstraintComponent", "hasCodingSystem"),
         ("Violation", "ClassConstraintComponent", "healthCategory"),
         ("Violation", "ClassConstraintComponent", "healthTheme"),
-        # Test-fixture artifacts, not schema bugs: dpv:hasLegalBasis /
-        # hasPersonalData / hasPurpose / dqv:hasQualityAnnotation need the
-        # real DPV/DQV ontologies loaded (or explicit rdf:type triples on
-        # the term IRIs) for sh:class membership checks to pass -- this
-        # fixture uses bare term IRIs with no inference.
-        ("Violation", "ClassConstraintComponent", "hasLegalBasis"),
-        ("Violation", "ClassConstraintComponent", "hasPersonalData"),
-        ("Violation", "ClassConstraintComponent", "hasPurpose"),
+        # Deliberately kept local, not swapped for an external registry ID:
+        # checked directly, there is no shared global registry of "quality
+        # certificates" the way there is for DPV concepts -- a quality
+        # certificate is an assertion a specific organization makes about a
+        # specific dataset, inherently instance-specific (see the fixture
+        # YAML's own comment on has_quality_annotation for the fuller
+        # reasoning, including why the auto-stubbed QualityCertificate
+        # class's single-identifier-slot collapsing behavior is also part
+        # of why this can't be fixed by adding a local rdf:type triple
+        # either).
         ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
         # FIXED 2026-08-25: vcard:hasEmail's range is now uriorcurie (see
         # KNOWN_OWN_SHAPES_VIOLATIONS' own comment on the parse_shapes fix),
@@ -483,7 +506,12 @@ def test_dataset_conforms_to_own_generated_shacl():
     ),
 )
 def test_dataset_conforms_to_real_healthdcat_ap_shacl():
-    data_graph = _build_test_dataset_graph()
+    # Merge in the real vocabulary-term snapshot so pyshacl's skos:inScheme/
+    # sh:class checks have real membership triples to check against, instead
+    # of failing simply because our own instance data only carries a bare
+    # reference to each term, not that term's own describing triples (see
+    # _real_vocabulary_terms_graph's own docstring).
+    data_graph = _build_test_dataset_graph() + _real_vocabulary_terms_graph()
     shapes_graph = _real_healthdcat_ap_shapes_graph()
     _, results_graph, _ = pyshacl.validate(
         data_graph,

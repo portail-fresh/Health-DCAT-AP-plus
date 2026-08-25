@@ -81,12 +81,20 @@ health_category:
   - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories/ONCOLOGY
 health_theme:
   - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme/CANCER
+# All three DPV terms below checked directly against DPV's real turtle
+# source, not assumed -- see tests/data/real_vocabulary_terms.ttl for the
+# exact confirmed triples. LegalObligation was already correct. The other
+# two were invented, plausible-sounding but non-existent terms (dpv-pd's
+# real prefix is pd:, not dpv-pd:, and neither MedicalHealthInsurance nor
+# MedicalResearchPurpose exist anywhere in DPV) -- replaced with the
+# closest genuinely real terms: pd:MedicalHealth (a dpv:PersonalData,
+# dpv:SpecialCategoryPersonalData) and dpv:ScientificResearch (a dpv:Purpose).
 has_legal_basis:
   - https://w3id.org/dpv#LegalObligation
 has_personal_data:
-  - https://w3id.org/dpv/dpv-pd#MedicalHealthInsurance
+  - https://w3id.org/dpv/pd#MedicalHealth
 has_purpose:
-  - https://w3id.org/dpv#MedicalResearchPurpose
+  - https://w3id.org/dpv#ScientificResearch
 # Deliberately kept local (example.org), not swapped for an external
 # registry ID: checked directly, there is no shared global registry of
 # "quality certificates" the way there is for legislation (ELI) or DPV

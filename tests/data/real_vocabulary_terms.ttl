@@ -1,0 +1,66 @@
+# A small, curated snapshot of the *actual* describing triples for the
+# specific external vocabulary terms tests/data/problem/valid/
+# HealthDataset-shacl-full.yaml references -- fetched and checked directly
+# against each term's own real source on 2026-08-25, not assumed or
+# invented. Loaded into test_dataset_conforms_to_real_healthdcat_ap_shacl's
+# validation call (merged into the data graph) so pyshacl's skos:inScheme /
+# sh:class checks have the real membership triples to check against,
+# instead of failing simply because the bare term reference in our own
+# instance data carries no local proof of it.
+#
+# Deliberately a static, checked-in snapshot, not a live fetch during test
+# runs: this project already has direct, confirmed evidence that w3id.org's
+# own permalink redirects are intermittently flaky (see
+# docs/architecture-verification.md), and a live network dependency inside
+# a test that's supposed to be a fast, deterministic regression check is
+# the same class of risk, just against a different host. Refresh by
+# re-running the curl commands in this file's own git history / commit
+# message if the referenced terms are ever expected to have changed.
+#
+# NOT every external term in the fixture has an entry here: checked
+# directly (curl, both without and with explicit turtle/RDF-XML Accept
+# headers) and confirmed empty -- dataset-type/EXPLOITABLE from the EU
+# Publications Office, and all three of HealthDCAT-AP's own
+# "acceptance"-environment vocabularies (healthcategories/ONCOLOGY,
+# health-theme/CANCER, coding-system/ICD_O_3) currently return a
+# genuinely empty RDF document (<rdf:RDF></rdf:RDF>, no content at all) at
+# their own real URI -- not fake terms, but nothing real to load either.
+# Likely explained by HealthDCAT-AP's vocabulary server still being a
+# pre-production "acceptance" environment. Revisit once/if that changes.
+
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dpv: <https://w3id.org/dpv#> .
+@prefix pd: <https://w3id.org/dpv/pd#> .
+
+# --- EU Publications Office authority-table terms (confirmed real, populated) ---
+
+<http://publications.europa.eu/resource/authority/data-theme/HEAL>
+    a skos:Concept ;
+    skos:inScheme <http://publications.europa.eu/resource/authority/data-theme> ;
+    skos:prefLabel "Health"@en .
+
+<http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC>
+    a skos:Concept ;
+    skos:inScheme <http://publications.europa.eu/resource/authority/access-right> ;
+    skos:prefLabel "non-public"@en .
+
+<http://publications.europa.eu/resource/authority/frequency/ANNUAL>
+    a skos:Concept ;
+    skos:inScheme <http://publications.europa.eu/resource/authority/frequency> ;
+    skos:prefLabel "annual"@en .
+
+<http://publications.europa.eu/resource/authority/language/ENG>
+    a skos:Concept ;
+    skos:inScheme <http://publications.europa.eu/resource/authority/language> ;
+    skos:prefLabel "English"@en .
+
+# --- DPV (Data Privacy Vocabulary) terms (confirmed real via dpv.ttl / pd.ttl) ---
+
+dpv:LegalObligation
+    a skos:Concept, dpv:LegalBasis .
+
+dpv:ScientificResearch
+    a skos:Concept, dpv:Purpose .
+
+pd:MedicalHealth
+    a skos:Concept, dpv:PersonalData, dpv:SpecialCategoryPersonalData .
