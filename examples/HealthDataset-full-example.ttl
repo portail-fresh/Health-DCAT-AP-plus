@@ -17,11 +17,18 @@
 # Every external vocabulary/ontology term below was checked directly
 # against its own real source, not assumed -- see the fixture YAML's own
 # comments and tests/data/real_vocabulary_terms.ttl for exactly what was
-# verified and how (including which terms turned out to be genuinely
-# invented and were replaced, and which resolve but currently have no
-# real published content at their own source). applicable_legislation
-# points at the real ELI for Regulation (EU) 2025/327, the EHDS Regulation
-# itself.
+# verified and how. applicable_legislation points at the real ELI for
+# Regulation (EU) 2025/327, the EHDS Regulation itself.
+#
+# This exact file was manually pasted into Sciensano's own official
+# HealthDCAT-AP validator (https://healthdcat-validator.sciensano.be) on
+# 2026-08-26 as a real-world cross-check, not just our own pyshacl run --
+# see tests/test_shacl_validation.py's KNOWN_REAL_SHAPES_VIOLATIONS comment
+# for what that surfaced: four term references below were invented/wrong,
+# not just unverifiable (healthcategories/ONCOLOGY, health-theme/CANCER,
+# coding-system/ICD_O_3, dataset-type/EXPLOITABLE), and all four are now
+# fixed to their real vocabulary codes.
+
 @prefix adms: <http://www.w3.org/ns/adms#> .
 @prefix cv: <http://data.europa.eu/m8g/> .
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
@@ -46,14 +53,14 @@
             dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2025/327/oj> ;
             dcat:accessURL <https://example.org/dataset/cancer-registry-2024/analytics> ] ;
     healthdcatap:hasCodeValues "ICD-O-3" ;
-    healthdcatap:hasCodingSystem <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD_O_3> ;
+    healthdcatap:hasCodingSystem <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD-O-3> ;
     healthdcatap:hasStructuredData true ;
     healthdcatap:hdab [ a foaf:Agent ;
             cv:contactPoint [ a cv:ContactPoint ;
                     cv:email "hdab@example.org" ] ;
             foaf:name "National Health Data Access Body" ] ;
-    healthdcatap:healthCategory <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories/ONCOLOGY> ;
-    healthdcatap:healthTheme <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme/CANCER> ;
+    healthdcatap:healthCategory <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories/PHDR> ;
+    healthdcatap:healthTheme <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme/CANCER_DISEASE> ;
     healthdcatap:maxTypicalAge "99"^^xsd:nonNegativeInteger ;
     healthdcatap:minTypicalAge "0"^^xsd:nonNegativeInteger ;
     healthdcatap:numberOfRecords "45000"^^xsd:nonNegativeInteger ;
@@ -78,7 +85,7 @@
             dcat:endDate "2024-12-31"^^xsd:date ;
             dcat:startDate "2024-01-01"^^xsd:date ] ;
     dcterms:title "Regional cancer incidence registry 2024" ;
-    dcterms:type <http://publications.europa.eu/resource/authority/dataset-type/EXPLOITABLE> ;
+    dcterms:type <http://publications.europa.eu/resource/authority/dataset-type/STATISTICAL> ;
     adms:sample [ a dcat:Distribution ;
             dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2025/327/oj> ;
             dcat:accessURL <https://example.org/dataset/cancer-registry-2024/sample> ] ;
@@ -106,14 +113,14 @@
 <https://example.org/activity/cancer-registry-collection-2024> a prov:Activity ;
     dcterms:title "Cancer registry data collection process" ;
     prov:qualifiedAssociation [ a prov:Association ;
-            prov:agent <https://ror.org/00k4n6c32> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
+            prov:agent <https://orcid.org/0000-0002-1825-0097> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ],
         [ a prov:Association ;
             prov:agent <https://ror.org/03yrm5c26> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ],
         [ a prov:Association ;
-            prov:agent <https://orcid.org/0000-0002-1825-0097> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ] .
+            prov:agent <https://ror.org/00k4n6c32> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ] .
 
 <https://example.org/activity/diagnostic-reporting-process> a prov:Activity ;
     dcterms:title "Diagnostic reporting and coding process" .

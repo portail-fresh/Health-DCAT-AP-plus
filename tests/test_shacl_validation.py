@@ -52,6 +52,21 @@ FIXTURE_PATH = (
 HEALTHDCATAP_SHACL_DIR = (
     REPO_ROOT / "repos" / "healthdcat-ap" / "public" / "releases" / "release-7" / "html" / "shacl"
 )
+# Sciensano's real hosted validator (https://healthdcat-validator.sciensano.be)
+# is an ITB instance whose exact config is checked directly into the official
+# repo at this path -- config.properties there sets `validator.shaclFile.*`
+# to precisely the 5 files _REAL_SHAPE_FILES below already loads (confirmed
+# directly, not assumed: same filenames, just different subdirectories under
+# this same release-7 tree), plus `validator.preloadOwlImports = true` and a
+# ~37-entry owlImportMapping that merges real, populated vocabulary RDF/OWL
+# graphs into every validation's data graph -- including HealthDCAT-AP's own
+# health-theme/healthcategories/coding-system tables, which turned out to
+# have real content in this checked-in cache even where the live
+# "acceptance"-environment server (see tests/data/real_vocabulary_terms.ttl's
+# old comment, now corrected) currently returns empty RDF.
+OFFICIAL_VOCABULARY_CATALOGUE_DIR = (
+    HEALTHDCATAP_SHACL_DIR / "HealthDCAT-AP_validator" / "config" / "rdf-validator" / "ehds" / "catalogue"
+)
 
 SH = Namespace("http://www.w3.org/ns/shacl#")
 
@@ -164,20 +179,69 @@ def _real_healthdcat_ap_shapes_graph() -> Graph:
     return g
 
 
+# Health-specific + generic MDR authority tables actually referenced by
+# fields the HealthDataset fixture populates (access-right, frequency,
+# language, data-theme, dataset-type, plus every HealthDCAT-AP-specific
+# table). Deliberately skips the huge geographic/corporate-body tables
+# (continents/countries/corporatebodies/places, tens of thousands of
+# entries each) and the pure-ontology files (schema.ttl, dcat2.ttl,
+# prov-o.ttl, etc.) that config.properties also preloads: those ontology
+# files only declare owl:Class terms, which can't help a ClassConstraintComponent/
+# skos:inScheme check without RDFS/OWL entailment -- and this project runs
+# pyshacl with inference="none" deliberately (checked directly, not
+# guessed: loading them changes nothing for this fixture). Revisit this
+# subset if a future fixture actually populates dct:spatial or a
+# corporate-body-coded field.
+OFFICIAL_VOCABULARY_CATALOGUE_FILES = [
+    "health-theme.rdf",
+    "healthcategories.rdf",
+    "coding-system.rdf",
+    "health-activity.rdf",
+    "standard.rdf",
+    "publisher-type.rdf",
+    "access-right.rdf",
+    "frequencies.rdf",
+    "languages.rdf",
+    "data-theme.rdf",
+    "dataset-types.rdf",
+    "planned-availability.rdf",
+    "distribution-status.rdf",
+    "filetypes.rdf",
+]
+
+
+def _official_vocabulary_catalogue_graph() -> Graph:
+    """Load Sciensano's own real, cached vocabulary catalogue (see
+    OFFICIAL_VOCABULARY_CATALOGUE_DIR's own comment for what this is and
+    why it exists). Each file's real serialization format is sniffed
+    directly rather than assumed from its extension -- confirmed some
+    catalogue files use RDF/XML despite non-`.rdf` naming conventions
+    elsewhere in this tree, and vice versa.
+    """
+    g = Graph()
+    for fname in OFFICIAL_VOCABULARY_CATALOGUE_FILES:
+        text = (OFFICIAL_VOCABULARY_CATALOGUE_DIR / fname).read_text(encoding="utf-8")
+        fmt = "xml" if text.lstrip().startswith("<?xml") or "<rdf:RDF" in text[:500] else "turtle"
+        g.parse(data=text, format=fmt)
+    return g
+
+
 REAL_VOCABULARY_TERMS_PATH = Path(__file__).parent / "data" / "real_vocabulary_terms.ttl"
 
 
 def _real_vocabulary_terms_graph() -> Graph:
-    """Load the curated snapshot of real external vocabulary/DPV term triples.
+    """Load the curated snapshot of real DPV term triples.
 
-    See tests/data/real_vocabulary_terms.ttl's own header for what this is,
-    why it's a static checked-in snapshot rather than a live fetch, and
-    which fixture terms it deliberately does NOT cover (their real sources
-    currently return empty RDF, not fake terms but nothing real to load).
-    Only merged into the *real*-shapes validation below, not
-    _build_test_dataset_graph()'s own output -- these are validation aids
-    about external resources, not part of our own dataset's data, and
-    shouldn't leak into the published example.
+    See tests/data/real_vocabulary_terms.ttl's own header for what this is
+    and why it's a static checked-in snapshot rather than a live fetch. DPV
+    isn't one of HealthDCAT-AP's own MDR-managed authority tables (see
+    OFFICIAL_VOCABULARY_CATALOGUE_DIR's own comment), so
+    _official_vocabulary_catalogue_graph() above can't cover it -- this
+    small hand-curated snippet is what's left after that catalogue took
+    over everything it does cover. Only merged into the *real*-shapes
+    validation below, not _build_test_dataset_graph()'s own output -- these
+    are validation aids about external resources, not part of our own
+    dataset's data, and shouldn't leak into the published example.
     """
     g = Graph()
     g.parse(str(REAL_VOCABULARY_TERMS_PATH), format="turtle")
@@ -409,43 +473,55 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
 # and contactPoint finding gone) -> 19 after also fixing HealthAgent's
 # missing foaf:Agent class_uri (the ClassConstraintComponent "hdab" finding
 # is gone) -> 18 after fixing the sh:nodeKind sh:IRI range gap (hasEmail) ->
-# 12 after merging in tests/data/real_vocabulary_terms.ttl, a curated
-# snapshot of the real describing triples for the fixture's external
-# vocabulary/DPV terms (see that file's own header, and
-# _real_vocabulary_terms_graph's docstring, for what it covers and why 4 of
-# the 11 external terms used still can't be fixed this way -- their real
-# sources currently return empty RDF, not fake terms, just nothing real to
-# load yet). See docs/architecture-verification.md section 6.
+# 12 after merging in a small curated snapshot of external term triples.
+#
+# Updated again 2026-08-26, down to 3: prompted by manually cross-checking
+# against Sciensano's own official hosted validator
+# (https://healthdcat-validator.sciensano.be), which reported zero
+# violations for this exact fixture (examples/HealthDataset-full-example.ttl,
+# pasted in as-is) -- a real discrepancy worth resolving, not dismissing.
+# Root-caused directly, not guessed: their ITB config is checked into the
+# official repo itself (see OFFICIAL_VOCABULARY_CATALOGUE_DIR's own comment)
+# and preloads real, populated vocabulary catalogue graphs -- confirming the
+# earlier "resolves to empty RDF" belief was about the wrong thing: the
+# *live* acceptance-environment server is empty, but this checked-in cache
+# genuinely is not. Merging that same catalogue in here
+# (_official_vocabulary_catalogue_graph) reproduced their result almost
+# exactly, and also surfaced that 4 of the fixture's own term references
+# were themselves invented/wrong, not just unverifiable:
+#   - healthcategories/ONCOLOGY doesn't exist -- healthcategories is EHDS
+#     Article 51's *data category* list (genetic data, claims data,
+#     registry data, ...), not a disease/specialty list. Fixed to PHDR
+#     ("data from population-based health data registries").
+#   - health-theme/CANCER doesn't exist -- the real code is CANCER_DISEASE.
+#   - coding-system/ICD_O_3 (underscored) doesn't exist -- the real code is
+#     hyphenated, ICD-O-3.
+#   - dataset-type/EXPLOITABLE doesn't exist -- fixed to STATISTICAL
+#     ("Statistical data"), the real code that actually fits an aggregate
+#     incidence registry.
+# All four were fixed directly in the fixture (see its own comments), which
+# is what actually cleared their violations -- not the catalogue merge
+# alone. See docs/architecture-verification.md section 6.
 # ---------------------------------------------------------------------------
 KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
     {
-        # mdr-vocabularies.shape.ttl's own "must conform to X_Restriction"
-        # node-shape check (skos:inScheme membership) still fires for these
-        # three specifically -- NOT because they're fake/illustrative term
-        # IRIs (their real sources were checked directly, same as
-        # theme/accessRights/accrualPeriodicity/language, which *are* now
-        # fixed via the vocabulary snapshot) but because
-        # healthcategories/ONCOLOGY, health-theme/CANCER, and
-        # coding-system/ICD_O_3 currently resolve to a genuinely empty RDF
-        # document at their own real URI on HealthDCAT-AP's own
-        # "acceptance" (pre-production) vocabulary server -- there's
-        # nothing real to load for these yet. Revisit once/if that server
-        # publishes real content. Same root cause as the
-        # ClassConstraintComponent findings just below.
-        ("Violation", "NodeConstraintComponent", "healthCategory"),
-        ("Violation", "NodeConstraintComponent", "healthTheme"),
-        ("Violation", "NodeConstraintComponent", "hasCodingSystem"),
         # Deliberately not aligned with an external vocabulary term: checked
         # directly, HealthDCAT-AP's own real shape for dct:conformsTo only
         # *recommends* aligning with a concept from .../authority/standard
         # (its own message: "if no match is found, inform the vocabulary
         # maintainer") -- a dataset-specific schema like this fixture's is
-        # an expected, tolerated case, not a violation to work around.
+        # an expected, tolerated case, not a violation to work around. Not
+        # reproduced on Sciensano's own hosted validator for reasons not yet
+        # understood (their config uses the identical shape file) -- an open
+        # question, not yet a blocker, since this violation is itself
+        # deliberate and expected on our end regardless of their result.
         ("Violation", "NodeConstraintComponent", "conformsTo"),
-        # Same empty-vocabulary-server cause as healthCategory/healthTheme/
-        # hasCodingSystem above -- dataset-type/EXPLOITABLE also resolves to
-        # an empty RDF document at its own real URI.
-        ("Warning", "NodeConstraintComponent", "type"),
+        # The same conformsTo violation's own nested sh:detail results
+        # (pyshacl emits each sh:detail as its own sh:ValidationResult, not
+        # just a note attached to the parent) -- the compound shape's inner
+        # skos:inScheme MinCount/HasValue check against the standard/
+        # ConceptScheme, which our deliberately-local schema URI can't and
+        # shouldn't satisfy either.
         ("Violation", "MinCountConstraintComponent", "inScheme"),
         ("Violation", "HasValueConstraintComponent", "inScheme"),
         # Benign, expected: dct:source is only sh:Warning-severity
@@ -455,15 +531,6 @@ KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # a hard LinkML `required`, see the severity-awareness fix above).
         # This fixture simply doesn't supply the optional source field.
         ("Warning", "MinCountConstraintComponent", "source"),
-        # range.ttl carries its own, independent sh:class requirement for
-        # these three HealthDCAT-AP-specific predicates (dcterms:Standard /
-        # skos:Concept), separate from mdr-vocabularies.shape.ttl's
-        # skos:inScheme check above -- same empty-vocabulary-server cause,
-        # not fixable by the snapshot until HealthDCAT-AP's own server has
-        # real content to fetch.
-        ("Violation", "ClassConstraintComponent", "hasCodingSystem"),
-        ("Violation", "ClassConstraintComponent", "healthCategory"),
-        ("Violation", "ClassConstraintComponent", "healthTheme"),
         # Deliberately kept local, not swapped for an external registry ID:
         # checked directly, there is no shared global registry of "quality
         # certificates" the way there is for DPV concepts -- a quality
@@ -473,13 +540,9 @@ KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # reasoning, including why the auto-stubbed QualityCertificate
         # class's single-identifier-slot collapsing behavior is also part
         # of why this can't be fixed by adding a local rdf:type triple
-        # either).
+        # either). Same "not reproduced on Sciensano's end, not yet
+        # understood why" caveat as conformsTo above.
         ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
-        # FIXED 2026-08-25: vcard:hasEmail's range is now uriorcurie (see
-        # KNOWN_OWN_SHAPES_VIOLATIONS' own comment on the parse_shapes fix),
-        # and the fixture's existing "mailto:data-access@example.org" value
-        # was already correctly formatted -- it just wasn't being checked as
-        # an IRI before.
     }
 )
 
@@ -506,12 +569,14 @@ def test_dataset_conforms_to_own_generated_shacl():
     ),
 )
 def test_dataset_conforms_to_real_healthdcat_ap_shacl():
-    # Merge in the real vocabulary-term snapshot so pyshacl's skos:inScheme/
-    # sh:class checks have real membership triples to check against, instead
-    # of failing simply because our own instance data only carries a bare
-    # reference to each term, not that term's own describing triples (see
-    # _real_vocabulary_terms_graph's own docstring).
-    data_graph = _build_test_dataset_graph() + _real_vocabulary_terms_graph()
+    # Merge in the same vocabulary preloading Sciensano's own official
+    # validator does (_official_vocabulary_catalogue_graph) plus the DPV
+    # terms it doesn't cover (_real_vocabulary_terms_graph), so pyshacl's
+    # skos:inScheme/sh:class checks have real membership triples to check
+    # against, instead of failing simply because our own instance data only
+    # carries a bare reference to each term, not that term's own describing
+    # triples.
+    data_graph = _build_test_dataset_graph() + _official_vocabulary_catalogue_graph() + _real_vocabulary_terms_graph()
     shapes_graph = _real_healthdcat_ap_shapes_graph()
     _, results_graph, _ = pyshacl.validate(
         data_graph,

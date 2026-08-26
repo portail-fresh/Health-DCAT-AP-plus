@@ -15,8 +15,12 @@ theme:
   # HealthDCAT-AP's real shapes, see docs/architecture-verification.md
   # section 6.
   - http://publications.europa.eu/resource/authority/data-theme/HEAL
+# EXPLOITABLE was also invented (same real-catalogue check as
+# health_category/health_theme/has_coding_system above) -- STATISTICAL
+# ("Statistical data") is the real code, and the right fit for an annual
+# aggregate incidence registry.
 type:
-  - http://publications.europa.eu/resource/authority/dataset-type/EXPLOITABLE
+  - http://publications.europa.eu/resource/authority/dataset-type/STATISTICAL
 contact_point:
   - has_email: "mailto:data-access@example.org"
 # dct:accessRights's real shape requires this exact fixed value
@@ -77,10 +81,22 @@ custodian:
   agent_contact_point:
     email:
       - "custodian@example.org"
+# ONCOLOGY and CANCER (below) were both invented, plausible-sounding codes
+# -- confirmed directly against the real cached vocabulary catalogue
+# Sciensano's own official HealthDCAT-AP validator preloads (repos/
+# healthdcat-ap/.../HealthDCAT-AP_validator/config/rdf-validator/ehds/
+# catalogue/), not assumed. healthcategories is EHDS Article 51's *data
+# category* list (genetic data, claims data, registry data, ...), not a
+# disease/specialty list -- PHDR ("data from population-based health data
+# registries such as public health registries") is the real code that
+# actually fits a cancer *registry* dataset. health-theme is the
+# disease/specialty-like list; CANCER_DISEASE ("Cancer" / "Malignant
+# neoplasms, including site-specific cancers and childhood cancers") is
+# the real code there -- bare CANCER doesn't exist.
 health_category:
-  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories/ONCOLOGY
+  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories/PHDR
 health_theme:
-  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme/CANCER
+  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme/CANCER_DISEASE
 # All three DPV terms below checked directly against DPV's real turtle
 # source, not assumed -- see tests/data/real_vocabulary_terms.ttl for the
 # exact confirmed triples. LegalObligation was already correct. The other
@@ -114,8 +130,11 @@ has_quality_annotation:
 has_structured_data: true
 has_code_values:
   - ICD-O-3
+# ICD_O_3 (underscored) doesn't exist in the real coding-system vocabulary
+# -- confirmed directly against the real cached catalogue (see comment
+# above); the real code is hyphenated, ICD-O-3, matching has_code_values.
 has_coding_system:
-  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD_O_3
+  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD-O-3
 # Deliberately kept local: checked directly, HealthDCAT-AP's own real shape
 # for dct:conformsTo only *recommends* aligning with a concept from
 # .../authority/standard (its own message says "if no match is found,
