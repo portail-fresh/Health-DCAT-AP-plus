@@ -505,28 +505,19 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
 # All four were fixed directly in the fixture (see its own comments), which
 # is what actually cleared their violations -- not the catalogue merge
 # alone. See docs/architecture-verification.md section 6.
+#
+# FIXED 2026-08-26: conformsTo's own NodeConstraintComponent + nested
+# MinCount/HasValueConstraintComponent inScheme trio is gone -- the fixture
+# now points dct:conformsTo at a REAL member of HealthDCAT-AP's own
+# standard vocabulary (.../authority/standard/FHIR, confirmed directly
+# against standard.rdf: a real skos:Concept + dct:Standard entry with its
+# own skos:inScheme triple) instead of a local, instance-specific schema
+# URI. Nothing added to the published example file itself for this --
+# FHIR's own describing triples are supplied only at validation time, by
+# _referenced_terms_closure_graph, same as every other external term.
 # ---------------------------------------------------------------------------
 KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
     {
-        # Deliberately not aligned with an external vocabulary term: checked
-        # directly, HealthDCAT-AP's own real shape for dct:conformsTo only
-        # *recommends* aligning with a concept from .../authority/standard
-        # (its own message: "if no match is found, inform the vocabulary
-        # maintainer") -- a dataset-specific schema like this fixture's is
-        # an expected, tolerated case, not a violation to work around. Not
-        # reproduced on Sciensano's own hosted validator for reasons not yet
-        # understood (their config uses the identical shape file) -- an open
-        # question, not yet a blocker, since this violation is itself
-        # deliberate and expected on our end regardless of their result.
-        ("Violation", "NodeConstraintComponent", "conformsTo"),
-        # The same conformsTo violation's own nested sh:detail results
-        # (pyshacl emits each sh:detail as its own sh:ValidationResult, not
-        # just a note attached to the parent) -- the compound shape's inner
-        # skos:inScheme MinCount/HasValue check against the standard/
-        # ConceptScheme, which our deliberately-local schema URI can't and
-        # shouldn't satisfy either.
-        ("Violation", "MinCountConstraintComponent", "inScheme"),
-        ("Violation", "HasValueConstraintComponent", "inScheme"),
         # Benign, expected: dct:source is only sh:Warning-severity
         # "recommended" in the real shapes (non-public-shapes_recommended.ttl
         # -- confirmed directly, not assumed, and the reason the port script
@@ -543,8 +534,11 @@ KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # reasoning, including why the auto-stubbed QualityCertificate
         # class's single-identifier-slot collapsing behavior is also part
         # of why this can't be fixed by adding a local rdf:type triple
-        # either). Same "not reproduced on Sciensano's end, not yet
-        # understood why" caveat as conformsTo above.
+        # either). Not reproduced on Sciensano's own hosted validator for
+        # reasons not yet understood (their config uses the identical shape
+        # file) -- an open question, not yet a blocker, since this
+        # violation is itself deliberate and expected on our end regardless
+        # of their result.
         ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
     }
 )
@@ -661,18 +655,19 @@ def _referenced_terms_closure_graph(data_graph: Graph, catalogue_graph: Graph) -
 # individually traced to its focus node and source shape before being
 # allowlisted, not just pattern-matched against the two existing allowlists
 # above.
+#
+# Updated same day: conformsTo's own trio (NodeConstraintComponent +
+# nested MinCount/HasValueConstraintComponent inScheme) is gone -- see
+# KNOWN_REAL_SHAPES_VIOLATIONS' own comment on the same fix (FHIR, a real
+# standard-vocabulary member, replaced the fixture's local schema URI).
 # ---------------------------------------------------------------------------
 KNOWN_MERGED_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
     {
-        # Same three already-known, deliberately-tolerated real-shapes
-        # findings as KNOWN_REAL_SHAPES_VIOLATIONS above (conformsTo's
-        # compound shape + its own nested sh:detail results, dct:source's
+        # Same two already-known, deliberately-tolerated real-shapes
+        # findings as KNOWN_REAL_SHAPES_VIOLATIONS above (dct:source's
         # Warning-severity recommendation, hasQualityAnnotation's
         # deliberately-local placeholder) -- unaffected by the own-shapes
-        # filtering, since none of them come from our own generated shapes.
-        ("Violation", "NodeConstraintComponent", "conformsTo"),
-        ("Violation", "MinCountConstraintComponent", "inScheme"),
-        ("Violation", "HasValueConstraintComponent", "inScheme"),
+        # filtering, since neither comes from our own generated shapes.
         ("Warning", "MinCountConstraintComponent", "source"),
         ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
         # Already known from KNOWN_OWN_SHAPES_VIOLATIONS, unrelated to

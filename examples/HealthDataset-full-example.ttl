@@ -24,10 +24,17 @@
 # HealthDCAT-AP validator (https://healthdcat-validator.sciensano.be) on
 # 2026-08-26 as a real-world cross-check, not just our own pyshacl run --
 # see tests/test_shacl_validation.py's KNOWN_REAL_SHAPES_VIOLATIONS comment
-# for what that surfaced: four term references below were invented/wrong,
+# for what that surfaced: five term references below were invented/wrong,
 # not just unverifiable (healthcategories/ONCOLOGY, health-theme/CANCER,
-# coding-system/ICD_O_3, dataset-type/EXPLOITABLE), and all four are now
-# fixed to their real vocabulary codes.
+# coding-system/ICD_O_3, dataset-type/EXPLOITABLE, and conformsTo's own
+# local schema URI, replaced with a real standard-vocabulary member,
+# .../authority/standard/FHIR), and all five are now fixed to real
+# vocabulary codes (or, for conformsTo, a real vocabulary member entirely).
+#
+# See examples/HealthDataset-validation-check.ipynb, next to this file, for
+# a runnable walkthrough of exactly how this file gets validated (the same
+# check tests/test_shacl_validation.py::test_dataset_conforms_to_merged_shacl
+# runs in CI) and what the few remaining, deliberate known violations are.
 
 @prefix adms: <http://www.w3.org/ns/adms#> .
 @prefix cv: <http://data.europa.eu/m8g/> .
@@ -71,7 +78,7 @@
             dcat:startDate "2024-01-01"^^xsd:date ] ;
     dcterms:accessRights <http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC> ;
     dcterms:accrualPeriodicity <http://publications.europa.eu/resource/authority/frequency/ANNUAL> ;
-    dcterms:conformsTo <https://example.org/schemas/cancer-registry-v1> ;
+    dcterms:conformsTo <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard/FHIR> ;
     dcterms:description "Annual registry of new cancer diagnoses, regional coverage." ;
     dcterms:identifier "https://example.org/dataset/cancer-registry-2024" ;
     dcterms:isReferencedBy <https://example.org/publications/cancer-registry-report-2024> ;
@@ -113,14 +120,14 @@
 <https://example.org/activity/cancer-registry-collection-2024> a prov:Activity ;
     dcterms:title "Cancer registry data collection process" ;
     prov:qualifiedAssociation [ a prov:Association ;
-            prov:agent <https://orcid.org/0000-0002-1825-0097> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ],
-        [ a prov:Association ;
             prov:agent <https://ror.org/03yrm5c26> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ],
         [ a prov:Association ;
             prov:agent <https://ror.org/00k4n6c32> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ] .
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
+        [ a prov:Association ;
+            prov:agent <https://orcid.org/0000-0002-1825-0097> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ] .
 
 <https://example.org/activity/diagnostic-reporting-process> a prov:Activity ;
     dcterms:title "Diagnostic reporting and coding process" .

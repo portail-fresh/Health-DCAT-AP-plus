@@ -135,13 +135,14 @@ has_code_values:
 # above); the real code is hyphenated, ICD-O-3, matching has_code_values.
 has_coding_system:
   - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD-O-3
-# Deliberately kept local: checked directly, HealthDCAT-AP's own real shape
-# for dct:conformsTo only *recommends* aligning with a concept from
-# .../authority/standard (its own message says "if no match is found,
-# inform the vocabulary maintainer") -- a dataset-specific schema like this
-# one is an expected, tolerated case, not a violation to work around.
+# Switched from a local, instance-specific schema URI to a real member of
+# HealthDCAT-AP's own standard vocabulary -- confirmed directly against the
+# real cached catalogue (standard.rdf): FHIR is a real skos:Concept +
+# dct:Standard entry there, with its own skos:inScheme triple. A cancer
+# registry plausibly does conform to FHIR as its exchange format, so this
+# is a real fix, not just a substitution for validation's sake.
 conforms_to:
-  - https://example.org/schemas/cancer-registry-v1
+  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard/FHIR
 max_typical_age: 99
 min_typical_age: 0
 number_of_records: 45000
