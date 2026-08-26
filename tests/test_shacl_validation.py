@@ -29,6 +29,7 @@ silently accumulating new noise. See docs/architecture-verification.md for
 the full narrative.
 """
 
+import sys
 from pathlib import Path
 from typing import FrozenSet, Tuple
 
@@ -38,11 +39,13 @@ import yaml
 from linkml.generators.shaclgen import ShaclGenerator
 from linkml_runtime import SchemaView
 from linkml_runtime.dumpers import rdflib_dumper
-from rdflib import Graph, Namespace
+from rdflib import SKOS, Graph, Namespace, URIRef
 
 import health_dcat_ap_plus.datamodel.health_dcat_ap_plus as dm
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
+import gen_merged_shacl  # noqa: E402
 SCHEMA_PATH = (
     REPO_ROOT / "src" / "health_dcat_ap_plus" / "schema" / "health_dcat_ap_plus.yaml"
 )
@@ -586,3 +589,142 @@ def test_dataset_conforms_to_real_healthdcat_ap_shacl():
         advanced=True,
     )
     _assert_known_violations(_violation_signatures(results_graph), KNOWN_REAL_SHAPES_VIOLATIONS)
+
+
+def _merged_shapes_graph() -> Graph:
+    """The ONE production shapes graph: HealthDCAT-AP's real official
+    shapes + our own generated shapes for everything they don't cover, with
+    the Dataset/Distribution/Agent/vocabulary-stub overlap filtered out --
+    see scripts/gen_merged_shacl.py's own docstring for the full mechanism.
+
+    Rebuilt fresh in-memory whenever the sibling repos/healthdcat-ap clone
+    is present (so it can never silently go stale here or in CI, which
+    always has that clone -- same freshness guarantee `just test`'s own
+    gen-python prerequisite gives the Python dataclasses, just scoped to
+    this one test instead of wired into the whole `just test` pipeline,
+    since -- unlike gen-python -- this generation step has an external
+    dependency not every contributor will have set up locally). Falls back
+    to the committed docs/schema/health_dcat_ap_plus.merged-shacl.ttl
+    (regenerate via `just gen-shacl`) when that clone is absent; skips only
+    if neither is available.
+    """
+    if HEALTHDCATAP_SHACL_DIR.exists():
+        return gen_merged_shacl.build_merged_shapes_graph()
+    if gen_merged_shacl.OUTPUT_PATH.exists():
+        g = Graph()
+        g.parse(str(gen_merged_shacl.OUTPUT_PATH), format="turtle")
+        return g
+    pytest.skip(
+        f"neither repos/healthdcat-ap nor the committed "
+        f"{gen_merged_shacl.OUTPUT_PATH} is available -- see README.md for "
+        "how to fetch the former, or run `just gen-shacl` once it's fetched"
+    )
+
+
+def _referenced_terms_closure_graph(data_graph: Graph, catalogue_graph: Graph) -> Graph:
+    """Extract just the describing triples for external vocabulary terms
+    `data_graph` actually references (any URI object that's also a subject
+    in `catalogue_graph`), plus one hop out via skos:inScheme for the
+    ConceptScheme membership check -- same real membership triples merging
+    the whole catalogue would supply, at a fraction of the size.
+
+    Confirmed directly, not assumed: merging the full ~208k-triple official
+    catalogue as data alongside the *merged* shapes graph (real + our own
+    filtered shapes, more shapes than either individual test uses) made
+    pyshacl's advanced-mode validation pathologically slow -- several
+    minutes, not obviously converging. This targeted extraction reaches the
+    identical validation result in well under a second.
+    """
+    referenced = {
+        o for _, _, o in data_graph if isinstance(o, URIRef) and next(catalogue_graph.triples((o, None, None)), None)
+    }
+    g = Graph()
+    seen: set = set()
+    stack = list(referenced)
+    while stack:
+        u = stack.pop()
+        if u in seen:
+            continue
+        seen.add(u)
+        for p, o in catalogue_graph.predicate_objects(u):
+            g.add((u, p, o))
+            if p == SKOS.inScheme and o not in seen:
+                stack.append(o)
+    return g
+
+
+# ---------------------------------------------------------------------------
+# Violations against the ONE merged production shapes graph (real
+# HealthDCAT-AP shapes + our own filtered shapes -- see
+# _merged_shapes_graph's own docstring). Found 2026-08-26, built specifically
+# to confirm the filtering mechanism itself: every signature below was
+# individually traced to its focus node and source shape before being
+# allowlisted, not just pattern-matched against the two existing allowlists
+# above.
+# ---------------------------------------------------------------------------
+KNOWN_MERGED_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
+    {
+        # Same three already-known, deliberately-tolerated real-shapes
+        # findings as KNOWN_REAL_SHAPES_VIOLATIONS above (conformsTo's
+        # compound shape + its own nested sh:detail results, dct:source's
+        # Warning-severity recommendation, hasQualityAnnotation's
+        # deliberately-local placeholder) -- unaffected by the own-shapes
+        # filtering, since none of them come from our own generated shapes.
+        ("Violation", "NodeConstraintComponent", "conformsTo"),
+        ("Violation", "MinCountConstraintComponent", "inScheme"),
+        ("Violation", "HasValueConstraintComponent", "inScheme"),
+        ("Warning", "MinCountConstraintComponent", "source"),
+        ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
+        # Already known from KNOWN_OWN_SHAPES_VIOLATIONS, unrelated to
+        # Dataset/Distribution/Agent (so unaffected by filtering those
+        # out): QualitativeAttribute's own required prov:value bleeds onto
+        # every prov:Entity-typed node via the shared class_uri (see that
+        # allowlist's own comment) -- fires here on the population Entity
+        # node, which has no prov:value of its own.
+        ("Violation", "MinCountConstraintComponent", "value"),
+        # Already known from KNOWN_OWN_SHAPES_VIOLATIONS: rdflib_dumper's
+        # untyped-literal quirk (Literal("x") without an explicit
+        # xsd:string datatype doesn't satisfy sh:datatype xsd:string) --
+        # fires here on dct:title wherever our own kept Activity-side
+        # shapes check it (Entity, Agent, ProvenanceStatement), not just on
+        # Dataset's own copy (which no longer exists in the merged graph).
+        ("Violation", "DatatypeConstraintComponent", "title"),
+        # NEW finding, only visible once Dataset's own conflicting dct:type
+        # shape is filtered out: dcat-ap-plus's own ClassifierMixin mixes
+        # an `rdf_type` slot into every Activity/Entity/AgenticEntity/Plan/
+        # Surrounding class, mapped directly to the bare rdf:type predicate
+        # (slot_uri: rdf:type) -- confirmed directly by tracing this
+        # violation's own focus/value nodes: the VALUE being checked
+        # against `sh:class schema:DefinedTerm` is literally the node's own
+        # class-typing triple (e.g. <activity> rdf:type prov:Activity),
+        # not a separately-set classification value. SHACL can't tell
+        # those two triples apart -- they're both just <node> rdf:type
+        # <value>. A real, pre-existing dcat-ap-plus schema quirk (the
+        # rdf_type slot reusing the class-typing predicate), not something
+        # this filtering work introduced; simply never visible before
+        # because it shared this exact (severity, component, path) triple
+        # with the separate, already-diagnosed Dataset dct:type conflict
+        # KNOWN_OWN_SHAPES_VIOLATIONS' own "type" entry actually names.
+        ("Violation", "ClassConstraintComponent", "type"),
+    }
+)
+
+
+def test_dataset_conforms_to_merged_shacl():
+    """The end-to-end check: does a real HealthDataset instance conform to
+    the ONE shapes graph a real downstream user would actually validate
+    against -- HealthDCAT-AP's real official shapes for the catalogue side,
+    plus our own shapes for everything else, no conflicts between them?
+    """
+    catalogue = _official_vocabulary_catalogue_graph()
+    base_data = _build_test_dataset_graph()
+    data_graph = base_data + _referenced_terms_closure_graph(base_data, catalogue) + _real_vocabulary_terms_graph()
+    shapes_graph = _merged_shapes_graph()
+    _, results_graph, _ = pyshacl.validate(
+        data_graph,
+        shacl_graph=shapes_graph,
+        data_graph_format="turtle",
+        inference="none",
+        advanced=True,
+    )
+    _assert_known_violations(_violation_signatures(results_graph), KNOWN_MERGED_SHAPES_VIOLATIONS)

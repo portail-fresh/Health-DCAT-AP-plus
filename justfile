@@ -155,6 +155,19 @@ gen-diagram:
 gen-diagram-svg: gen-diagram
   curl -s -X POST -H "Content-Type: text/plain" --data-binary @docs/diagrams/model.puml https://kroki.io/plantuml/svg -o docs/diagrams/model.svg
 
+# Regenerate the merged SHACL shapes file (docs/schema/{{schema_name}}.merged-shacl.ttl
+# -- HealthDCAT-AP's real official shapes + our own generated shapes for
+# everything they don't cover). Commit the result. Not wired into
+# gen-doc/test as a hard prerequisite -- unlike gen-python, this needs the
+# external repos/healthdcat-ap sibling clone (see README.md), which not
+# every contributor will have set up. tests/test_shacl_validation.py
+# regenerates this in-memory itself when that clone is present (so it can
+# never silently go stale in CI, which does have it), falling back to this
+# committed file otherwise.
+[group('model development')]
+gen-shacl:
+  uv run python scripts/gen_merged_shacl.py
+
 # Generate the Python data models (dataclasses & pydantic)
 gen-python:
   uv run gen-project -d  {{pymodel}} -I python {{source_schema_path}}
