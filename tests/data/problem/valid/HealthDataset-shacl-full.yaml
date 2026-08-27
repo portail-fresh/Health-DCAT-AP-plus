@@ -49,6 +49,15 @@ temporal_resolution:
   - P1D
 is_referenced_by:
   - id: https://example.org/publications/cancer-registry-report-2024
+# NOT actually a trivial fix: tried populating dct:source (only
+# sh:Warning-severity "recommended", non-public-shapes_recommended.ttl),
+# but its induced range silently resolves to HealthDataset here (dcat-ap-plus's
+# own declared range is plain Dataset -- confirmed directly, no explicit
+# override anywhere in this schema) -- dragging in all 15 of HealthDataset's
+# own required fields onto what should be a lightweight related-resource
+# stub. Same class_uri-sharing artifact family as the contactPoint/value
+# bleeds already documented elsewhere; left unset rather than force an
+# unrealistic full nested HealthDataset just to silence a Warning.
 frequency:
   - http://publications.europa.eu/resource/authority/frequency/ANNUAL
 sample:
