@@ -1,0 +1,450 @@
+# HealthDCAT-AP's own official, comprehensive worked example (release 7),
+# vendored here for durable reference -- the sibling repos/healthdcat-ap
+# clone this was copied from is gitignored (fetched fresh per README.md,
+# not committed), so without this copy the example wouldn't survive a
+# fresh checkout. Copyright (c) 2025 European Union, published under
+# CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/) -- see
+# docs/schema/health_dcat_ap_plus.merged-shacl.ttl's own header for the
+# same attribution on the shapes themselves.
+#
+# Source: https://healthdataeu.pages.code.europa.eu/healthdcat-ap/releases/release-7/html/examples/example-healthdcat-dataset.ttl
+# Retrieved: 2026-08-27, from repos/healthdcat-ap's own release-7 tree
+# (public/releases/release-7/html/examples/example-healthdcat-dataset.ttl),
+# commit e90053e73b3c5252706efa16afd4da424875e1b1. Copied verbatim, not
+# hand-edited -- if HealthDCAT-AP publishes a new release, re-copy from
+# there rather than patching this file directly.
+#
+# Genuinely useful as a cross-check, not just a curiosity: this file
+# demonstrates the REAL, official convention for external vocabulary
+# terms in a self-contained example -- confirmed directly by reading it,
+# not assumed. Terms checked via simple sh:class constraints
+# (range.ttl-style: RightsStatement, LinguisticSystem, Frequency,
+# MediaType(OrExtent), Standard, Location, LegalResource) get a bare
+# `<term> a <Class> .` triple right in this file. Terms checked via the
+# richer skos:inScheme / ConceptScheme membership mechanism
+# (mdr-vocabularies.shape.ttl-style: healthCategory, healthTheme,
+# publisher-type, health-activity, dataset-type) get NO such triple here
+# at all -- this official example doesn't self-supply that support either,
+# same gap our own _official_vocabulary_catalogue_graph/
+# _referenced_terms_closure_graph mechanism exists to fill for those.
+# Also notable: dct:source never appears on the Dataset itself anywhere in
+# this comprehensive, deliberately-exhaustive example -- it's only used
+# once, on a dpv:LegalBasis instance, pointing at an eli:LegalResource.
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix csvw: <http://www.w3.org/ns/csvw#> .
+@prefix cv: <http://data.europa.eu/m8g/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcatap: <http://data.europa.eu/r5r/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dpv: <https://w3id.org/dpv#> .
+@prefix dpvpd: <https://w3id.org/dpv/dpv-pd#> .
+@prefix dqv: <http://www.w3.org/ns/dqv#> .
+@prefix eli: <http://data.europa.eu/eli/ontology#> .
+@prefix ex: <https://healthdcat-ap.example.org/release-7/example/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix geodcatap: <http://data.europa.eu/930/> .
+@prefix healthdcatap: <http://healthdataportal.eu/ns/health#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# This is an illustrative example intended to help understand how HealthDCAT-AP
+# properties are used in practice. It is not meant to be a normative reference.
+
+ex:dataset-oncology-ehrs-2024
+    a dcat:Dataset ;
+    dct:title "Cross-border oncology EHR cohort 2024"@en ;
+    dct:description "Comprehensive release-7 example dataset describing a non-public oncology cohort assembled from electronic health records, registries, and secure analytics outputs for secondary use."@en ;
+    dct:alternative "EU Oncology Cohort 2024"@en ;
+    dct:identifier "EU-HDCA-R7-ONCOLOGY-EHRS-2024" ;
+    adms:identifier ex:dataset-identifier ;
+    adms:otherIdentifier ex:dataset-other-identifier ;
+    dct:accessRights <http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC> ;
+    dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2022/868/oj> ;
+    dct:type <http://publications.europa.eu/resource/authority/dataset-type/STATISTICAL> ;
+    dct:language <http://publications.europa.eu/resource/authority/language/ENG> ;
+    dct:accrualPeriodicity <http://publications.europa.eu/resource/authority/frequency/ANNUAL> ;
+    dct:issued "2024-01-15"^^xsd:date ;
+    dct:modified "2026-03-30"^^xsd:date ;
+    dct:publisher ex:publisher-agent ;
+    dct:creator ex:creator-agent ;
+    dct:conformsTo <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard/DICOM> , <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard/FHIR> ;
+    dct:relation <https://health.example.org/publications/oncology-cohort-methodology> ;
+    dct:isReferencedBy <https://doi.org/10.1000/example-oncology-cohort> ;
+    dct:spatial <http://publications.europa.eu/resource/authority/country/BEL> ;
+    dct:temporal ex:dataset-coverage-period ;
+    dct:provenance ex:dataset-provenance ;
+    dcat:theme <http://publications.europa.eu/resource/authority/data-theme/HEAL> ;
+    dcat:keyword "oncology"@en , "electronic health records"@en , "hospital registry"@en , "secondary use"@en ;
+    dcat:contactPoint ex:dataset-contact-point ;
+    dcat:landingPage <https://healthdcat-ap.example.org/datasets/oncology-ehrs-2024> ;
+    foaf:page <https://healthdcat-ap.example.org/datasets/oncology-ehrs-2024/metadata> ;
+    dcat:distribution ex:distribution-main-csv , ex:distribution-fhir-package ;
+    adms:sample ex:distribution-sample-csv ;
+    healthdcatap:analytics ex:distribution-analytics-report ;
+    healthdcatap:hdab ex:hdab-agent ;
+    geodcatap:custodian ex:custodian-agent ;
+    healthdcatap:healthCategory <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories/EHRS> ;
+    healthdcatap:healthTheme <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme/HEALTH_SYSTEMS> ;
+    dpv:hasPurpose ex:purpose-population-health-research ;
+    dpv:hasLegalBasis ex:legal-basis-ehds ;
+    dpv:hasPersonalData dpvpd:Age , dpvpd:Gender ;
+    dqv:hasQualityAnnotation ex:dataset-quality-certificate ;
+    healthdcatap:hasStructuredData true ;
+    healthdcatap:hasVariables ex:variables-group ;
+    healthdcatap:hasCodeValues "U07.1" ;
+    healthdcatap:hasCodingSystem <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/SNOMED-CT> ;
+    healthdcatap:minTypicalAge "18"^^xsd:nonNegativeInteger ;
+    healthdcatap:maxTypicalAge "99"^^xsd:nonNegativeInteger ;
+    healthdcatap:numberOfRecords "1850000"^^xsd:nonNegativeInteger ;
+    healthdcatap:numberOfUniqueIndividuals "412000"^^xsd:nonNegativeInteger ;
+    healthdcatap:populationCoverage "Adults treated for oncology-related conditions in tertiary hospitals and linked reimbursement systems in Belgium from 2020 onwards."@en ;
+    healthdcatap:retentionPeriod ex:dataset-retention-period ;
+    dcat:temporalResolution "P1M"^^xsd:duration ;
+    dcat:spatialResolutionInMeters "1000"^^xsd:decimal ;
+    dcat:version "7.0.0-example" ;
+    adms:versionNotes "This example intentionally combines a rich DCAT-AP dataset description with HealthDCAT-specific fields, analytics output and CSVW variables."@en ;
+    prov:wasGeneratedBy ex:generation-activity .
+
+ex:dataset-identifier
+    a adms:Identifier ;
+    skos:notation "EU-HDCA-R7-ONCOLOGY-EHRS-2024" .
+
+ex:dataset-other-identifier
+    a adms:Identifier ;
+    skos:notation "ONC-EHR-2024-BE-01" .
+
+ex:creator-agent
+    a foaf:Agent ;
+    dct:type <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/publisher-type/non-gov-org> ;
+    foaf:name "European Oncology Data Integration Network"@en .
+
+ex:publisher-agent
+    a foaf:Agent ;
+    foaf:name "Belgian National Cancer Registry"@en ;
+    dct:type <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/publisher-type/public-health-registry> ;
+    dct:description "Publisher note: metadata is maintained by the registry metadata office and reviewed quarterly."@en ;
+    cv:contactPoint ex:publisher-contact-point .
+
+ex:hdab-agent
+    a foaf:Agent ;
+    foaf:name "Belgian Health Data Access Body"@en ;
+    dct:type <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/publisher-type/non-gov-org> ;
+    cv:contactPoint ex:hdab-contact-point .
+
+ex:custodian-agent
+    a foaf:Agent ;
+    foaf:name "National Hospital Data Custodian Service"@en ;
+    dct:type <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/publisher-type/non-gov-org> ;
+    cv:contactPoint ex:custodian-contact-point .
+
+ex:dataset-contact-point
+    a vcard:Kind ;
+    vcard:hasURL <https://healthdcat-ap.example.org/support/oncology-ehrs-2024> ;
+    vcard:hasEmail <mailto:oncology-dataset-support@example.org> .
+
+ex:publisher-contact-point
+    a cv:ContactPoint ;
+    cv:email "publisher-contact@example.org" ;
+    cv:contactPage <https://healthdcat-ap.example.org/contacts/publisher> ;
+    cv:telephone "+32 2 555 0101" ;
+    cv:openingHours ex:publisher-opening-hours ;
+    cv:specialOpeningHoursSpecification ex:publisher-special-hours .
+
+ex:hdab-contact-point
+    a cv:ContactPoint ;
+    cv:email "hdab-contact@example.org" ;
+    cv:contactPage <https://healthdcat-ap.example.org/contacts/hdab> ;
+    cv:telephone "+32 2 555 0102" ;
+    cv:openingHours ex:hdab-opening-hours ;
+    cv:specialOpeningHoursSpecification ex:hdab-special-hours .
+
+ex:custodian-contact-point
+    a cv:ContactPoint ;
+    cv:email "custodian-contact@example.org" ;
+    cv:contactPage <https://healthdcat-ap.example.org/contacts/custodian> ;
+    cv:telephone "+32 2 555 0103" ;
+    cv:openingHours ex:custodian-opening-hours ;
+    cv:specialOpeningHoursSpecification ex:custodian-special-hours .
+
+ex:publisher-opening-hours
+    a time:TemporalEntity ;
+    dct:description "Every working day from 09:00 to 17:00 CET."@en ;
+    cv:frequency <http://publications.europa.eu/resource/authority/frequency/DAILY> .
+
+ex:publisher-special-hours
+    a time:TemporalEntity ;
+    dct:description "Closed during Belgian national holidays."@en ;
+    cv:frequency <http://publications.europa.eu/resource/authority/frequency/WEEKLY> .
+
+ex:hdab-opening-hours
+    a time:TemporalEntity ;
+    dct:description "Every working day from 08:30 to 16:30 CET."@en ;
+    cv:frequency <http://publications.europa.eu/resource/authority/frequency/DAILY> .
+
+ex:hdab-special-hours
+    a time:TemporalEntity ;
+    dct:description "Closed during weekends and public holidays."@en ;
+    cv:frequency <http://publications.europa.eu/resource/authority/frequency/WEEKLY> .
+
+ex:custodian-opening-hours
+    a time:TemporalEntity ;
+    dct:description "Every working day from 09:00 to 17:30 CET."@en ;
+    cv:frequency <http://publications.europa.eu/resource/authority/frequency/DAILY> .
+
+ex:custodian-special-hours
+    a time:TemporalEntity ;
+    dct:description "Reduced support during end-of-year maintenance windows."@en ;
+    cv:frequency <http://publications.europa.eu/resource/authority/frequency/WEEKLY> .
+
+ex:dataset-coverage-period
+    a dct:PeriodOfTime ;
+    dcat:startDate "2020-01-01"^^xsd:date ;
+    dcat:endDate "2024-12-31"^^xsd:date .
+
+ex:dataset-retention-period
+    a dct:PeriodOfTime ;
+    dcat:startDate "2020-01-01"^^xsd:date ;
+    dcat:endDate "2035-12-31"^^xsd:date .
+
+ex:dataset-provenance
+    a dct:ProvenanceStatement ;
+    rdfs:label "The dataset is derived from linked hospital EHR systems, oncology registries, laboratory systems and reimbursement records using a pseudonymised patient linkage workflow operated under national secondary-use governance."@en .
+
+ex:purpose-population-health-research
+    a dpv:Purpose ;
+    dct:description "Secondary-use analysis for oncology service planning, survivorship monitoring and cross-border health system performance assessment."@en .
+
+ex:legal-basis-ehds
+    a dpv:LegalBasis ;
+    dct:description "Processing is performed under the European Health Data Space and national secondary-use authorisation for pseudonymised oncology records."@en ;
+    dct:source <http://data.europa.eu/eli/reg/2022/868/oj> .
+
+
+ex:dataset-quality-certificate
+    a dqv:QualityCertificate ;
+    oa:hasTarget ex:dataset-oncology-ehrs-2024 ;
+    oa:hasBody <https://quality.example.org/certificates/oncology-ehrs-2024> ;
+    oa:motivatedBy dqv:qualityAssessment .
+
+ex:generation-activity
+    a prov:Activity ;
+    rdfs:label "Routine oncology EHR linkage and harmonisation pipeline"@en ;
+    dct:type <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-activity/ROUTINE_RECORDS> .
+
+
+
+ex:dataset-license
+    a dct:LicenseDocument ;
+    dct:title "Secondary-use permit and secure-processing licence"@en ;
+    dct:type ex:license-type-permit ;
+    foaf:page <https://healthdcat-ap.example.org/licences/secondary-use-secure-processing> .
+
+ex:license-type-permit
+    a skos:Concept ;
+    skos:inScheme <http://purl.org/adms/licencetype/1.0> ;
+    skos:prefLabel "Data use permit"@en .
+
+ex:distribution-main-rights
+    a dct:RightsStatement ;
+    rdfs:label "Access is limited to approved researchers after HDAB review and secure processing environment onboarding."@en .
+
+ex:distribution-sample-rights
+    a dct:RightsStatement ;
+    rdfs:label "The sample distribution is a synthetic illustrative extract made available only inside documentation and training environments."@en .
+
+ex:distribution-analytics-rights
+    a dct:RightsStatement ;
+    rdfs:label "The analytics distribution contains aggregate indicators and methodological notes generated from the source dataset."@en .
+
+ex:distribution-main-csv
+    a dcat:Distribution ;
+    dct:title "Secure CSV extract"@en ;
+    dct:description "Primary tabular extract made available within a secure research environment."@en ;
+    dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2022/868/oj> ;
+    dcat:accessURL <https://secure-access.example.org/requests/oncology-ehrs-2024/csv> ;
+    dcat:downloadURL <https://secure-access.example.org/downloads/oncology-ehrs-2024.csv.gz> ;
+    dct:format <http://publications.europa.eu/resource/authority/file-type/CSV> ;
+    dcat:mediaType <http://www.iana.org/assignments/media-types/text/csv> ;
+    dcat:compressFormat <http://www.iana.org/assignments/media-types/application/gzip> ;
+    dcat:packageFormat <http://www.iana.org/assignments/media-types/application/zip> ;
+    dct:language <http://publications.europa.eu/resource/authority/language/ENG> ;
+    adms:status <http://publications.europa.eu/resource/authority/distribution-status/COMPLETED> ;
+    dcatap:availability <http://publications.europa.eu/resource/authority/planned-availability/STABLE> ;
+    dcat:byteSize "245000000"^^xsd:nonNegativeInteger ;
+    dct:license ex:dataset-license ;
+    dct:rights ex:distribution-main-rights .
+
+ex:distribution-fhir-package
+    a dcat:Distribution ;
+    dct:title "FHIR-aligned package"@en ;
+    dct:description "Alternative exchange package containing mapped resources for interoperability testing and harmonisation audits."@en ;
+    dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2022/868/oj> ;
+    dcat:accessURL <https://secure-access.example.org/requests/oncology-ehrs-2024/fhir-package> ;
+    dcat:downloadURL <https://secure-access.example.org/downloads/oncology-ehrs-2024-fhir.zip> ;
+    dct:format <http://publications.europa.eu/resource/authority/file-type/JSON> ;
+    dcat:mediaType <http://www.iana.org/assignments/media-types/application/json> ;
+    dcat:compressFormat <http://www.iana.org/assignments/media-types/application/gzip> ;
+    dcat:packageFormat <http://www.iana.org/assignments/media-types/application/zip> ;
+    dct:language <http://publications.europa.eu/resource/authority/language/ENG> ;
+    adms:status <http://publications.europa.eu/resource/authority/distribution-status/COMPLETED> ;
+    dcatap:availability <http://publications.europa.eu/resource/authority/planned-availability/AVAILABLE> ;
+    dcat:byteSize "92000000"^^xsd:nonNegativeInteger ;
+    dct:license ex:dataset-license ;
+    dct:rights ex:distribution-main-rights .
+
+ex:distribution-sample-csv
+    a dcat:Distribution ;
+    dct:title "Synthetic sample distribution"@en ;
+    dct:description "A small synthetic sample used for documentation, onboarding and schema illustration."@en ;
+    dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2022/868/oj> ;
+    dcat:accessURL <https://healthdcat-ap.example.org/samples/oncology-ehrs-2024> ;
+    dcat:downloadURL <https://healthdcat-ap.example.org/samples/oncology-ehrs-2024-sample.csv> ;
+    dct:format <http://publications.europa.eu/resource/authority/file-type/CSV> ;
+    dcat:mediaType <http://www.iana.org/assignments/media-types/text/csv> ;
+    adms:status <http://publications.europa.eu/resource/authority/distribution-status/COMPLETED> ;
+    dcatap:availability <http://publications.europa.eu/resource/authority/planned-availability/AVAILABLE> ;
+    dct:license ex:dataset-license ;
+    dct:rights ex:distribution-sample-rights .
+
+ex:distribution-analytics-report
+    a dcat:Distribution ;
+    dct:title "Aggregate analytics report"@en ;
+    dct:description "Analytical distribution containing aggregate indicators on cancer incidence, treatment episodes and follow-up outcomes."@en ;
+    dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2022/868/oj> ;
+    dcat:accessURL <https://healthdcat-ap.example.org/analytics/oncology-ehrs-2024> ;
+    dcat:downloadURL <https://healthdcat-ap.example.org/analytics/oncology-ehrs-2024-report.csv> ;
+    dct:format <http://publications.europa.eu/resource/authority/file-type/CSV> ;
+    dcat:mediaType <http://www.iana.org/assignments/media-types/text/csv> ;
+    adms:status <http://publications.europa.eu/resource/authority/distribution-status/COMPLETED> ;
+    dcatap:availability <http://publications.europa.eu/resource/authority/planned-availability/STABLE> ;
+    dct:license ex:dataset-license ;
+    dct:rights ex:distribution-analytics-rights .
+
+ex:variables-group
+    a csvw:TableGroup ;
+    csvw:table ex:variables-table .
+
+ex:variables-table
+    a csvw:Table ;
+    dct:title "Variable inventory for the oncology EHR cohort"@en ;
+    dcat:keyword "oncology"@en , "variables"@en , "csvw"@en ;
+    csvw:url <https://healthdcat-ap.example.org/variables/oncology-ehrs-2024.csv> ;
+    csvw:column ex:col-patient-id , ex:col-encounter-date , ex:col-primary-diagnosis , ex:col-tumour-stage , ex:col-vital-status .
+
+ex:col-patient-id
+    a csvw:Column ;
+    csvw:name "patientId" ;
+    csvw:titles "Patient identifier"@en ;
+    csvw:datatype "string" ;
+    dct:description "Pseudonymised patient identifier used to link longitudinal care episodes."@en ;
+    csvw:propertyUrl <http://purl.org/dc/terms/identifier> .
+
+ex:col-encounter-date
+    a csvw:Column ;
+    csvw:name "encounterDate" ;
+    csvw:titles "Encounter date"@en ;
+    csvw:datatype "dateTime" ;
+    dct:description "Date and time of the oncology-related encounter."@en ;
+    csvw:propertyUrl <http://purl.org/dc/terms/date> .
+
+ex:col-primary-diagnosis
+    a csvw:Column ;
+    csvw:name "primaryDiagnosisCode" ;
+    csvw:titles "Primary diagnosis code"@en ;
+    csvw:datatype "string" ;
+    dct:description "Primary diagnosis coded with ICD-10 and mapped to SNOMED CT where available."@en ;
+    csvw:propertyUrl <https://icd.who.int/browse10/2019/en> .
+
+ex:col-tumour-stage
+    a csvw:Column ;
+    csvw:name "tumourStage" ;
+    csvw:titles "Tumour stage"@en ;
+    csvw:datatype "string" ;
+    dct:description "Tumour stage classification at diagnosis."@en ;
+    csvw:propertyUrl <https://www.cancer.gov/publications/dictionaries/cancer-terms/def/stage> .
+
+ex:col-vital-status
+    a csvw:Column ;
+    csvw:name "vitalStatus" ;
+    csvw:titles "Vital status"@en ;
+    csvw:datatype "boolean" ;
+    dct:description "Indicates whether the individual is alive at the end of the observation window."@en ;
+    csvw:propertyUrl <https://terminology.hl7.org/CodeSystem-v3-ObservationValue> .
+
+dpvpd:Age
+    a dpv:PersonalData .
+
+dpvpd:Gender
+    a dpv:PersonalData .
+
+<http://data.europa.eu/eli/reg/2022/868/oj>
+    a eli:LegalResource .
+
+<http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC>
+    a dct:RightsStatement .
+
+<http://publications.europa.eu/resource/authority/language/ENG>
+    a dct:LinguisticSystem .
+
+<http://publications.europa.eu/resource/authority/frequency/ANNUAL>
+    a dct:Frequency .
+
+<http://publications.europa.eu/resource/authority/frequency/DAILY>
+    a dct:Frequency .
+
+<http://publications.europa.eu/resource/authority/frequency/WEEKLY>
+    a dct:Frequency .
+
+<http://publications.europa.eu/resource/authority/country/BEL>
+    a dct:Location .
+
+<http://publications.europa.eu/resource/authority/file-type/CSV>
+    a dct:MediaTypeOrExtent .
+
+<http://publications.europa.eu/resource/authority/file-type/JSON>
+    a dct:MediaTypeOrExtent .
+
+<http://www.iana.org/assignments/media-types/text/csv>
+    a dct:MediaType .
+
+<http://www.iana.org/assignments/media-types/application/json>
+    a dct:MediaType .
+
+<http://www.iana.org/assignments/media-types/application/gzip>
+    a dct:MediaType .
+
+<http://www.iana.org/assignments/media-types/application/zip>
+    a dct:MediaType .
+
+<https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard/DICOM>
+    a dct:Standard .
+	
+<https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard/FHIR>	
+	a dct:Standard .
+
+<https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/SNOMED-CT>
+	a dct:Standard .
+
+<https://healthdcat-ap.example.org/datasets/oncology-ehrs-2024>
+    a foaf:Document .
+
+<https://healthdcat-ap.example.org/datasets/oncology-ehrs-2024/metadata>
+    a foaf:Document .
+
+<https://icd.who.int/browse10/2019/en>
+    a foaf:Document .
+
+<https://www.snomed.org/snomed-ct>
+    a foaf:Document .
+
+<https://ohdsi.github.io/CommonDataModel/>
+    a foaf:Document .
+
+<https://healthdcat-ap.example.org/licences/secondary-use-secure-processing>
+    a foaf:Document .
