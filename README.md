@@ -36,6 +36,12 @@ Only the `non-public` tier is ported so far; `public` and `restricted` use
 the same shape files (`--tier public` / `--tier restricted`) and should port
 the same way.
 
+## Roadmap
+
+See [ROADMAP.md](ROADMAP.md) for what's done, what's still open, and
+planned future improvements across both this repo and
+[ResHealth-DCAT-AP](https://github.com/portail-fresh/ResHealth-DCAT-AP).
+
 ## Documentation Website
 
 [https://portail-fresh.github.io/Health-DCAT-AP-plus](https://portail-fresh.github.io/Health-DCAT-AP-plus)
