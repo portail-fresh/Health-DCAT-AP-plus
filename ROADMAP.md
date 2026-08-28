@@ -30,7 +30,16 @@ repeat of that forensic record.
   own official worked example (now vendored at
   `examples/reference/example-healthdcat-dataset.ttl`) — both used to find
   and fix genuine bugs (invented vocabulary codes, `dct:source`'s eager
-  nested construction), not just to feel reassured.
+  nested construction, `hasQualityAnnotation`'s missing `inlined_as_list`),
+  not just to feel reassured. `KNOWN_REAL_SHAPES_VIOLATIONS` is now
+  **empty** — the `HealthDataset` portion fully conforms to HealthDCAT-AP's
+  real, official upstream SHACL shapes, in both repos.
+- **`association_had_role`'s `values_from` moved down to the specializing
+  repo** (ResHealth-DCAT-AP's own `ResearchAssociation`, narrowing
+  `ResearchStudy`'s `qualified_association` range) — Health-DCAT-AP-plus's
+  own copy of `Association` now stays genuinely open, matching dcat-ap-plus's
+  own stated intent for the upstream proposal and validating the design
+  ahead of that proposal landing.
 - **ResHealth-DCAT-AP**: `ResearchStudy`/`InterventionalStudy`/
   `ObservationalStudy` built on top, using dcat-ap-plus's existing
   `Association`-completion pattern (`qualified_association`, PI/sponsor/
@@ -46,13 +55,17 @@ repeat of that forensic record.
 ## Problems that still need fixing
 
 - **Known, deliberate SHACL violations** (`KNOWN_MERGED_SHAPES_VIOLATIONS`,
-  4 entries, mirrored in both repos): `hasQualityAnnotation` and `title`
-  are local quirks with no clean fix found (LinkML stub-class collapsing;
-  an rdflib/pyshacl literal-typing mismatch). `type` and `value` are real
-  `dcat-ap-plus`-level bugs (the `ClassifierMixin`/`rdf_type` predicate
-  collision; `QualitativeAttribute`'s required field bleeding onto every
-  `prov:Entity` node via a shared `class_uri`) — both diagnosed, neither
-  fixable from here; both belong in the upstream conversation once it's
+  3 entries, mirrored in both repos — down from 4; `hasQualityAnnotation`
+  turned out fixable after all, see "What's done" above). All three
+  remaining are genuinely outside our own control, not unexplored: `title`
+  is an `rdflib`/`pyshacl` interoperability quirk (untyped literals don't
+  satisfy an explicit `sh:datatype xsd:string`, even though RDF 1.1 says
+  they're implicitly one) — a tooling-level issue, not ours or
+  `dcat-ap-plus`'s to fix. `type` and `value` are real `dcat-ap-plus`-level
+  bugs (the `ClassifierMixin`/`rdf_type` predicate collision;
+  `QualitativeAttribute`'s required field bleeding onto every `prov:Entity`
+  node via a shared `class_uri`) — both diagnosed, neither fixable from
+  here; both belong in the upstream conversation once it's
   live again.
 - **`public`/`restricted` HealthDCAT-AP tiers are unported.** Only
   `non-public` exists today. The port script's own README says the other
