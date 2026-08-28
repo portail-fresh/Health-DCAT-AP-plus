@@ -969,3 +969,216 @@ formalized as a permanent regression test** (`just test` runs it; the
 upstream-shapes half skips gracefully if `repos/healthdcat-ap` isn't
 cloned locally) so future port-script or schema changes get checked
 against real SHACL automatically instead of ad hoc.
+
+## 7. Closing the loop: cross-checking against the real world, and one merged validation profile
+
+§6 above left the real-shapes count at 20, the honest, understood state as
+of 2026-08-25. The work below (2026-08-26 – 2026-08-28) didn't stop
+there: cross-checking against a genuinely independent source (Sciensano's
+own official hosted HealthDCAT-AP validator, and HealthDCAT-AP's own
+official worked example) found two more invented-term bugs and two more
+real, structural port/tooling bugs — and, more significantly, replaced
+"two separately-scoped reports" with **one merged shapes graph**, the
+shape a real downstream data producer would actually validate against.
+
+### Cross-checking against Sciensano's own official validator
+
+Pasting `examples/HealthDataset-full-example.ttl` into
+[healthdcat-validator.sciensano.be](https://healthdcat-validator.sciensano.be)
+reported zero violations — a real discrepancy against this repo's own
+12-known-violations `pyshacl` result at the time, worth reconciling, not
+dismissing. Root-caused directly: Sciensano's tool is an ITB instance
+whose exact config is checked into the *official* HealthDCAT-AP repo
+itself
+(`public/releases/release-7/html/shacl/HealthDCAT-AP_validator/config/rdf-validator/ehds/`),
+confirmed to load the identical 5 shape files this repo's own real-shapes
+test already does. The real difference: `validator.preloadOwlImports =
+true` merges real, populated vocabulary catalogue graphs (health-theme,
+healthcategories, coding-system, ...) into every validation run
+automatically — far more complete than the small, hand-curated snapshot
+this repo carried at the time. Reproducing that mechanism
+(`_official_vocabulary_catalogue_graph`, later replaced by the faster
+`_referenced_terms_closure_graph` — see below) surfaced that four of the
+fixture's own term references were themselves invented, not just
+unverifiable:
+
+- `healthcategories/ONCOLOGY` doesn't exist — `healthcategories` is EHDS
+  Article 51's *data category* list (genetic data, claims data, registry
+  data, ...), not a disease/specialty list. Fixed to `PHDR` ("data from
+  population-based health data registries").
+- `health-theme/CANCER` doesn't exist — the real code is
+  `CANCER_DISEASE`.
+- `coding-system/ICD_O_3` (underscored) doesn't exist — the real code is
+  hyphenated, `ICD-O-3`.
+- `dataset-type/EXPLOITABLE` doesn't exist — fixed to `STATISTICAL`, the
+  real code that actually fits an aggregate incidence registry.
+
+All four confirmed against the real cached catalogue directly, not
+assumed. Fixing them, plus merging the real catalogue in as a validation
+aid, brought the real-shapes count from 20 down to 5.
+
+### A fifth invented reference, found the same way: `conformsTo`
+
+`dct:conformsTo` pointed at a local, instance-specific schema URI
+(`https://example.org/schemas/cancer-registry-v1`) — a legitimate *kind*
+of value (the shape's own message: "if no match is found, inform the
+vocabulary maintainer"), but also genuinely improvable: `FHIR` is a real
+`skos:Concept` + `dct:Standard` member of HealthDCAT-AP's own `standard`
+vocabulary (confirmed directly against `standard.rdf`), and a cancer
+registry plausibly does conform to FHIR as an exchange format. Swapping it
+in cleared `conformsTo`'s own violation and both of its nested
+`sh:detail` results, dropping the real-shapes count from 5 to 2.
+
+### Vendoring HealthDCAT-AP's own official worked example
+
+`examples/reference/example-healthdcat-dataset.ttl` (HealthDCAT-AP's
+release-7 spec's own comprehensive example, copied in verbatim — CC-BY
+4.0, European Union — since the sibling checkout it came from is
+gitignored) turned out to be more than a curiosity. Reading it directly
+revealed the real, sanctioned convention for external vocabulary terms in
+a self-contained example: a bare `<term> a <Class> .` triple for terms
+whose real shape checks a simple `sh:class` constraint (`RightsStatement`,
+`LinguisticSystem`, `Frequency`, `MediaType(OrExtent)`, `Standard`,
+`Location`, `LegalResource`), and *nothing* for terms checked via the
+richer `skos:inScheme`/ConceptScheme mechanism (`healthCategory`,
+`healthTheme`, `dataset-type`, `publisher-type`, `health-activity`) — even
+the official example doesn't self-supply that second kind of support,
+confirming the gap `_referenced_terms_closure_graph` exists to fill is
+real, not an artifact of this repo's own port. `scripts/gen_example.py`
+now mirrors this convention for our own example, with each of its 6 stub
+triples individually confirmed against a real declared range or shape,
+not copied blindly.
+
+### One merged shapes graph, not two separate reports
+
+The two-report split (own-shapes / real-shapes) was always a testing
+convenience, not the shape a real downstream user should have to work
+with. `scripts/gen_merged_shacl.py` builds ONE shapes graph instead: the
+real HealthDCAT-AP shapes for the Dataset/Distribution/Agent/Catalog side,
+plus this repo's own generated shapes for everything else
+(Activity/Association/Attribution/Entity), committed as
+`docs/schema/health_dcat_ap_plus.merged-shacl.ttl` (regenerate via `just
+gen-shacl`) and covered by `test_dataset_conforms_to_merged_shacl`.
+
+A naive union doesn't work — confirmed directly, this is the *same*
+class_uri-sharing conflict already diagnosed above (§6), just encountered
+from the merge side instead of the self-generated-SHACL side. The fix
+filters our own generated NodeShapes for any class the real shapes
+already own, via two mechanisms:
+
+1. **Self-maintaining**: any class our own shapes target via
+   `sh:targetClass` that the real shapes *also* target via
+   `sh:targetClass` gets dropped. Since specialization work only ever
+   adds new Activity-side classes and never touches Dataset/Distribution/
+   Agent/Catalog, this half of the filter never needs updating as the
+   schema grows.
+2. **Explicit, individually justified**: `foaf:Agent` (the real shapes
+   cover it too, but via `sh:node` reference from Dataset's own
+   `hdab`/`custodian`/`publisher` property shapes, not `sh:targetClass` —
+   confirmed by grepping `non-public-shapes.ttl` directly) and 15
+   externally-authored vocabulary/standard/codelist stub classes
+   (`skos:Concept`, `dct:Standard`, `dpv:LegalBasis`, ...) whose own
+   `sh:closed`, narrow-allowlist shapes exist only to type-check an
+   *inline stub* we might construct ourselves — confirmed directly:
+   merging real, richly-labeled external vocabulary content against our
+   own `skos:Concept` shape produced dozens of false
+   `ClosedConstraintComponent` violations (real `skos:altLabel`/
+   `notation`/`exactMatch` properties against a 2-3-property allowlist)
+   the first time own-shapes and real vocabulary content were validated
+   together — never visible before, since the own-shapes-only test never
+   merged in any external vocabulary content.
+
+Validating the huge (~208k-triple) vocabulary catalogue directly as data
+alongside the larger merged shapes graph turned out to be pathologically
+slow (multiple minutes, not converging) — `_referenced_terms_closure_graph`
+replaced the full-catalogue merge everywhere: extract just the describing
+triples for whatever the data graph actually references (any URI object
+that's also a subject in the catalogue), automatically, no hardcoded term
+list. Same correctness, sub-second instead of unbounded.
+
+Final result, confirmed empirically: `KNOWN_MERGED_SHAPES_VIOLATIONS` is
+4 signatures — the union of the real-shapes side's one remaining
+deliberate finding (`hasQualityAnnotation`, below) and three already-known
+own-shapes-side artifacts (`value`, `title`, and a newly-isolated `type`
+finding — see next section) that simply hadn't been visible in the same
+report as the real-shapes findings before.
+
+### A sixth and seventh real, structural bug: `dct:source`'s eager nested construction
+
+`dct:source`'s own real shape carries no class or nodeKind restriction at
+all (confirmed: absent from `non-public-shapes.ttl`, only a
+`sh:Warning`-severity `minCount` in the `_recommended` file) — but this
+repo's own port correctly *recovers* `range: HealthDataset` for it anyway
+(the same "independently `sh:targetClass`-shaped elsewhere" mechanism
+`cv:contactPoint` already relies on, §6) — a real, correct constraint.
+Combined with `dcat-ap-plus`'s own `inlined_as_list: true` (inherited
+unchanged), this forced eager construction of a full nested `HealthDataset`
+object for what HealthDCAT-AP's own release-7 usage note ("the source
+Dataset must be fully described" — separately) and its own official
+worked example both confirm should be a bare, independent reference.
+
+Two real fixes, not a workaround:
+
+- **`scripts/port_healthdcat_ap_shacl_to_linkml.py`**:
+  `_FORCE_NON_INLINED_ON_RECOVERED_RANGE` forces `inlined_as_list: false`
+  for `source` specifically when the recovery mechanism fires — not a
+  general rule, since the identical mechanism correctly keeps
+  `cv:contactPoint` inlined (a real compositional sub-object, unlike
+  `source`).
+- **`scripts/patch_post_init_shielding.py`**: fixing the above exposed a
+  real, distinct gap in `compute_shield_map` — it only ever compared
+  `range`/`multivalued` between a narrowed slot and its parent, never
+  `inlined`/`inlined_as_list`. Since `HealthDataset` is a genuine subclass
+  of `Dataset`, the range-compatibility check judged the narrowing "safe"
+  even though the *representation* (bare string vs. keyed dict) changed —
+  the parent's own generated `__post_init__` still tried to
+  key-construct a full object from a bare string and crashed. Now
+  checked independently of range compatibility.
+
+Fixing this let `dct:source` genuinely accept a bare URI, dropping the
+real-shapes count from 2 to 1, and surfaced one new, fully-expected,
+purely self-testing violation in `KNOWN_OWN_SHAPES_VIOLATIONS`: our own
+port's recovered `sh:class HealthDataset` constraint on `source` still
+applies there (unlike the real shapes, which never had it) — the
+fixture's placeholder source URI correctly has no local `rdf:type` of its
+own, matching the real convention exactly.
+
+### An eighth finding, not ours to fix: `ClassifierMixin`'s `rdf_type` collision
+
+Filtering `HealthDataset`'s own conflicting shape out of the merged graph
+(above) let a *different*, previously-hidden finding surface on its own:
+every `prov:Activity`/`prov:Entity`-typed node fails a `ClassConstraintComponent`
+check on `rdf:type` against `schema:DefinedTerm`. Traced directly to focus
+and value nodes, not guessed: the value being checked is literally the
+node's own class-typing triple (e.g. `<activity> rdf:type prov:Activity`),
+not a separately-set classification value. Root cause: `dcat-ap-plus`'s
+own `ClassifierMixin` mixes an `rdf_type` slot into every
+`Activity`/`Entity`/`AgenticEntity`/`Plan`/`Surrounding` class with
+`slot_uri: rdf:type` — the *same* predicate LinkML/`rdflib_dumper` already
+uses to assert the node's own class, so SHACL can't tell the two triples
+apart. A real, pre-existing `dcat-ap-plus` schema quirk, not something
+this repo's port introduced or can fix locally; it previously shared its
+`(severity, component, path)` signature with the already-diagnosed
+`HealthDataset`/`dct:type` conflict (§6) and was never visible as a
+distinct finding until the merged-shapes filtering separated the two.
+Flagged for the `dcat-ap-plus` maintainers alongside the Association
+proposal (Discussion, in progress) rather than worked around here.
+
+### Result
+
+Two more invented/local vocabulary references found and fixed
+(`healthCategory`/`healthTheme`/`hasCodingSystem`'s four codes via the
+Sciensano cross-check, `conformsTo` via the official example), two more
+real, structural bugs found and fixed (`dct:source`'s eager inlining, in
+two separate scripts), one more real `dcat-ap-plus`-level bug found and
+flagged upstream (not fixed here), and the two-report testing convenience
+replaced with one merged, production-shaped validation profile. Final
+state, all formalized as permanent regression tests (`just test` runs
+all three): `KNOWN_OWN_SHAPES_VIOLATIONS` 31, `KNOWN_REAL_SHAPES_VIOLATIONS`
+1 (`hasQualityAnnotation` — a deliberately local, instance-specific
+placeholder with no shared external registry to point to instead),
+`KNOWN_MERGED_SHAPES_VIOLATIONS` 4. Mirrored in ResHealth-DCAT-AP with
+its own broader schema (adds `ResearchStudy`/`InterventionalStudy`/
+`ObservationalStudy`) — confirmed empirically, not just expected, that
+its own new classes introduce zero new violations against any of the
+three shapes graphs either.
