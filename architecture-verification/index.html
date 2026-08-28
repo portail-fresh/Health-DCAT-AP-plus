@@ -1661,23 +1661,60 @@ this repo's port introduced or can fix locally; it previously shared its
 distinct finding until the merged-shapes filtering separated the two.
 Flagged for the <code>dcat-ap-plus</code> maintainers alongside the Association
 proposal (Discussion, in progress) rather than worked around here.</p>
+<h3 id="a-ninth-finding-hasqualityannotation-was-genuinely-fixable-after-all">A ninth finding: <code>hasQualityAnnotation</code> was genuinely fixable after all</h3>
+<p>The "single-slot stub classes always collapse to a bare URI reference"
+diagnosis, repeated above (§6) and carried as a permanent, deliberate
+limitation for months, turned out to be imprecise. Reproduced directly, in
+isolation: an inlined class with <em>only</em> an identifier slot still gets its
+own <code>rdf:type</code> triple correctly asserted on dump — slot count was never the
+real cause. The actual, much narrower cause: <code>has_quality_annotation</code>'s own
+generated <code>slot_def</code> (built by the port script's generic per-property walk,
+same as any other genuinely-new multivalued slot) never set
+<code>inlined_as_list</code> at all — unlike <code>qualified_attribution</code>, which always
+carried an explicit, hand-authored override for exactly this. Without it,
+LinkML defaults to treating list entries as bare-identifier references,
+since <code>QualityCertificate</code> has an identifier slot.</p>
+<p>Fixed the same way <code>qualified_attribution</code> already was: a second
+hand-authored <code>slot_usage</code> override in
+<code>scripts/port_healthdcat_ap_shacl_to_linkml.py</code>, setting
+<code>inlined_as_list: true</code> for <code>has_quality_annotation</code> specifically —
+deliberately <em>not</em> applied to <code>has_legal_basis</code>/<code>has_personal_data</code>/
+<code>has_purpose</code>, the other three externally-referenced-but-unshaped stub
+ranges (<code>LegalBasis</code>/<code>PersonalData</code>/<code>Purpose</code>), which correctly stay bare
+references to real, externally-governed DPV vocabulary terms (e.g.
+<code>dpv:LegalObligation</code>) — inlining those would wrongly imply we're meant to
+locally describe someone else's vocabulary concept. A quality certificate
+is different in kind: the dataset publisher's own assertion about their
+own dataset, exactly the kind of thing that should be locally, richly
+describable. The fixture now supplies <code>has_quality_annotation</code> as
+<code>- id: &lt;uri&gt;</code> instead of a bare string, and the dumped RDF now correctly
+carries <code>&lt;uri&gt; a dqv:QualityCertificate .</code> with no separate stub-merging
+needed anywhere.</p>
+<p>This also retroactively resolves the earlier "not reproduced on
+Sciensano's own hosted validator, reasons not yet understood" open
+question from the <code>conformsTo</code>/FHIR section above — moot now that our own
+construction is fixed, not something that needed a separate explanation
+after all.</p>
 <h3 id="result">Result</h3>
 <p>Two more invented/local vocabulary references found and fixed
 (<code>healthCategory</code>/<code>healthTheme</code>/<code>hasCodingSystem</code>'s four codes via the
-Sciensano cross-check, <code>conformsTo</code> via the official example), two more
+Sciensano cross-check, <code>conformsTo</code> via the official example), three more
 real, structural bugs found and fixed (<code>dct:source</code>'s eager inlining, in
-two separate scripts), one more real <code>dcat-ap-plus</code>-level bug found and
+two separate scripts, and <code>hasQualityAnnotation</code>'s missing
+<code>inlined_as_list</code>), one more real <code>dcat-ap-plus</code>-level bug found and
 flagged upstream (not fixed here), and the two-report testing convenience
 replaced with one merged, production-shaped validation profile. Final
 state, all formalized as permanent regression tests (<code>just test</code> runs
-all three): <code>KNOWN_OWN_SHAPES_VIOLATIONS</code> 31, <code>KNOWN_REAL_SHAPES_VIOLATIONS</code>
-1 (<code>hasQualityAnnotation</code> — a deliberately local, instance-specific
-placeholder with no shared external registry to point to instead),
-<code>KNOWN_MERGED_SHAPES_VIOLATIONS</code> 4. Mirrored in ResHealth-DCAT-AP with
-its own broader schema (adds <code>ResearchStudy</code>/<code>InterventionalStudy</code>/
-<code>ObservationalStudy</code>) — confirmed empirically, not just expected, that
-its own new classes introduce zero new violations against any of the
-three shapes graphs either.</p>
+all three): <code>KNOWN_OWN_SHAPES_VIOLATIONS</code> 30, <code>KNOWN_REAL_SHAPES_VIOLATIONS</code>
+<strong>0</strong> — the HealthDataset portion of this fixture fully conforms to
+HealthDCAT-AP's real, official upstream SHACL shapes — and
+<code>KNOWN_MERGED_SHAPES_VIOLATIONS</code> 3 (<code>type</code>, <code>title</code>, <code>value</code> — all three
+either a real <code>dcat-ap-plus</code>-level bug already flagged upstream, or an
+<code>rdflib</code>/<code>pyshacl</code> tooling interoperability quirk; none fixable from
+here). Mirrored in ResHealth-DCAT-AP with its own broader schema (adds
+<code>ResearchStudy</code>/<code>InterventionalStudy</code>/<code>ObservationalStudy</code>) — confirmed
+empirically, not just expected, that its own new classes introduce zero
+new violations against any of the three shapes graphs either.</p>
 
 
 

@@ -197,6 +197,10 @@ classes:
         range: DatasetAttribution
         multivalued: true
         inlined_as_list: true
+      has_quality_annotation:
+        range: QualityCertificate
+        multivalued: true
+        inlined_as_list: true
   HealthDatasetSeries:
     is_a: DatasetSeries
     class_uri: dcat:DatasetSeries
