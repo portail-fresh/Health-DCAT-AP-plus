@@ -344,6 +344,22 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # checked and hits the exact same already-understood, already-accepted
         # structural pattern as the others -- not a new category of problem.
         ("Violation", "ClassConstraintComponent", "applicableLegislation"),
+        # NEW 2026-08-28, expected: dct:source's recovered range
+        # (HealthDataset, a real, correct constraint -- see
+        # _FORCE_NON_INLINED_ON_RECOVERED_RANGE's own comment in
+        # port_healthdcat_ap_shacl_to_linkml.py) requires sh:class
+        # HealthDataset on the value. The fixture now populates source with
+        # a bare URI (matching HealthDCAT-AP's own real convention: the
+        # source dataset is described separately, not embedded here -- see
+        # examples/reference/example-healthdcat-dataset.ttl), which
+        # correctly has no local rdf:type triple of its own. The REAL
+        # HealthDCAT-AP shapes don't have this problem at all (confirmed:
+        # dct:source carries no sh:class constraint there whatsoever, only
+        # a Warning-severity minCount) -- this is purely a self-testing
+        # artifact of our own port recovering a technically-correct but
+        # impractical-to-satisfy-inline constraint, same family as the
+        # class_uri-sharing entries above.
+        ("Violation", "ClassConstraintComponent", "source"),
         # FIXED (was here as a real, structural port bug): dcterms:relation/
         # source/conformsTo were ported under the wrong dcat-ap-plus slot,
         # because dcat-ap-plus reuses each predicate URI across several of
@@ -515,16 +531,19 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
 # URI. Nothing added to the published example file itself for this --
 # FHIR's own describing triples are supplied only at validation time, by
 # _referenced_terms_closure_graph, same as every other external term.
+#
+# FIXED 2026-08-28: dct:source's own Warning is gone -- the fixture now
+# populates it (a bare URI, matching HealthDCAT-AP's own real convention;
+# see the fixture YAML's own comment). Needed two real fixes to get there,
+# not a fixture-only change: port_healthdcat_ap_shacl_to_linkml.py's
+# _FORCE_NON_INLINED_ON_RECOVERED_RANGE (stop forcing eager nested
+# construction for a value that's meant to be an independent, separately-
+# published resource) and patch_post_init_shielding.py's compute_shield_map
+# gaining an inlined/inlined_as_list check it was missing entirely before
+# (range/multivalued only) -- see both scripts' own docstrings.
 # ---------------------------------------------------------------------------
 KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
     {
-        # Benign, expected: dct:source is only sh:Warning-severity
-        # "recommended" in the real shapes (non-public-shapes_recommended.ttl
-        # -- confirmed directly, not assumed, and the reason the port script
-        # was fixed to stop treating every *_recommended.ttl sh:minCount as
-        # a hard LinkML `required`, see the severity-awareness fix above).
-        # This fixture simply doesn't supply the optional source field.
-        ("Warning", "MinCountConstraintComponent", "source"),
         # Deliberately kept local, not swapped for an external registry ID:
         # checked directly, there is no shared global registry of "quality
         # certificates" the way there is for DPV concepts -- a quality
@@ -656,19 +675,25 @@ def _referenced_terms_closure_graph(data_graph: Graph, catalogue_graph: Graph) -
 # allowlisted, not just pattern-matched against the two existing allowlists
 # above.
 #
-# Updated same day: conformsTo's own trio (NodeConstraintComponent +
+# Updated 2026-08-26: conformsTo's own trio (NodeConstraintComponent +
 # nested MinCount/HasValueConstraintComponent inScheme) is gone -- see
 # KNOWN_REAL_SHAPES_VIOLATIONS' own comment on the same fix (FHIR, a real
 # standard-vocabulary member, replaced the fixture's local schema URI).
+#
+# Updated 2026-08-28: dct:source's own Warning is gone too -- see
+# KNOWN_REAL_SHAPES_VIOLATIONS' own comment on that fix. Doesn't newly
+# surface a ClassConstraintComponent here the way KNOWN_OWN_SHAPES_VIOLATIONS
+# does: our own Dataset-targeting NodeShape (the one carrying source's
+# sh:class HealthDataset constraint) is exactly one of the ones filtered
+# out of the merged graph, since the real shapes already own that class --
+# and the real shapes never constrained dct:source's class at all.
 # ---------------------------------------------------------------------------
 KNOWN_MERGED_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
     {
-        # Same two already-known, deliberately-tolerated real-shapes
-        # findings as KNOWN_REAL_SHAPES_VIOLATIONS above (dct:source's
-        # Warning-severity recommendation, hasQualityAnnotation's
-        # deliberately-local placeholder) -- unaffected by the own-shapes
-        # filtering, since neither comes from our own generated shapes.
-        ("Warning", "MinCountConstraintComponent", "source"),
+        # Deliberately-tolerated real-shapes finding (see
+        # KNOWN_REAL_SHAPES_VIOLATIONS above): hasQualityAnnotation's
+        # deliberately-local placeholder -- unaffected by the own-shapes
+        # filtering, since it doesn't come from our own generated shapes.
         ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
         # Already known from KNOWN_OWN_SHAPES_VIOLATIONS, unrelated to
         # Dataset/Distribution/Agent (so unaffected by filtering those

@@ -1,5 +1,5 @@
 # Auto generated from health_dcat_ap_plus.yaml by pythongen.py version: 0.0.1
-# Generation date: 2026-08-25T17:21:25
+# Generation date: 2026-08-28T09:51:51
 # Schema: Health-DCAT-AP-plus
 #
 # id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus
@@ -2461,7 +2461,7 @@ class HealthDataset(Dataset):
     publisher: Optional[Union[dict, "HealthPublisherAgent"]] = None
     sample: Optional[Union[Union[dict, "HealthDistribution"], list[Union[dict, "HealthDistribution"]]]] = empty_list()
     frequency: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
-    source: Optional[Union[dict[Union[str, HealthDatasetId], Union[dict, "HealthDataset"]], list[Union[dict, "HealthDataset"]]]] = empty_dict()
+    source: Optional[Union[Union[str, HealthDatasetId], list[Union[str, HealthDatasetId]]]] = empty_list()
     temporal_resolution: Optional[Union[str, list[str]]] = empty_list()
     language: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
     geographical_coverage: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
@@ -2610,7 +2610,9 @@ class HealthDataset(Dataset):
             self.frequency = [self.frequency] if self.frequency is not None else []
         self.frequency = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.frequency]
 
-        self._normalize_inlined_as_list(slot_name="source", slot_type=HealthDataset, key_name="id", keyed=True)
+        if not isinstance(self.source, list):
+            self.source = [self.source] if self.source is not None else []
+        self.source = [v if isinstance(v, HealthDatasetId) else HealthDatasetId(v) for v in self.source]
 
         if not isinstance(self.temporal_resolution, list):
             self.temporal_resolution = [self.temporal_resolution] if self.temporal_resolution is not None else []
@@ -2630,7 +2632,7 @@ class HealthDataset(Dataset):
 
         self._normalize_inlined_as_list(slot_name="qualified_attribution", slot_type=DatasetAttribution, key_name="attribution_had_role", keyed=False)
 
-        __post_init_shield = {n: getattr(self, n) for n in ("access_rights", "applicable_legislation", "theme", "type", "frequency", "temporal_resolution", "language", "geographical_coverage", "has_coding_system", "conforms_to", "health_theme")}
+        __post_init_shield = {n: getattr(self, n) for n in ("access_rights", "applicable_legislation", "theme", "type", "frequency", "source", "temporal_resolution", "language", "geographical_coverage", "has_coding_system", "conforms_to", "health_theme")}
         for __n in __post_init_shield:
             setattr(self, __n, None)
         super().__post_init__(**kwargs)
@@ -4135,7 +4137,7 @@ slots.HealthDataset_frequency = Slot(uri=DCTERMS.accrualPeriodicity, name="Healt
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_frequency, domain=HealthDataset, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
 
 slots.HealthDataset_source = Slot(uri=DCTERMS.source, name="HealthDataset_source", curie=DCTERMS.curie('source'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_source, domain=HealthDataset, range=Optional[Union[dict[Union[str, HealthDatasetId], Union[dict, "HealthDataset"]], list[Union[dict, "HealthDataset"]]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_source, domain=HealthDataset, range=Optional[Union[Union[str, HealthDatasetId], list[Union[str, HealthDatasetId]]]])
 
 slots.HealthDataset_temporal_resolution = Slot(uri=DCAT.temporalResolution, name="HealthDataset_temporal_resolution", curie=DCAT.curie('temporalResolution'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_temporal_resolution, domain=HealthDataset, range=Optional[Union[str, list[str]]])

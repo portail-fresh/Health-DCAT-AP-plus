@@ -31,6 +31,17 @@
 # .../authority/standard/FHIR), and all five are now fixed to real
 # vocabulary codes (or, for conformsTo, a real vocabulary member entirely).
 #
+# dct:source is a bare URI reference (not nested/inlined) -- confirmed
+# directly against examples/reference/example-healthdcat-dataset.ttl
+# (HealthDCAT-AP's own official worked example) and the release-7 spec's
+# own usage note ("the source Dataset must be fully described" separately,
+# not embedded here). Getting this far needed a real port-script fix
+# (scripts/port_healthdcat_ap_shacl_to_linkml.py's
+# _FORCE_NON_INLINED_ON_RECOVERED_RANGE) plus a real gap fix in
+# scripts/patch_post_init_shielding.py's own shield-map computation (it
+# only compared range/multivalued before, missing inlined_as_list changes
+# entirely) -- see both scripts' own docstrings.
+#
 # See examples/HealthDataset-validation-check.ipynb, next to this file, for
 # a runnable walkthrough of exactly how this file gets validated (the same
 # check tests/test_shacl_validation.py::test_dataset_conforms_to_merged_shacl
@@ -86,6 +97,7 @@
     dcterms:provenance [ a dcterms:ProvenanceStatement ;
             dcterms:title "Collected under regional ethics approval REC-2023-114." ] ;
     dcterms:relation <https://example.org/dataset/cancer-mortality-2024> ;
+    dcterms:source <https://example.org/dataset/hospital-case-reports-2024> ;
     dcterms:subject <https://example.org/activity/diagnostic-reporting-process>,
         <https://example.org/population/regional-cancer-patients-2024> ;
     dcterms:temporal [ a dcterms:PeriodOfTime ;
@@ -120,11 +132,11 @@
 <https://example.org/activity/cancer-registry-collection-2024> a prov:Activity ;
     dcterms:title "Cancer registry data collection process" ;
     prov:qualifiedAssociation [ a prov:Association ;
-            prov:agent <https://ror.org/03yrm5c26> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ],
-        [ a prov:Association ;
             prov:agent <https://ror.org/00k4n6c32> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
+        [ a prov:Association ;
+            prov:agent <https://ror.org/03yrm5c26> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ],
         [ a prov:Association ;
             prov:agent <https://orcid.org/0000-0002-1825-0097> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ] .

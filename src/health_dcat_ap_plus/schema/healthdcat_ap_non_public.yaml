@@ -4,7 +4,7 @@
 # regenerate after editing it or after HealthDCAT-AP publishes a new release.
 # Source: repos\healthdcat-ap\public\releases\release-7\html\shacl
 # healthdcat-ap commit: e90053e73b3c5252706efa16afd4da424875e1b1
-# Generated: 2026-08-25
+# Generated: 2026-08-28
 id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public
 name: healthdcat_ap_non_public
 title: HealthDCAT-AP (non-public tier), ported from SHACL
@@ -160,6 +160,7 @@ classes:
         range: uriorcurie
       source:
         range: HealthDataset
+        inlined_as_list: false
       temporal_resolution:
         multivalued: true
       language:

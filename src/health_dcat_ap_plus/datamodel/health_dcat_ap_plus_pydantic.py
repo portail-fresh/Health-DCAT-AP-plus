@@ -6786,7 +6786,9 @@ class HealthDataset(Dataset):
                                                   'name': 'qualified_attribution',
                                                   'range': 'DatasetAttribution'},
                         'sample': {'name': 'sample', 'range': 'HealthDistribution'},
-                        'source': {'name': 'source', 'range': 'HealthDataset'},
+                        'source': {'inlined_as_list': False,
+                                   'name': 'source',
+                                   'range': 'HealthDataset'},
                         'temporal_resolution': {'multivalued': True,
                                                 'name': 'temporal_resolution'},
                         'theme': {'name': 'theme',
@@ -6927,7 +6929,7 @@ class HealthDataset(Dataset):
     release_date: Optional[date] = Field(default=None, description="""The date of formal issuance (e.g., publication) of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries', 'Distribution'],
          'slot_uri': 'dcterms:issued'} })
     sample: Optional[list[HealthDistribution]] = Field(default=None, description="""A sample distribution of the dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'adms:sample'} })
-    source: Optional[list[HealthDataset]] = Field(default=None, description="""A related Dataset from which the described Dataset is derived.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcterms:source'} })
+    source: Optional[list[str]] = Field(default=None, description="""A related Dataset from which the described Dataset is derived.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset'], 'slot_uri': 'dcterms:source'} })
     spatial_resolution: Optional[Decimal] = Field(default=None, description="""The minimum spatial separation resolvable in a dataset, measured in meters.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'Distribution'],
          'slot_uri': 'dcat:spatialResolutionInMeters'} })
     temporal_coverage: Optional[list[PeriodOfTime]] = Field(default=None, description="""A temporal period that the Dataset covers.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries'],

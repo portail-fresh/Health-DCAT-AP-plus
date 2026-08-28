@@ -64,18 +64,30 @@ def compute_shield_map(sv: SchemaView) -> dict[str, list[str]]:
 
     Derived from the schema, not hand-maintained: for every class with its
     own is_a parent and its own local slot_usage, compare each overridden
-    slot's induced range/multivalued against the parent's induced value for
-    the same slot. A mismatch that isn't a safe subclass narrowing means the
-    parent's own generated coercion code would either crash or silently
-    re-wrap an already-correct value -- shield it. Over-inclusion is
-    harmless (shielding a field the parent's own code wouldn't actually have
-    touched, or wouldn't have broken, is a no-op: save-blank-restore around
-    a call that does nothing to that field either way) so this deliberately
-    doesn't try to be more precise than that -- see the module docstring.
-    Scans every class in the merged schema (imports=True), not just the
-    Health<X> ones: the same pattern shows up purely inside dcat-ap-plus's
-    own class hierarchy too (Concept, ConceptScheme, PeriodOfTime -- checked
-    directly), unrelated to anything this repo's port does.
+    slot's induced range/multivalued/inlined(_as_list) against the parent's
+    induced value for the same slot. A mismatch that isn't a safe subclass
+    narrowing means the parent's own generated coercion code would either
+    crash or silently re-wrap an already-correct value -- shield it.
+    Over-inclusion is harmless (shielding a field the parent's own code
+    wouldn't actually have touched, or wouldn't have broken, is a no-op:
+    save-blank-restore around a call that does nothing to that field
+    either way) so this deliberately doesn't try to be more precise than
+    that -- see the module docstring. Scans every class in the merged
+    schema (imports=True), not just the Health<X> ones: the same pattern
+    shows up purely inside dcat-ap-plus's own class hierarchy too (Concept,
+    ConceptScheme, PeriodOfTime -- checked directly), unrelated to
+    anything this repo's port does.
+
+    inlined/inlined_as_list mismatches are checked unconditionally,
+    independent of the range-compatibility check below -- confirmed as a
+    real, distinct gap, not hypothetical: HealthDataset.source narrows
+    inlined_as_list true -> false while keeping a range that's a genuine
+    subclass (HealthDataset is_a Dataset), so the range-compatibility
+    check alone judged it safe -- but the parent's own generated
+    __post_init__ still tries to key-construct a full nested object from
+    what's now a bare string, crashing exactly like a range mismatch
+    would. Representation (keyed dict vs. bare value) is an orthogonal
+    risk factor from range compatibility, not implied by it.
     """
     shield_map: dict[str, list[str]] = {}
     for cls_name in sv.all_classes(imports=True):
@@ -92,10 +104,13 @@ def compute_shield_map(sv: SchemaView) -> dict[str, list[str]]:
                 continue
             range_changed = child_slot.range != parent_slot.range
             mv_changed = bool(child_slot.multivalued) != bool(parent_slot.multivalued)
-            if not range_changed and not mv_changed:
+            inlined_changed = bool(child_slot.inlined) != bool(parent_slot.inlined) or bool(
+                child_slot.inlined_as_list
+            ) != bool(parent_slot.inlined_as_list)
+            if not range_changed and not mv_changed and not inlined_changed:
                 continue
             compatible = (not range_changed) or _is_compatible_narrowing(child_slot.range, parent_slot.range, sv)
-            if not compatible or mv_changed:
+            if not compatible or mv_changed or inlined_changed:
                 shielded.append(slot_name)
         if shielded:
             shield_map[cls_name] = shielded

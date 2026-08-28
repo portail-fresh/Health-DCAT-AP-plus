@@ -185,6 +185,28 @@ _KNOWN_UPSTREAM_PREFIX_FIXES = {
     "@prefix dcatap: <http://data.europa.eu/r5r> .": "@prefix dcatap: <http://data.europa.eu/r5r/> .",
 }
 
+# Properties where the "recovered narrowing" logic below (range_name is
+# None but existing.range in rename) is real and correct -- the value
+# really is checked against a real, independently-shaped profile class --
+# but the resulting range class is one whose real-world instances are
+# always an INDEPENDENT, separately-published resource, not something
+# meant to be embedded inline as part of *this* resource's own
+# description. dcat-ap-plus's own base declaration sets
+# inlined_as_list: true for these (correct for its own generic Dataset,
+# which has no heavy required-field profile of its own) -- but combined
+# with the Health-specific narrowed range (which does), LinkML tries to
+# construct a full nested object at build time. Confirmed directly, not
+# assumed: HealthDCAT-AP's own official worked example
+# (examples/reference/example-healthdcat-dataset.ttl in Health-DCAT-AP-plus)
+# never uses a nested/inlined value for dct:source anywhere, and the real
+# HealthDCAT-AP release-7 spec's own dct:source usage note says "the
+# source Dataset must be fully described" -- as its own, separate
+# resource, not embedded here. Forced non-inlined for exactly this
+# reason, for these specific properties only -- NOT a general rule (the
+# exact same recovery mechanism correctly keeps cv:contactPoint inlined,
+# which genuinely is a compositional sub-object, not an independent one).
+_FORCE_NON_INLINED_ON_RECOVERED_RANGE = {"source"}
+
 
 def parse_turtle_with_known_fixes(g: rdflib.Graph, path: Path) -> None:
     text = path.read_text(encoding="utf-8")
@@ -594,6 +616,7 @@ def build_linkml(
             existing = base_slot(prop_name, class_name)
             if existing is not None:
                 usage: dict = {}
+                recovered_range = False
                 if range_name is None and existing.range in rename:
                     # This property's own shape never explicitly narrowed its
                     # range (no sh:class/sh:node on THIS property) -- but its
@@ -609,12 +632,20 @@ def build_linkml(
                     # inventing one the mechanical per-property walk above
                     # can't see on its own.
                     range_name = rename[existing.range]
+                    recovered_range = True
                 if range_name and range_name != (existing.range or "string"):
                     usage["range"] = range_name
                 if required and not existing.required:
                     usage["required"] = True
                 if multivalued != bool(existing.multivalued):
                     usage["multivalued"] = multivalued
+                if recovered_range and prop_name in _FORCE_NON_INLINED_ON_RECOVERED_RANGE:
+                    # See _FORCE_NON_INLINED_ON_RECOVERED_RANGE's own comment:
+                    # the recovered range is real, but dcat-ap-plus's own
+                    # inlined_as_list: true (inherited unchanged otherwise)
+                    # forces eager nested construction of a value that's
+                    # really an independent, separately-published resource.
+                    usage["inlined_as_list"] = False
                 if usage:
                     slot_usage[prop_name] = usage
                 # Only needs listing under this class's own `slots:` if it
