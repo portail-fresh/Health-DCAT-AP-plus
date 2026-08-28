@@ -6529,8 +6529,7 @@ slots:
     range: HealthDataset
     required: false
     multivalued: true
-    inlined: true
-    inlined_as_list: true
+    inlined_as_list: false
   HealthDataset_temporal_resolution:
     name: HealthDataset_temporal_resolution
     definition_uri: https://w3id.org/nfdi-de/dcat-ap-plus/temporal_resolution
@@ -9630,6 +9629,7 @@ classes:
       source:
         name: source
         range: HealthDataset
+        inlined_as_list: false
       temporal_resolution:
         name: temporal_resolution
         multivalued: true
@@ -9993,7 +9993,7 @@ classes:
     class_uri: prov:Attribution
 metamodel_version: 1.11.0
 source_file: health_dcat_ap_plus.yaml
-source_file_date: '2026-08-27T15:53:49'
+source_file_date: '2026-08-28T07:57:02'
 source_file_size: 8289
-generation_date: '2026-08-27T15:53:58'
+generation_date: '2026-08-28T07:57:14'
 
