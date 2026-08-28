@@ -34,6 +34,14 @@
 # _FORCE_NON_INLINED_ON_RECOVERED_RANGE) plus a real gap fix in
 # scripts/patch_post_init_shielding.py's own shield-map computation.
 #
+# dqv:hasQualityAnnotation's own value is now a real, correctly-typed
+# QualityCertificate object (see below), not a bare reference either --
+# the earlier "single-slot stub classes always collapse" diagnosis was
+# imprecise; the real, narrower cause was specifically that
+# has_quality_annotation never had inlined_as_list: true set on it at
+# all. Fixed the same way as qualified_attribution already was, in
+# port_healthdcat_ap_shacl_to_linkml.py.
+#
 # The bare `<term> a <Class> .` triples at the end of this file (before the
 # blank-node stub resources) mirror HealthDCAT-AP's own official worked
 # example's convention exactly -- see scripts/gen_example.py's own
@@ -136,11 +144,11 @@
 <https://example.org/activity/cancer-registry-collection-2024> a prov:Activity ;
     dcterms:title "Cancer registry data collection process" ;
     prov:qualifiedAssociation [ a prov:Association ;
-            prov:agent <https://ror.org/00k4n6c32> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
-        [ a prov:Association ;
             prov:agent <https://orcid.org/0000-0002-1825-0097> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ],
+        [ a prov:Association ;
+            prov:agent <https://ror.org/00k4n6c32> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
         [ a prov:Association ;
             prov:agent <https://ror.org/03yrm5c26> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ] .
@@ -164,6 +172,8 @@
     dcterms:title "Regional cancer patient population, 2024 cohort" .
 
 <https://example.org/publications/cancer-registry-report-2024> a <rdfs:Resource> .
+
+<https://example.org/quality-certificate/iso-27001> a dqv:QualityCertificate .
 
 <https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD-O-3> a dcterms:Standard .
 

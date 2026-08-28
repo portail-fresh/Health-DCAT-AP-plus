@@ -419,7 +419,10 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         ("Violation", "ClassConstraintComponent", "hasLegalBasis"),
         ("Violation", "ClassConstraintComponent", "hasPersonalData"),
         ("Violation", "ClassConstraintComponent", "hasPurpose"),
-        ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
+        # FIXED 2026-08-28: hasQualityAnnotation used to be here too --
+        # gone now that has_quality_annotation gained inlined_as_list: true
+        # (port script), constructing a real QualityCertificate object
+        # instead of a bare reference. See the fixture YAML's own comment.
         ("Violation", "ClassConstraintComponent", "subject"),
         # Re-diagnosed after scripts/patch_post_init_shielding.py: the value
         # itself is fixed (confirmed directly -- dcat:temporalResolution now
@@ -541,26 +544,34 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
 # published resource) and patch_post_init_shielding.py's compute_shield_map
 # gaining an inlined/inlined_as_list check it was missing entirely before
 # (range/multivalued only) -- see both scripts' own docstrings.
+#
+# FIXED 2026-08-28: hasQualityAnnotation is gone too, the same day --
+# turned out genuinely fixable, not a permanent limitation. The earlier
+# "single-slot stub classes always collapse to a bare URI" diagnosis was
+# imprecise: confirmed directly, in isolation, that an inlined class with
+# only an identifier slot still gets its own rdf:type triple correctly
+# asserted on dump. The real, narrower cause was specifically that
+# has_quality_annotation's own generated slot_def never set
+# inlined_as_list at all (unlike qualified_attribution, which always had
+# an explicit override) -- so it defaulted to a bare-identifier reference.
+# Now fixed via the exact same kind of hand-authored slot_usage override
+# in port_healthdcat_ap_shacl_to_linkml.py, deliberately NOT applied to
+# has_legal_basis/has_personal_data/has_purpose (the other three
+# externally-referenced-but-unshaped stub ranges), which correctly stay
+# bare references to real, externally-governed DPV vocabulary terms --
+# inlining those would wrongly imply we're meant to locally describe
+# someone else's vocabulary concept. A quality certificate is different in
+# kind: the dataset publisher's own assertion about their own dataset,
+# exactly the kind of thing that should be locally, richly describable.
+# This also resolves the earlier "not reproduced on Sciensano's own hosted
+# validator" open question -- moot now that our own construction is fixed,
+# not something that needed a separate explanation after all.
+#
+# KNOWN_REAL_SHAPES_VIOLATIONS is empty as of this fix: the HealthDataset
+# portion of this fixture now fully conforms to HealthDCAT-AP's real,
+# official upstream SHACL shapes.
 # ---------------------------------------------------------------------------
-KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
-    {
-        # Deliberately kept local, not swapped for an external registry ID:
-        # checked directly, there is no shared global registry of "quality
-        # certificates" the way there is for DPV concepts -- a quality
-        # certificate is an assertion a specific organization makes about a
-        # specific dataset, inherently instance-specific (see the fixture
-        # YAML's own comment on has_quality_annotation for the fuller
-        # reasoning, including why the auto-stubbed QualityCertificate
-        # class's single-identifier-slot collapsing behavior is also part
-        # of why this can't be fixed by adding a local rdf:type triple
-        # either). Not reproduced on Sciensano's own hosted validator for
-        # reasons not yet understood (their config uses the identical shape
-        # file) -- an open question, not yet a blocker, since this
-        # violation is itself deliberate and expected on our end regardless
-        # of their result.
-        ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
-    }
-)
+KNOWN_REAL_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(set())
 
 
 def test_dataset_conforms_to_own_generated_shacl():
@@ -687,14 +698,14 @@ def _referenced_terms_closure_graph(data_graph: Graph, catalogue_graph: Graph) -
 # sh:class HealthDataset constraint) is exactly one of the ones filtered
 # out of the merged graph, since the real shapes already own that class --
 # and the real shapes never constrained dct:source's class at all.
+#
+# FIXED 2026-08-28: hasQualityAnnotation is gone too -- see
+# KNOWN_REAL_SHAPES_VIOLATIONS' own comment on the same fix
+# (has_quality_annotation gained inlined_as_list: true, constructing a
+# real, correctly-typed QualityCertificate object).
 # ---------------------------------------------------------------------------
 KNOWN_MERGED_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
     {
-        # Deliberately-tolerated real-shapes finding (see
-        # KNOWN_REAL_SHAPES_VIOLATIONS above): hasQualityAnnotation's
-        # deliberately-local placeholder -- unaffected by the own-shapes
-        # filtering, since it doesn't come from our own generated shapes.
-        ("Violation", "ClassConstraintComponent", "hasQualityAnnotation"),
         # Already known from KNOWN_OWN_SHAPES_VIOLATIONS, unrelated to
         # Dataset/Distribution/Agent (so unaffected by filtering those
         # out): QualitativeAttribute's own required prov:value bleeds onto

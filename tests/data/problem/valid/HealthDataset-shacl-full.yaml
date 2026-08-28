@@ -128,18 +128,21 @@ has_purpose:
 # registry ID: checked directly, there is no shared global registry of
 # "quality certificates" the way there is for legislation (ELI) or DPV
 # concepts -- a quality certificate is an assertion a specific organization
-# makes about a specific dataset, inherently instance-specific. The real
-# shape requires sh:class dqv:QualityCertificate, which needs an explicit
-# rdf:type triple on the value -- currently missing because
-# QualityCertificate is one of the auto-stubbed, single-slot (id-only)
-# classes, and LinkML/rdflib_dumper collapses a single-identifier-slot class
-# to a bare URI reference rather than a typed object (see
-# docs/architecture-verification.md's stub-class section). Not fixed here:
-# doing so would change that collapsing behavior for every other bare-URI
-# reference built the same way, a bigger design call than this fixture
-# should make unilaterally.
+# makes about a specific dataset, inherently instance-specific.
+#
+# FIXED for real 2026-08-28: the real shape requires sh:class
+# dqv:QualityCertificate, which needs an explicit rdf:type triple on the
+# value -- now correctly asserted, via has_quality_annotation gaining
+# inlined_as_list: true in the port script (_FORCE... no, plain
+# slot_usage, see port_healthdcat_ap_shacl_to_linkml.py's own comment on
+# it) so this constructs as a real QualityCertificate object, not a bare
+# reference. The earlier "single-slot stub classes always collapse"
+# diagnosis was imprecise -- confirmed directly, in isolation, that an
+# inlined class with only an identifier slot still gets its own rdf:type
+# triple correctly asserted; the real, narrower cause was specifically
+# the missing inlined_as_list on this one slot.
 has_quality_annotation:
-  - https://example.org/quality-certificate/iso-27001
+  - id: https://example.org/quality-certificate/iso-27001
 has_structured_data: true
 has_code_values:
   - ICD-O-3

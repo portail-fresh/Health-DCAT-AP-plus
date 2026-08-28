@@ -99,6 +99,14 @@ HEADER = """\
 # _FORCE_NON_INLINED_ON_RECOVERED_RANGE) plus a real gap fix in
 # scripts/patch_post_init_shielding.py's own shield-map computation.
 #
+# dqv:hasQualityAnnotation's own value is now a real, correctly-typed
+# QualityCertificate object (see below), not a bare reference either --
+# the earlier "single-slot stub classes always collapse" diagnosis was
+# imprecise; the real, narrower cause was specifically that
+# has_quality_annotation never had inlined_as_list: true set on it at
+# all. Fixed the same way as qualified_attribution already was, in
+# port_healthdcat_ap_shacl_to_linkml.py.
+#
 # The bare `<term> a <Class> .` triples at the end of this file (before the
 # blank-node stub resources) mirror HealthDCAT-AP's own official worked
 # example's convention exactly -- see scripts/gen_example.py's own

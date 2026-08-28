@@ -891,6 +891,32 @@ def main() -> None:
             "inlined_as_list": True,
         }
 
+        # has_quality_annotation's own generic slot_def (built by the main
+        # per-property walk above, same as every other genuinely-new
+        # multivalued slot) never sets inlined_as_list at all -- LinkML then
+        # defaults to treating list entries as bare-identifier references,
+        # since QualityCertificate has an identifier slot. Confirmed
+        # directly, not assumed: an inlined class WITH only an identifier
+        # slot still gets its own `a <class_uri>` triple correctly asserted
+        # on dump (reproduced in isolation) -- the earlier "single-slot stub
+        # classes always collapse to a bare URI" diagnosis was imprecise;
+        # the real, narrower cause is specifically this missing
+        # inlined_as_list, not the slot count. Deliberately NOT the same fix
+        # for has_legal_basis/has_personal_data/has_purpose (the other three
+        # externally-referenced-but-unshaped stub ranges, see the class
+        # descriptions above): those correctly stay bare references to real,
+        # externally-governed DPV vocabulary terms (e.g. dpv:LegalObligation)
+        # -- inlining would wrongly imply we're meant to locally describe
+        # someone else's vocabulary concept. hasQualityAnnotation is
+        # different in kind: a quality certificate is the dataset
+        # publisher's own assertion about their own dataset, exactly the
+        # kind of thing that should be locally, richly describable.
+        classes["HealthDataset"].setdefault("slot_usage", {})["has_quality_annotation"] = {
+            "range": "QualityCertificate",
+            "multivalued": True,
+            "inlined_as_list": True,
+        }
+
     source_commit = None
     if args.healthdcat_ap_repo:
         source_commit = git_commit(Path(args.healthdcat_ap_repo))

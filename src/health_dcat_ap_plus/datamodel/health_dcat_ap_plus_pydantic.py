@@ -6767,6 +6767,10 @@ class HealthDataset(Dataset):
                         'has_coding_system': {'name': 'has_coding_system',
                                               'range': 'uriorcurie',
                                               'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system']},
+                        'has_quality_annotation': {'inlined_as_list': True,
+                                                   'multivalued': True,
+                                                   'name': 'has_quality_annotation',
+                                                   'range': 'QualityCertificate'},
                         'health_category': {'name': 'health_category',
                                             'range': 'uriorcurie',
                                             'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories']},
@@ -6814,7 +6818,7 @@ class HealthDataset(Dataset):
     has_legal_basis: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasLegalBasis'} })
     has_personal_data: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasPersonalData'} })
     has_purpose: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasPurpose'} })
-    has_quality_annotation: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dqv:hasQualityAnnotation'} })
+    has_quality_annotation: Optional[list[QualityCertificate]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dqv:hasQualityAnnotation'} })
     has_structured_data: bool = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasStructuredData'} })
     has_variables: Optional[list[TableGroup]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasVariables'} })
     hdab: HealthAgent = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hdab'} })

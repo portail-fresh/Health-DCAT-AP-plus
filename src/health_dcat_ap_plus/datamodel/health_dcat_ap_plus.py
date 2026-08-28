@@ -1,5 +1,5 @@
 # Auto generated from health_dcat_ap_plus.yaml by pythongen.py version: 0.0.1
-# Generation date: 2026-08-28T14:28:43
+# Generation date: 2026-08-28T14:58:41
 # Schema: Health-DCAT-AP-plus
 #
 # id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus
@@ -2449,7 +2449,7 @@ class HealthDataset(Dataset):
     has_legal_basis: Optional[Union[Union[str, LegalBasisId], list[Union[str, LegalBasisId]]]] = empty_list()
     has_personal_data: Optional[Union[Union[str, PersonalDataId], list[Union[str, PersonalDataId]]]] = empty_list()
     has_purpose: Optional[Union[Union[str, PurposeId], list[Union[str, PurposeId]]]] = empty_list()
-    has_quality_annotation: Optional[Union[Union[str, QualityCertificateId], list[Union[str, QualityCertificateId]]]] = empty_list()
+    has_quality_annotation: Optional[Union[list[Union[str, QualityCertificateId]], dict[Union[str, QualityCertificateId], Union[dict, "QualityCertificate"]]]] = empty_dict()
     has_variables: Optional[Union[Union[dict, "TableGroup"], list[Union[dict, "TableGroup"]]]] = empty_list()
     health_theme: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
     max_typical_age: Optional[int] = None
@@ -2570,9 +2570,7 @@ class HealthDataset(Dataset):
             self.has_purpose = [self.has_purpose] if self.has_purpose is not None else []
         self.has_purpose = [v if isinstance(v, PurposeId) else PurposeId(v) for v in self.has_purpose]
 
-        if not isinstance(self.has_quality_annotation, list):
-            self.has_quality_annotation = [self.has_quality_annotation] if self.has_quality_annotation is not None else []
-        self.has_quality_annotation = [v if isinstance(v, QualityCertificateId) else QualityCertificateId(v) for v in self.has_quality_annotation]
+        self._normalize_inlined_as_list(slot_name="has_quality_annotation", slot_type=QualityCertificate, key_name="id", keyed=True)
 
         if not isinstance(self.has_variables, list):
             self.has_variables = [self.has_variables] if self.has_variables is not None else []
@@ -2632,7 +2630,7 @@ class HealthDataset(Dataset):
 
         self._normalize_inlined_as_list(slot_name="qualified_attribution", slot_type=DatasetAttribution, key_name="attribution_had_role", keyed=False)
 
-        __post_init_shield = {n: getattr(self, n) for n in ("access_rights", "applicable_legislation", "theme", "type", "frequency", "source", "temporal_resolution", "language", "geographical_coverage", "has_coding_system", "conforms_to", "health_theme")}
+        __post_init_shield = {n: getattr(self, n) for n in ("access_rights", "applicable_legislation", "theme", "type", "frequency", "source", "temporal_resolution", "language", "geographical_coverage", "has_coding_system", "conforms_to", "health_theme", "has_quality_annotation")}
         for __n in __post_init_shield:
             setattr(self, __n, None)
         super().__post_init__(**kwargs)
@@ -4162,6 +4160,9 @@ slots.HealthDataset_health_theme = Slot(uri=HEALTHDCATAP.healthTheme, name="Heal
 
 slots.HealthDataset_qualified_attribution = Slot(uri=PROV.qualifiedAttribution, name="HealthDataset_qualified_attribution", curie=PROV.curie('qualifiedAttribution'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_qualified_attribution, domain=HealthDataset, range=Optional[Union[Union[dict, "DatasetAttribution"], list[Union[dict, "DatasetAttribution"]]]])
+
+slots.HealthDataset_has_quality_annotation = Slot(uri=DQV.hasQualityAnnotation, name="HealthDataset_has_quality_annotation", curie=DQV.curie('hasQualityAnnotation'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_has_quality_annotation, domain=HealthDataset, range=Optional[Union[list[Union[str, QualityCertificateId]], dict[Union[str, QualityCertificateId], Union[dict, "QualityCertificate"]]]])
 
 slots.HealthDatasetSeries_applicable_legislation = Slot(uri=DCATAP.applicableLegislation, name="HealthDatasetSeries_applicable_legislation", curie=DCATAP.curie('applicableLegislation'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDatasetSeries_applicable_legislation, domain=HealthDatasetSeries, range=Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]])
