@@ -4,15 +4,9 @@
 # sponsor, funder, real ISO 19115 CI_RoleCode roles, not invented. See
 # docs/architecture-verification.md sections 5-6 for the full narrative.
 #
-# Source: tests/data/problem/valid/HealthDataset-shacl-full.yaml, built via
-# tests/test_shacl_validation.py's _build_test_dataset_graph() helper --
-# regenerate with that function directly (see its own docstring) after
-# changing the fixture or schema. As of scripts/patch_post_init_shielding.py,
-# plain HealthDataset(**data) construction needs no special workaround at
-# all; the one thing this helper still does by hand is substituting
-# AssociatedDataGeneratingActivity instances into was_generated_by (a
-# deliberate design choice, not a bug -- see that class's own docstring in
-# health_dcat_ap_plus.yaml).
+# Source: tests/data/problem/valid/HealthDataset-shacl-full.yaml.
+# Regenerate with `.venv/Scripts/python scripts/gen_example.py` (see that
+# script's own docstring) after changing the fixture or schema.
 #
 # Every external vocabulary/ontology term below was checked directly
 # against its own real source, not assumed -- see the fixture YAML's own
@@ -38,9 +32,12 @@
 # not embedded here). Getting this far needed a real port-script fix
 # (scripts/port_healthdcat_ap_shacl_to_linkml.py's
 # _FORCE_NON_INLINED_ON_RECOVERED_RANGE) plus a real gap fix in
-# scripts/patch_post_init_shielding.py's own shield-map computation (it
-# only compared range/multivalued before, missing inlined_as_list changes
-# entirely) -- see both scripts' own docstrings.
+# scripts/patch_post_init_shielding.py's own shield-map computation.
+#
+# The bare `<term> a <Class> .` triples at the end of this file (before the
+# blank-node stub resources) mirror HealthDCAT-AP's own official worked
+# example's convention exactly -- see scripts/gen_example.py's own
+# docstring for which terms get one and why.
 #
 # See examples/HealthDataset-validation-check.ipynb, next to this file, for
 # a runnable walkthrough of exactly how this file gets validated (the same
@@ -54,6 +51,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix dpv: <https://w3id.org/dpv#> .
 @prefix dqv: <http://www.w3.org/ns/dqv#> .
+@prefix eli: <http://data.europa.eu/eli/ontology#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix geodcatap: <http://data.europa.eu/930/> .
 @prefix healthdcatap: <http://healthdataportal.eu/ns/health#> .
@@ -129,17 +127,23 @@
     dpv:hasPersonalData <https://w3id.org/dpv/pd#MedicalHealth> ;
     dpv:hasPurpose dpv:ScientificResearch .
 
+<http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC> a dcterms:RightsStatement .
+
+<http://publications.europa.eu/resource/authority/frequency/ANNUAL> a dcterms:Frequency .
+
+<http://publications.europa.eu/resource/authority/language/ENG> a dcterms:LinguisticSystem .
+
 <https://example.org/activity/cancer-registry-collection-2024> a prov:Activity ;
     dcterms:title "Cancer registry data collection process" ;
     prov:qualifiedAssociation [ a prov:Association ;
             prov:agent <https://ror.org/00k4n6c32> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
         [ a prov:Association ;
-            prov:agent <https://ror.org/03yrm5c26> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ],
-        [ a prov:Association ;
             prov:agent <https://orcid.org/0000-0002-1825-0097> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ] .
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ],
+        [ a prov:Association ;
+            prov:agent <https://ror.org/03yrm5c26> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ] .
 
 <https://example.org/activity/diagnostic-reporting-process> a prov:Activity ;
     dcterms:title "Diagnostic reporting and coding process" .
@@ -161,6 +165,10 @@
 
 <https://example.org/publications/cancer-registry-report-2024> a <rdfs:Resource> .
 
+<https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD-O-3> a dcterms:Standard .
+
+<https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard/FHIR> a dcterms:Standard .
+
 <https://orcid.org/0000-0002-1825-0097> a prov:Agent ;
     dcterms:title "Dr. Maria Santos" .
 
@@ -169,4 +177,6 @@
 
 <https://ror.org/03yrm5c26> a prov:Agent ;
     dcterms:title "European Health Research Council" .
+
+<http://data.europa.eu/eli/reg/2025/327/oj> a eli:LegalResource .
 
