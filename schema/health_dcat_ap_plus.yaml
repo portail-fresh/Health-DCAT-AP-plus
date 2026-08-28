@@ -572,12 +572,20 @@ slots:
       example (a bare ISO 19115 CI_RoleCode URI, not an inline dcat:Role), and avoids
       a real LinkML limitation found by testing: a class-plus-scalar any_of union
       between Role and uriorcurie doesn''t reliably validate both shapes (see DatasetAttribution''s
-      own had_role in the port script for the fuller writeup of that test).'
+      own had_role in the port script for the fuller writeup of that test).
+
+      Deliberately left with NO values_from here -- moved down to the specializing
+      repo instead (ResHealth-DCAT-AP''s own HealthAssociation, is_a: Association,
+      narrowing this one slot via slot_usage). Matches dcat-ap-plus''s own stated
+      intent for the Association proposal (keep DCAT-AP+''s ontological commitment
+      open, let sub-profiles bind controlled vocabularies) and the had_role precedent
+      right above: this repo already treats predicate-level role slots as reused as-is,
+      un-narrowed, at the merge layer. Confirmed directly, not assumed, that the subclass-plus-slot_usage
+      mechanism works cleanly for this exact case (SchemaView, gen-python, gen-shacl
+      all clean) before moving it -- see ResHealth-DCAT-AP''s own reshealth_dcat_ap.yaml.'
     from_schema: https://w3id.org/portail-fresh/Health-DCAT-AP-plus
     mappings:
     - prov:hadRole
-    values_from:
-    - https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml
     slot_uri: prov:hadRole
     owner: Association
     domain_of:
@@ -9993,7 +10001,7 @@ classes:
     class_uri: prov:Attribution
 metamodel_version: 1.11.0
 source_file: health_dcat_ap_plus.yaml
-source_file_date: '2026-08-28T10:07:33'
-source_file_size: 8289
-generation_date: '2026-08-28T10:07:44'
+source_file_date: '2026-08-28T12:30:01'
+source_file_size: 8983
+generation_date: '2026-08-28T12:30:11'
 
