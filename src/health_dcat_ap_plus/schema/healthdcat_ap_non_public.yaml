@@ -4,7 +4,7 @@
 # regenerate after editing it or after HealthDCAT-AP publishes a new release.
 # Source: repos\healthdcat-ap\public\releases\release-7\html\shacl
 # healthdcat-ap commit: e90053e73b3c5252706efa16afd4da424875e1b1
-# Generated: 2026-08-28
+# Generated: 2026-08-31
 id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public
 name: healthdcat_ap_non_public
 title: HealthDCAT-AP (non-public tier), ported from SHACL
@@ -34,6 +34,7 @@ prefixes:
   time: http://www.w3.org/2006/time#
   geodcatap: http://data.europa.eu/930/
   dcatap: http://data.europa.eu/r5r/
+  xsd: http://www.w3.org/2001/XMLSchema#
 default_prefix: health_dcat_ap_plus
 default_range: string
 imports:

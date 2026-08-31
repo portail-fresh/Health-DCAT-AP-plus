@@ -53,31 +53,68 @@ repeat of that forensic record.
   "Blocked" below).
 - **The `ClassifierMixin`/`rdf_type` finding, posted to dcat-ap-plus as
   [#110](https://github.com/nfdi-de/dcat-ap-plus/issues/110), traced one
-  level further up to LinkML itself.** Maintainer StroemPhi confirmed the
-  bug independently and proposed a `sh:or`-union fix direction; LinkML
-  maintainer matentzn asked for it to be filed on LinkML's own tracker
-  instead, since it's a `ShaclGenerator` bug, not a dcat-ap-plus one.
-  Reproduced again with a genuinely minimal, dcat-ap-plus-independent
-  schema (two classes, one slot) at `examples/issues_for_linkml/` —
-  confirms it's a real LinkML bug, not something specific to dcat-ap-plus's
-  own mixin design. Issue text drafted, incorporating StroemPhi's `sh:or`
-  suggestion; **not yet filed** (see "Blocked" below).
+  level further up to LinkML itself and filed as
+  [linkml/linkml#3931](https://github.com/linkml/linkml/issues/3931).**
+  Maintainer StroemPhi confirmed the bug independently and proposed a
+  `sh:or`-union fix direction; LinkML maintainer matentzn asked for it to
+  be filed on LinkML's own tracker instead, since it's a `ShaclGenerator`
+  bug, not a dcat-ap-plus one. Reproduced again with a genuinely minimal,
+  dcat-ap-plus-independent schema (two classes, one slot) at
+  `examples/issues_for_linkml/` — confirms it's a real LinkML bug, not
+  something specific to dcat-ap-plus's own mixin design. **Filed, waiting
+  on maintainer response** (see "Blocked" below).
+- **The `value`/`QualitativeAttribute` finding, filed directly as
+  [linkml/linkml#3932](https://github.com/linkml/linkml/issues/3932)**
+  (no separate dcat-ap-plus issue — see "Blocked" below for why). Same
+  underlying mechanism as
+  [linkml/linkml#3011](https://github.com/linkml/linkml/issues/3011)
+  ("Unintentional SHACL Class merge," closed, partially fixed by
+  [#3020](https://github.com/linkml/linkml/pull/3020)), but demonstrates a
+  functional consequence (a `required` slot's `sh:minCount` bleeding onto
+  every other class sharing its `class_uri`, breaking otherwise-valid
+  data) rather than #3011's cosmetic one (`sh:description` duplication).
+  Reproduced standalone at
+  `examples/issues_for_linkml/class-uri-cardinality-bleed.ipynb`. **Filed,
+  waiting on maintainer response.**
+- **`title`'s violation, fixed for real — it was never an `rdflib`/`pyshacl`
+  quirk.** Prompted by directly asking "is this third violation also worth
+  reporting upstream?" instead of trusting the standing diagnosis:
+  re-verified from scratch, found the standing diagnosis was wrong (a
+  synthetic reproduction of the exact same shape conformed cleanly),
+  and traced the real cause by querying the actual failing shape's own
+  `sh:datatype` term directly — it was the *unexpanded CURIE string*
+  `"xsd:string"` used as a literal 10-character `URIRef`, not the real
+  39-character `http://www.w3.org/2001/XMLSchema#string`. Root cause: this
+  schema's own `prefixes:` block already works around a known LinkML
+  `gen-shacl`/`gen-owl` bug (imported schemas' own prefixes don't
+  propagate into generated Turtle) by manually redeclaring every prefix it
+  needs — `xsd:` was simply missing from that list, the one prefix nobody
+  thought to check because it's assumed to always be there. Fixed by
+  adding `xsd:` to `health_dcat_ap_plus.yaml`'s `prefixes:` block and the
+  port script's own `PREFIXES` dict. This single fix cleared 17 allowlist
+  entries at once, not just `title` — every plain-string/date/boolean-typed
+  slot had the same malformed `sh:datatype`, previously attributed to two
+  separate, both-wrong theories (an rdflib literal-typing quirk for one
+  group, an `sh:order`-collision theory for another). See
+  `docs/architecture-verification.md`'s "A tenth finding" section for the
+  full misdiagnosis-then-correction narrative.
+  `KNOWN_OWN_SHAPES_VIOLATIONS` is now 14 (was 30);
+  `KNOWN_MERGED_SHAPES_VIOLATIONS` is now 2 (`type`, `value` — see above).
 
 ## Problems that still need fixing
 
 - **Known, deliberate SHACL violations** (`KNOWN_MERGED_SHAPES_VIOLATIONS`,
-  3 entries, mirrored in both repos — down from 4; `hasQualityAnnotation`
-  turned out fixable after all, see "What's done" above). All three
-  remaining are genuinely outside our own control, not unexplored: `title`
-  is an `rdflib`/`pyshacl` interoperability quirk (untyped literals don't
-  satisfy an explicit `sh:datatype xsd:string`, even though RDF 1.1 says
-  they're implicitly one) — a tooling-level issue, not ours or
-  `dcat-ap-plus`'s to fix. `type` and `value` are real `dcat-ap-plus`-level
-  bugs (the `ClassifierMixin`/`rdf_type` predicate collision;
+  2 entries, mirrored in both repos — down from 3; `title` turned out
+  fixable after all, see "What's done" above). Both remaining are
+  genuinely outside our own control, not unexplored: real LinkML
+  `ShaclGenerator`-level bugs, not dcat-ap-plus's to fix either (the
+  `ClassifierMixin`/`rdf_type` predicate collision, filed as
+  [linkml/linkml#3931](https://github.com/linkml/linkml/issues/3931);
   `QualitativeAttribute`'s required field bleeding onto every `prov:Entity`
-  node via a shared `class_uri`) — both diagnosed, neither fixable from
-  here; both belong in the upstream conversation once it's
-  live again.
+  node via a shared `class_uri`, filed as
+  [linkml/linkml#3932](https://github.com/linkml/linkml/issues/3932)) —
+  both diagnosed, reproduced standalone, and now filed; neither fixable
+  from here, both waiting on upstream response.
 - **`public`/`restricted` HealthDCAT-AP tiers are unported.** Only
   `non-public` exists today. The port script's own README says the other
   two "should port the same way" — never actually run.
@@ -90,32 +127,19 @@ repeat of that forensic record.
 - **The dcat-ap-plus Discussion** (Association/`qualified_association`
   proposal): posted, one maintainer response so far, more input requested
   from other maintainers. Nothing to do here until they respond — revisit
-  the `type`/`value` findings above and the `HealthAssociation`/
-  `values_from` downstream design (sketched, not built) once it moves.
-- **The LinkML `ShaclGenerator`/`rdf_type` issue**: reproduction built and
-  verified (`examples/issues_for_linkml/`), issue text drafted — waiting on
-  it actually being filed on `linkml/linkml`, then on maintainer response.
-- **The `value`/`QualitativeAttribute` finding** (`KNOWN_MERGED_SHAPES_VIOLATIONS`'
-  own `value` entry): diagnosed, reproduced standalone at
-  `examples/issues_for_linkml/class-uri-cardinality-bleed.ipynb` (zero
-  dcat-ap-plus dependency, confirms a `required` slot on one class bleeds
-  its `sh:minCount` onto every other class sharing the same `class_uri` —
-  a functional consequence of the same mechanism
-  [linkml/linkml#3011](https://github.com/linkml/linkml/issues/3011)
-  reported cosmetically, closed, partially fixed by
-  [#3020](https://github.com/linkml/linkml/pull/3020)). Decided:
-  **LinkML only, no separate dcat-ap-plus issue** — the mechanism is
-  already tracked upstream, filed by a dcat-ap-plus contributor using
-  dcat-ap-plus's own schema; a new dcat-ap-plus-side issue would be
-  redundant. Filing as a *new* LinkML issue rather than commenting on the
-  closed #3011, since this is a functional symptom (spurious validation
-  failures) distinct from #3011's cosmetic one (`sh:description`
-  duplication) — citing #3011 for context. Issue text not yet drafted.
-  Also still references closed issue
+  the `ResearchAssociation`/`values_from` downstream design (sketched, not
+  built) once it moves.
+- **[linkml/linkml#3931](https://github.com/linkml/linkml/issues/3931)**
+  (the `ClassifierMixin`/`rdf_type` finding) and
+  **[linkml/linkml#3932](https://github.com/linkml/linkml/issues/3932)**
+  (the `value`/`QualitativeAttribute` finding): both filed, both waiting
+  on maintainer response. `KNOWN_MERGED_SHAPES_VIOLATIONS`' `type` and
+  `value` entries stay in the allowlist until either gets fixed upstream.
+  #3932 also still references closed issue
   [nfdi-de/dcat-ap-plus#15](https://github.com/nfdi-de/dcat-ap-plus/issues/15)
   and the design-patterns.md "three distinct node shapes" claim, which is
   empirically inaccurate (shapes get merged by `class_uri`, not kept
-  distinct) — background only, not part of the LinkML issue itself.
+  distinct) — background only, not part of the issue text itself.
 
 ## Future improvements (the "would a third party want to copy this" pass)
 
@@ -148,6 +172,22 @@ inherent to Health-DCAT-AP-plus itself. In order:
    the sibling-checkout requirement to just what's legitimately needed:
    cloning the *official* HealthDCAT-AP spec repo for real-shapes/
    vocabulary testing (a genuine third-party dependency, not a smell).
+2b. **Check whether LinkML's "imported schema prefixes don't propagate
+   into `gen-shacl`/`gen-owl` output" gap is already known/reported, and
+   report it if not.** A different bug from #2 above (this one doesn't
+   crash — it silently produces wrong output), but the same general
+   family, and now confirmed to have real teeth: it's cost this project a
+   `dcatap:` prefix fix, a `dcterms:`/`dcat:`/16-more-prefixes redeclaration
+   block, ResHealth-DCAT-AP's own `dcatapplus:`/`dcterms:` redeclaration,
+   and, most recently, 17 stale `title`-and-friends allowlist entries that
+   took months to correctly diagnose because a missing `xsd:` doesn't
+   *look* like a missing-prefix bug the way `@prefix ns1: <dcatap:>` does
+   — it produces a plausible-looking but wrong `sh:datatype` value instead.
+   Every downstream schema in this schema family has to manually
+   redeclare every prefix it transitively needs, with no reliable way to
+   know the list is complete short of inspecting generated output
+   term-by-term. See `docs/architecture-verification.md`'s "A tenth
+   finding" section for the full story.
 3. **Have ResHealth-DCAT-AP clone `repos/healthdcat-ap` directly**,
    instead of reading it through Health-DCAT-AP-plus's own copy — simpler
    dependency graph, and it's what any third party would naturally do.

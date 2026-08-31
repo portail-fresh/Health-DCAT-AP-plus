@@ -1209,17 +1209,101 @@ Two more invented/local vocabulary references found and fixed
 Sciensano cross-check, `conformsTo` via the official example), three more
 real, structural bugs found and fixed (`dct:source`'s eager inlining, in
 two separate scripts, and `hasQualityAnnotation`'s missing
-`inlined_as_list`), one more real `dcat-ap-plus`-level bug found and
-flagged upstream (not fixed here), and the two-report testing convenience
-replaced with one merged, production-shaped validation profile. Final
-state, all formalized as permanent regression tests (`just test` runs
-all three): `KNOWN_OWN_SHAPES_VIOLATIONS` 30, `KNOWN_REAL_SHAPES_VIOLATIONS`
-**0** — the HealthDataset portion of this fixture fully conforms to
-HealthDCAT-AP's real, official upstream SHACL shapes — and
-`KNOWN_MERGED_SHAPES_VIOLATIONS` 3 (`type`, `title`, `value` — all three
-either a real `dcat-ap-plus`-level bug already flagged upstream, or an
-`rdflib`/`pyshacl` tooling interoperability quirk; none fixable from
-here). Mirrored in ResHealth-DCAT-AP with its own broader schema (adds
-`ResearchStudy`/`InterventionalStudy`/`ObservationalStudy`) — confirmed
-empirically, not just expected, that its own new classes introduce zero
-new violations against any of the three shapes graphs either.
+`inlined_as_list`), two more real bugs found, diagnosed, and flagged
+upstream to LinkML directly (not fixable from here — see "A tenth
+finding" below), and the two-report testing convenience replaced with one
+merged, production-shaped validation profile. Final state, all formalized
+as permanent regression tests (`just test` runs all three):
+`KNOWN_OWN_SHAPES_VIOLATIONS` 14 (down from 30 — see "A tenth finding"
+below for where 17 of those went), `KNOWN_REAL_SHAPES_VIOLATIONS` **0** —
+the HealthDataset portion of this fixture fully conforms to HealthDCAT-AP's
+real, official upstream SHACL shapes — and `KNOWN_MERGED_SHAPES_VIOLATIONS`
+2 (`type`, `value` — both real LinkML `ShaclGenerator` bugs, diagnosed,
+reproduced standalone, and filed
+[upstream](https://github.com/linkml/linkml/issues/3931); neither fixable
+from here). Mirrored in ResHealth-DCAT-AP with its own broader schema
+(adds `ResearchStudy`/`InterventionalStudy`/`ObservationalStudy`) —
+confirmed empirically, not just expected, that its own new classes
+introduce zero new violations against any of the three shapes graphs
+either.
+
+### A tenth finding: `title` was never an `rdflib`/`pyshacl` quirk at all
+
+For months, `title` (and 16 sibling entries across `KNOWN_OWN_SHAPES_VIOLATIONS`
+and `KNOWN_MERGED_SHAPES_VIOLATIONS`) carried a confident-sounding
+diagnosis: `rdflib.Literal("x") != rdflib.Literal("x", datatype=XSD.string)`
+in rdflib itself, so `rdflib_dumper`'s plain-string output never satisfies
+an explicit `sh:datatype xsd:string`, even though RDF 1.1 says an untyped
+literal *is* one. A second group (`startDate`, `maxTypicalAge`,
+`temporalResolution`, and others) carried a completely different
+diagnosis: an `sh:order` collision between merged property shapes,
+confirmed by directly querying the shapes graph and finding two shapes on
+the same subject both claiming the same `sh:order`.
+
+Both diagnoses were wrong — the same way the earlier "single-slot stub
+classes always collapse" belief was (see the `hasQualityAnnotation`
+section above). Prompted by the user directly asking whether the `title`
+finding was also worth reporting upstream, re-verifying it from scratch
+rather than trusting the standing comment turned up something neither
+prior investigation had actually checked: what RDF term the failing
+`sh:datatype` constraint itself pointed at.
+
+**Direct reproduction, not assumed.** A synthetic schema with the exact
+same shape (`sh:datatype xsd:string`, plain in-memory `Literal("hello")`,
+no explicit datatype) validated *cleanly* — contradicting the standing
+"untyped literal" diagnosis outright. So the real fixture's own generated
+shapes graph was queried directly instead of reasoning about it:
+
+```python
+sv = SchemaView("src/health_dcat_ap_plus/schema/health_dcat_ap_plus.yaml")
+g = _merged_shapes_graph()
+for dt in g.objects(subject_shape, SH.datatype):
+    print(repr(dt), len(str(dt)))
+# rdflib.term.URIRef('xsd:string')   len: 10
+```
+
+The `sh:datatype` value was the *literal ten-character string* `"xsd:string"`
+used directly as a `URIRef` — not the real, 39-character
+`http://www.w3.org/2001/XMLSchema#string`. No literal, however typed,
+could ever satisfy that. This is the exact same class of bug the schema's
+own `prefixes:` block already documents and works around for `dcterms:`,
+`dcat:`, `prov:`, and 13 others: LinkML's `gen-shacl`/`gen-owl` don't
+propagate an imported schema's own prefix declarations into the generated
+Turtle, so every downstream schema has to manually redeclare every prefix
+it (transitively) needs, or CURIEs from imported type/slot definitions
+come out unexpanded. `xsd:` was simply never added to that redeclaration
+list — easy to miss, because unlike every other missed prefix here, it
+doesn't announce itself as a `@prefix ns1: <weird>` line in the output; it
+produces a well-formed-looking but silently wrong `sh:datatype` value
+instead, indistinguishable from a real interop quirk unless you go check
+what the term actually is.
+
+Confirmed the blast radius directly before fixing anything: `ShaclGenerator`
+run standalone on `healthdcat_ap_non_public.yaml` (the port script's own
+output) showed the same bug for `xsd:duration`, `xsd:decimal`, `xsd:date`,
+`xsd:string`, `xsd:float`, `xsd:hexBinary`, and `xsd:boolean` — seven
+distinct XSD types, not just `xsd:string`. That single missing prefix was
+the true, unifying root cause behind every one of the 17 entries removed
+this round, both the "untyped literal" group and the unrelated-looking
+"`sh:order` collision" group alike; whatever the `sh:order` investigation
+found was either a red herring or a second, coincidental symptom that
+happened to disappear alongside the real fix.
+
+**Fixed** by adding `xsd: http://www.w3.org/2001/XMLSchema#` to
+`health_dcat_ap_plus.yaml`'s own `prefixes:` block, and to the port
+script's own `PREFIXES` dict (so `healthdcat_ap_non_public.yaml`
+regenerates with it too) — the exact same remedy already used for
+`dcatap:`, just never extended to `xsd:`. Verified directly: zero
+malformed `sh:datatype` URIs anywhere in the regenerated shapes graph, and
+17 allowlist entries across both `KNOWN_OWN_SHAPES_VIOLATIONS` and
+`KNOWN_MERGED_SHAPES_VIOLATIONS` went stale (the test suite's own
+`_assert_known_violations` catches this automatically — a fixed bug shows
+up as an assertion failure demanding the allowlist be pruned, not a
+silent pass).
+
+Unlike `type`/`value`, this one genuinely was ours to fix — an upstream
+LinkML issue for the underlying "imported schema prefixes don't propagate
+into generated Turtle" mechanism is a separate, open question (this
+project has hit it three times now: the original `dcterms:`/`dcat:`/etc.
+block, `dcatap:`, and now `xsd:`) — worth a duplicate check and a report,
+tracked in `ROADMAP.md`, not done as part of this fix.

@@ -112,10 +112,20 @@ HEADER = """\
 # example's convention exactly -- see scripts/gen_example.py's own
 # docstring for which terms get one and why.
 #
+# dct:title (and every other plain-string/date/boolean-ranged property in
+# this file) used to trip a spurious DatatypeConstraintComponent violation,
+# misdiagnosed for months as an rdflib/pyshacl untyped-literal interop
+# quirk -- the real cause was this schema's own prefixes: block missing an
+# xsd: redeclaration (a workaround for a separate, already-known LinkML
+# gen-shacl/gen-owl prefix-propagation gap), which made every sh:datatype
+# constraint generated from a builtin XSD-backed range come out as the
+# *unexpanded CURIE string* "xsd:string" used directly as a URIRef. Fixed
+# by adding xsd: to health_dcat_ap_plus.yaml's own prefixes: block.
+#
 # See examples/HealthDataset-validation-check.ipynb, next to this file, for
 # a runnable walkthrough of exactly how this file gets validated (the same
 # check tests/test_shacl_validation.py::test_dataset_conforms_to_merged_shacl
-# runs in CI) and what the few remaining, deliberate known violations are.
+# runs in CI) and what the two remaining, deliberate known violations are.
 """
 
 

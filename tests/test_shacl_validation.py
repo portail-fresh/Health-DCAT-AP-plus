@@ -391,7 +391,11 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # as the accessRights/theme/etc. finding above -- QualitativeAttribute's
         # own required field bleeds onto the merged prov:Entity shape and
         # applies to every prov:Entity-typed node, including ones that have
-        # nothing to do with QualitativeAttribute.
+        # nothing to do with QualitativeAttribute. A real LinkML
+        # ShaclGenerator bug, not dcat-ap-plus's to fix -- filed as
+        # https://github.com/linkml/linkml/issues/3932, standalone
+        # reproduction at
+        # examples/issues_for_linkml/class-uri-cardinality-bleed.ipynb.
         ("Violation", "MinCountConstraintComponent", "value"),
         # Same class_uri-sharing mechanism again, this time a direct,
         # expected side effect of the cv:contactPoint fix itself: HealthAgent/
@@ -424,66 +428,35 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # (port script), constructing a real QualityCertificate object
         # instead of a bare reference. See the fixture YAML's own comment.
         ("Violation", "ClassConstraintComponent", "subject"),
-        # Re-diagnosed after scripts/patch_post_init_shielding.py: the value
-        # itself is fixed (confirmed directly -- dcat:temporalResolution now
-        # dumps as a clean Literal("P1D", datatype=xsd:duration), not the
-        # list-repr-into-literal corruption this was originally attributed
-        # to), but the violation signature persists for an unrelated reason:
-        # dcat:temporalResolution has two separate property shapes on the
-        # merged dcat:Dataset node both claiming sh:order 29 (confirmed by
-        # querying the shapes graph directly) -- the same sh:order-collision
-        # family already diagnosed for maxTypicalAge/landingPage above, just
-        # a same-predicate collision this time instead of a cross-predicate
-        # one. Not a schema bug; a pyshacl quirk downstream of the
-        # class_uri-sharing pattern this whole section already accepts.
-        ("Violation", "DatatypeConstraintComponent", "temporalResolution"),
-        # Diagnosed, not a schema bug -- confirmed by direct, isolated
-        # reproduction (not assumed): rdflib.Literal("x") != rdflib.Literal(
-        # "x", datatype=XSD.string) in rdflib itself (.datatype is None vs.
-        # explicit), so rdflib_dumper's plain-string output never satisfies
-        # sh:datatype xsd:string even though RDF 1.1 says an untyped literal
-        # IS an xsd:string. Affects every plain-string-typed slot below.
-        ("Violation", "DatatypeConstraintComponent", "title"),
-        ("Violation", "DatatypeConstraintComponent", "description"),
-        ("Violation", "DatatypeConstraintComponent", "identifier"),
-        ("Violation", "DatatypeConstraintComponent", "keyword"),
-        ("Violation", "DatatypeConstraintComponent", "email"),
-        ("Violation", "DatatypeConstraintComponent", "name"),
-        ("Violation", "DatatypeConstraintComponent", "hasCodeValues"),
-        ("Violation", "DatatypeConstraintComponent", "populationCoverage"),
-        # FIXED 2026-08-25 (was here as a real, structural port bug, not this
-        # untyped-literal quirk at all): vcard:hasEmail on Kind_Shape has
-        # sh:nodeKind sh:IRI with no sh:datatype/sh:class/sh:node -- a case
-        # parse_shapes' range-detection never handled, so it silently fell
-        # back to the schema default (string) instead of uriorcurie. Fixed
-        # in parse_shapes directly (same sh:nodeKind sh:IRI idiom
-        # parse_vocabulary_restrictions already used for values_from-bound
-        # slots, generalized to the non-vocabulary case) -- also caught
-        # has_url, contact_page, property_url, and applicable_legislation,
-        # which had the exact same gap.
-        # Diagnosed, not a schema bug -- a different cause from the string
-        # ones above (these already carry the exactly-correct explicit
-        # datatype in the dump -- xsd:date/xsd:boolean/xsd:nonNegativeInteger
-        # -- and still fail). Root cause confirmed by direct, isolated
-        # reproduction: linkml generate shacl numbers sh:order per source
-        # class, restarting at 1 for HealthDataset's own additions; once
-        # merged onto the same dcat:Dataset shape subject (the same
-        # class_uri-sharing fact from the "26 conflicts" investigation
-        # above, this time surfacing via sh:order instead of a semantic
-        # conflict), sh:order values collide across unrelated properties
-        # (confirmed directly: dcat:landingPage and healthdcatap:maxTypicalAge
-        # both carry sh:order 15 on the merged shape) -- and pyshacl visibly
-        # mishandles the collision, misreporting a passing value as a
-        # datatype violation. Reproduced in a self-contained 948-triple
-        # extract of just dcat:Dataset's own shape closure, independent of
-        # the rest of the schema, ruling out any other cause.
-        ("Violation", "DatatypeConstraintComponent", "startDate"),
-        ("Violation", "DatatypeConstraintComponent", "endDate"),
-        ("Violation", "DatatypeConstraintComponent", "hasStructuredData"),
-        ("Violation", "DatatypeConstraintComponent", "maxTypicalAge"),
-        ("Violation", "DatatypeConstraintComponent", "minTypicalAge"),
-        ("Violation", "DatatypeConstraintComponent", "numberOfRecords"),
-        ("Violation", "DatatypeConstraintComponent", "numberOfUniqueIndividuals"),
+        # FIXED 2026-08-31 (this entry plus 16 more that used to follow it
+        # here, and the merged-shapes `title` entry too -- 17 in total).
+        # Every one of them carried its own separate diagnosis --
+        # dcat:temporalResolution's and the date/boolean/integer group's own
+        # "sh:order collision" theory, the string-typed group's own
+        # "rdflib.Literal('x') != rdflib.Literal('x', datatype=XSD.string)"
+        # theory -- and every one of those diagnoses turned out to be
+        # wrong, the same way the earlier "single-slot stub classes always
+        # collapse" belief was (see the hasQualityAnnotation finding
+        # above). Root-caused for real this time, prompted by actually
+        # inspecting the failing sh:datatype term directly instead of
+        # reasoning about rdflib/pyshacl semantics in the abstract: every
+        # one of these property shapes' own sh:datatype value was the
+        # *unexpanded CURIE string* "xsd:string"/"xsd:date"/"xsd:boolean"/
+        # etc. used directly as a URIRef (ten-ish characters, not the real
+        # ~39-character http://www.w3.org/2001/XMLSchema# IRI) -- no
+        # literal, however typed, could ever satisfy that. Cause: this
+        # schema's own prefixes: block redeclares dcterms:/dcat:/prov:/etc.
+        # to work around LinkML's own gen-shacl/gen-owl prefix-propagation
+        # gap (imported schemas' prefixes don't reach the generated
+        # Turtle -- already documented above for dcatap:), but never
+        # redeclared xsd: specifically -- easy to miss since a missing
+        # xsd: doesn't announce itself as a `@prefix ns1: <weird>` line the
+        # way the others did; it silently produces a well-formed-looking
+        # but wrong sh:datatype instead. Fixed by adding xsd: to this
+        # schema's own prefixes: block (and to the port script's PREFIXES
+        # dict, for healthdcat_ap_non_public.yaml's own regeneration) --
+        # see docs/architecture-verification.md for the full
+        # misdiagnosis-then-correction narrative.
     }
 )
 
@@ -711,15 +684,18 @@ KNOWN_MERGED_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # out): QualitativeAttribute's own required prov:value bleeds onto
         # every prov:Entity-typed node via the shared class_uri (see that
         # allowlist's own comment) -- fires here on the population Entity
-        # node, which has no prov:value of its own.
+        # node, which has no prov:value of its own. A real LinkML
+        # ShaclGenerator bug (distinct classes sharing one class_uri get
+        # merged into a single NodeShape, folding cardinality constraints
+        # together, not just cosmetic ones) -- filed as
+        # https://github.com/linkml/linkml/issues/3932, standalone
+        # reproduction at examples/issues_for_linkml/class-uri-cardinality-bleed.ipynb.
         ("Violation", "MinCountConstraintComponent", "value"),
-        # Already known from KNOWN_OWN_SHAPES_VIOLATIONS: rdflib_dumper's
-        # untyped-literal quirk (Literal("x") without an explicit
-        # xsd:string datatype doesn't satisfy sh:datatype xsd:string) --
-        # fires here on dct:title wherever our own kept Activity-side
-        # shapes check it (Entity, Agent, ProvenanceStatement), not just on
-        # Dataset's own copy (which no longer exists in the merged graph).
-        ("Violation", "DatatypeConstraintComponent", "title"),
+        # FIXED 2026-08-31: title used to be here too -- see
+        # KNOWN_OWN_SHAPES_VIOLATIONS' own comment on the same fix (this
+        # schema's own prefixes: block was missing an xsd: redeclaration,
+        # a real, fixable bug, not the rdflib/pyshacl untyped-literal
+        # interop quirk it was originally, wrongly, attributed to).
         # NEW finding, only visible once Dataset's own conflicting dct:type
         # shape is filtered out: dcat-ap-plus's own ClassifierMixin mixes
         # an `rdf_type` slot into every Activity/Entity/AgenticEntity/Plan/
@@ -736,6 +712,11 @@ KNOWN_MERGED_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # because it shared this exact (severity, component, path) triple
         # with the separate, already-diagnosed Dataset dct:type conflict
         # KNOWN_OWN_SHAPES_VIOLATIONS' own "type" entry actually names.
+        # Posted to dcat-ap-plus (https://github.com/nfdi-de/dcat-ap-plus/issues/110),
+        # confirmed by a maintainer, traced to a real LinkML ShaclGenerator
+        # bug and filed as https://github.com/linkml/linkml/issues/3931,
+        # standalone reproduction at
+        # examples/issues_for_linkml/rdf-type-slot-uri-collision.ipynb.
         ("Violation", "ClassConstraintComponent", "type"),
     }
 )

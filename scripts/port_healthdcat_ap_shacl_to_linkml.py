@@ -151,6 +151,21 @@ PREFIXES = {
     # gap as every other entry here, just not noticed until real output was
     # actually inspected.
     "dcatap": "http://data.europa.eu/r5r/",
+    # Missed longer than any entry above -- unlike the others, an absent
+    # xsd: binding doesn't announce itself as a `@prefix ns1: <weird>` line;
+    # it produces a well-formed-looking but wrong sh:datatype value instead
+    # (the *unexpanded CURIE string* "xsd:string" used directly as a
+    # URIRef, ten characters long, not the real 39-character
+    # http://www.w3.org/2001/XMLSchema#string). Confirmed directly: every
+    # sh:datatype constraint generated from a LinkML `range: string` (or
+    # any other builtin XSD-backed type) came out this way for every
+    # ShaclGenerator run on this schema family's own downstream schemas,
+    # tracked for months as an unexplained rdflib/pyshacl "untyped literal"
+    # interop quirk (KNOWN_MERGED_SHAPES_VIOLATIONS' own `title` entry)
+    # before actually being traced to this exact, same, already-known
+    # prefix-propagation gap. See docs/architecture-verification.md for
+    # the full misdiagnosis-then-correction narrative.
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
 }
 
 
