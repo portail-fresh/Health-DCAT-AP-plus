@@ -1,0 +1,51 @@
+# Minimal, standalone LinkML schema reproducing a ShaclGenerator bug --
+# see rdf-type-slot-uri-collision.ipynb, next to this file, for the full
+# walkthrough and validation run. No dependency on dcat-ap-plus or any
+# other external schema: two classes, one slot.
+#
+# The bug: a slot declared with slot_uri: rdf:type generates a SHACL
+# property shape for predicate rdf:type, constrained by the slot's own
+# range (sh:class DefinedTerm below). But rdf:type is *also* the predicate
+# every RDF node uses to assert its own class membership -- including the
+# very class-typing triple (`<node> a Thing .`) that makes the NodeShape's
+# own sh:targetClass match the node in the first place. The generated
+# property shape can't tell those two uses of the same predicate apart, so
+# every node's own class-assertion triple gets checked against the slot's
+# range and (correctly, but unhelpfully) fails, even when the slot itself
+# was never given a value.
+id: https://example.org/linkml-shacl-rdf-type-bug
+name: linkml-shacl-rdf-type-bug
+prefixes:
+  linkml: https://w3id.org/linkml/
+  ex: https://example.org/
+  rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+default_range: string
+default_prefix: ex
+imports:
+  - linkml:types
+
+classes:
+  Thing:
+    class_uri: ex:Thing
+    description: >-
+      Any class that also wants to record an *additional*, explicit
+      rdf:type value via a real slot (a common pattern -- e.g. dcat-ap-plus's
+      ClassifierMixin, PROV-O's own "extra typing" convention) collides
+      with its own class-assertion triple this way.
+    slots:
+      - rdf_type
+  DefinedTerm:
+    class_uri: ex:DefinedTerm
+    description: >-
+      Stand-in range for the rdf_type slot below -- any class works here,
+      the bug isn't specific to what DefinedTerm is.
+
+slots:
+  rdf_type:
+    slot_uri: rdf:type
+    range: DefinedTerm
+    required: false
+    description: >-
+      An extra, explicit rdf:type value, distinct from the node's own
+      class-typing triple -- but SHACL generation can't tell them apart,
+      since both use the same predicate.

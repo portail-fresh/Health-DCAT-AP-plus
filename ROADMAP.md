@@ -51,6 +51,17 @@ repeat of that forensic record.
   pattern upstream (it's not health-specific). A maintainer has responded
   positively; **currently waiting on further maintainer input** (see
   "Blocked" below).
+- **The `ClassifierMixin`/`rdf_type` finding, posted to dcat-ap-plus as
+  [#110](https://github.com/nfdi-de/dcat-ap-plus/issues/110), traced one
+  level further up to LinkML itself.** Maintainer StroemPhi confirmed the
+  bug independently and proposed a `sh:or`-union fix direction; LinkML
+  maintainer matentzn asked for it to be filed on LinkML's own tracker
+  instead, since it's a `ShaclGenerator` bug, not a dcat-ap-plus one.
+  Reproduced again with a genuinely minimal, dcat-ap-plus-independent
+  schema (two classes, one slot) at `examples/issues_for_linkml/` —
+  confirms it's a real LinkML bug, not something specific to dcat-ap-plus's
+  own mixin design. Issue text drafted, incorporating StroemPhi's `sh:or`
+  suggestion; **not yet filed** (see "Blocked" below).
 
 ## Problems that still need fixing
 
@@ -81,6 +92,17 @@ repeat of that forensic record.
   from other maintainers. Nothing to do here until they respond — revisit
   the `type`/`value` findings above and the `HealthAssociation`/
   `values_from` downstream design (sketched, not built) once it moves.
+- **The LinkML `ShaclGenerator`/`rdf_type` issue**: reproduction built and
+  verified (`examples/issues_for_linkml/`), issue text drafted — waiting on
+  it actually being filed on `linkml/linkml`, then on maintainer response.
+- **The `value`/`QualitativeAttribute` finding** (`KNOWN_MERGED_SHAPES_VIOLATIONS`'
+  own `value` entry): diagnosed, not yet posted as its own dcat-ap-plus
+  issue — deferred while the `type` issue was being handled first (now
+  traced up to LinkML, see above). References closed issue
+  [nfdi-de/dcat-ap-plus#15](https://github.com/nfdi-de/dcat-ap-plus/issues/15)
+  and the design-patterns.md "three distinct node shapes" claim, which is
+  empirically inaccurate (shapes get merged by `class_uri`, not kept
+  distinct).
 
 ## Future improvements (the "would a third party want to copy this" pass)
 
