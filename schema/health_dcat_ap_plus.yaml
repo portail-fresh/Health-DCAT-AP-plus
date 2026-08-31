@@ -78,6 +78,9 @@ prefixes:
   dcatap:
     prefix_prefix: dcatap
     prefix_reference: http://data.europa.eu/r5r/
+  xsd:
+    prefix_prefix: xsd
+    prefix_reference: http://www.w3.org/2001/XMLSchema#
 default_prefix: health_dcat_ap_plus
 default_range: string
 subsets:
@@ -10025,7 +10028,7 @@ classes:
     class_uri: prov:Attribution
 metamodel_version: 1.11.0
 source_file: health_dcat_ap_plus.yaml
-source_file_date: '2026-08-31T09:22:54'
-source_file_size: 8983
-generation_date: '2026-08-31T09:23:04'
+source_file_date: '2026-08-31T09:51:55'
+source_file_size: 9722
+generation_date: '2026-08-31T09:52:04'
 
