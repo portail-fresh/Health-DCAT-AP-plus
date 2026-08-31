@@ -187,22 +187,38 @@ inherent to Health-DCAT-AP-plus itself. In order (step 1 is done — see
    the sibling-checkout requirement to just what's legitimately needed:
    cloning the *official* HealthDCAT-AP spec repo for real-shapes/
    vocabulary testing (a genuine third-party dependency, not a smell).
-2b. **Check whether LinkML's "imported schema prefixes don't propagate
+2b. ~~Check whether LinkML's "imported schema prefixes don't propagate
    into `gen-shacl`/`gen-owl` output" gap is already known/reported, and
-   report it if not.** A different bug from #2 above (this one doesn't
-   crash — it silently produces wrong output), but the same general
-   family, and now confirmed to have real teeth: it's cost this project a
-   `dcatap:` prefix fix, a `dcterms:`/`dcat:`/16-more-prefixes redeclaration
-   block, ResHealth-DCAT-AP's own `dcatapplus:`/`dcterms:` redeclaration,
-   and, most recently, 17 stale `title`-and-friends allowlist entries that
-   took months to correctly diagnose because a missing `xsd:` doesn't
-   *look* like a missing-prefix bug the way `@prefix ns1: <dcatap:>` does
-   — it produces a plausible-looking but wrong `sh:datatype` value instead.
-   Every downstream schema in this schema family has to manually
-   redeclare every prefix it transitively needs, with no reliable way to
-   know the list is complete short of inspecting generated output
-   term-by-term. See `docs/architecture-verification.md`'s "A tenth
-   finding" section for the full story.
+   report it if not.~~ **Root-caused precisely, going further than
+   originally planned.** Checked first, per the plan: already tracked as
+   [linkml/linkml#3574](https://github.com/linkml/linkml/issues/3574)
+   ("prefixes declared by sub-schema are dropped during (merge) import"),
+   with an open fix, [PR #3575](https://github.com/linkml/linkml/pull/3575).
+   Prompted by being asked directly whether our own `xsd:` fix "could be
+   hiding a deeper problem" — it did. Several hand-built minimal schemas
+   failed to reproduce the bug even though the general mechanism looked
+   simple; chasing that down (bisecting the real files, then reading
+   `ShaclGenerator`/`SchemaView` source directly instead of guessing at
+   schema shapes) found the *actual* mechanism: `SchemaView.namespaces()`
+   is `@lru_cache(None)`-memoized with no invalidation, and gets called
+   *from inside* `imports_closure()` itself (to resolve a CURIE-style
+   import name) — so it can permanently cache an incomplete prefix map
+   taken mid-traversal, before the schema that would supply a needed
+   prefix (`xsd:`, from `linkml:types`) has loaded. Confirmed directly,
+   not inferred: cleared the cache mid-run on the real files and watched
+   resolution fix itself instantly. Also confirmed directly that PR
+   #3575's own fix (`materialize_prefixes()`) does **not** resolve this
+   specific manifestation — it mutates `schema.prefixes` but never clears
+   `namespaces()`'s own cache, and by the time it runs, that cache is
+   already poisoned. Neither #3574's own diagnosis nor #3575's own fix
+   mention this. Reproduced standalone (three tiny synthetic schemas, zero
+   network dependency, exact call-stack trace to the buggy line, plus a
+   live demonstration that PR #3575's fix doesn't help) at
+   `examples/issues_for_linkml/namespaces-cache-staleness.ipynb`. **To be
+   filed as its own new LinkML issue**, cross-linked from #3574 and PR
+   #3575 rather than folded into either — see "Blocked" below once filed.
+   See `docs/architecture-verification.md`'s "A tenth finding" section for
+   the original `xsd:` story this grew out of.
 3. **Have ResHealth-DCAT-AP clone `repos/healthdcat-ap` directly**,
    instead of reading it through Health-DCAT-AP-plus's own copy — simpler
    dependency graph, and it's what any third party would naturally do.

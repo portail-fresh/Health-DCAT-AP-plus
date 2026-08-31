@@ -1,0 +1,26 @@
+# Reference copy of the root schema used in
+# namespaces-cache-staleness.ipynb, next to this file -- see that
+# notebook for the two sibling schemas (local_helper.yaml, child.yaml)
+# and the full walkthrough. Not runnable standalone: the childns: prefix
+# below is a placeholder the notebook rewrites to a real file:// URI at
+# runtime (the whole point of the bug is that childns: must be a genuine,
+# loadable CURIE-style import, not a relative path -- see the notebook's
+# own intro cell for why). Kept here as a plain, readable reference of
+# the schema shape itself, since the notebook's own inline YAML strings
+# are harder to read as rendered markdown.
+id: https://example.org/root
+name: root
+prefixes:
+  linkml: https://w3id.org/linkml/
+  root: https://example.org/root/
+  childns: file:///REWRITTEN-AT-RUNTIME/
+default_range: string
+default_prefix: root
+imports:
+  - linkml:types
+  - childns:child
+  - ./local_helper
+
+classes:
+  RootThing:
+    is_a: Thing
