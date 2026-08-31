@@ -96,27 +96,26 @@ repeat of that forensic record.
   verified (`examples/issues_for_linkml/`), issue text drafted — waiting on
   it actually being filed on `linkml/linkml`, then on maintainer response.
 - **The `value`/`QualitativeAttribute` finding** (`KNOWN_MERGED_SHAPES_VIOLATIONS`'
-  own `value` entry): diagnosed, not yet posted as its own dcat-ap-plus
-  issue — deferred while the `type` issue was being handled first (now
-  traced up to LinkML, see above). References closed issue
+  own `value` entry): diagnosed, reproduced standalone at
+  `examples/issues_for_linkml/class-uri-cardinality-bleed.ipynb` (zero
+  dcat-ap-plus dependency, confirms a `required` slot on one class bleeds
+  its `sh:minCount` onto every other class sharing the same `class_uri` —
+  a functional consequence of the same mechanism
+  [linkml/linkml#3011](https://github.com/linkml/linkml/issues/3011)
+  reported cosmetically, closed, partially fixed by
+  [#3020](https://github.com/linkml/linkml/pull/3020)). Decided:
+  **LinkML only, no separate dcat-ap-plus issue** — the mechanism is
+  already tracked upstream, filed by a dcat-ap-plus contributor using
+  dcat-ap-plus's own schema; a new dcat-ap-plus-side issue would be
+  redundant. Filing as a *new* LinkML issue rather than commenting on the
+  closed #3011, since this is a functional symptom (spurious validation
+  failures) distinct from #3011's cosmetic one (`sh:description`
+  duplication) — citing #3011 for context. Issue text not yet drafted.
+  Also still references closed issue
   [nfdi-de/dcat-ap-plus#15](https://github.com/nfdi-de/dcat-ap-plus/issues/15)
   and the design-patterns.md "three distinct node shapes" claim, which is
   empirically inaccurate (shapes get merged by `class_uri`, not kept
-  distinct). Also cite
-  [linkml/linkml#3011](https://github.com/linkml/linkml/issues/3011)
-  ("Unintentional SHACL Class merge," closed, partially fixed by
-  [#3020](https://github.com/linkml/linkml/pull/3020)) when drafting this
-  one — found while checking the `type` issue for LinkML-tracker
-  duplicates, filed by a dcat-ap-plus contributor using dcat-ap-plus's own
-  schema as the example, and the author's own comments admit the fix is
-  still incomplete. That's the general "distinct classes sharing one
-  `class_uri` get merged into a single NodeShape" mechanism — directly the
-  `value`/`QualitativeAttribute` finding's own root cause (`Entity`/
-  `EvaluatedEntity`/`AnalysisSourceData` all sharing `class_uri: prov:Entity`),
-  unlike the `type`/`rdf_type` finding, which turned out to be a
-  genuinely different, narrower mechanism (one class's own slot colliding
-  with its own class-membership triple, no `class_uri` sharing involved) —
-  confirmed not closely related enough to cite in that issue.
+  distinct) — background only, not part of the LinkML issue itself.
 
 ## Future improvements (the "would a third party want to copy this" pass)
 

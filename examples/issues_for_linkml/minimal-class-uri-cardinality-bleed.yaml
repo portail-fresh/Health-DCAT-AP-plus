@@ -1,0 +1,53 @@
+# Minimal, standalone LinkML schema reproducing a ShaclGenerator bug --
+# see class-uri-cardinality-bleed.ipynb, next to this file, for the full
+# walkthrough and validation run. No dependency on dcat-ap-plus or any
+# other external schema: two classes sharing one class_uri, one slot.
+#
+# The bug: two distinct LinkML classes that deliberately share one
+# class_uri (a real, legitimate pattern -- "this is also, more
+# specifically, an X") get merged into a *single* SHACL NodeShape, keyed
+# by that shared class_uri. Already reported architecturally at
+# https://github.com/linkml/linkml/issues/3011 ("Unintentional SHACL
+# Class merge," closed, partially fixed by
+# https://github.com/linkml/linkml/pull/3020) -- that issue's own example
+# showed the merge producing duplicated sh:description values, a cosmetic
+# symptom. This schema demonstrates the same merge causing a *functional*
+# one instead: a `required: true` slot declared on only ONE of the two
+# classes ends up as a `sh:minCount 1` constraint on the single merged
+# NodeShape -- so instances of the OTHER class, which never declared
+# anything about that slot, now spuriously fail validation for lacking a
+# value they were never supposed to need.
+id: https://example.org/linkml-shacl-class-uri-cardinality-bleed
+name: linkml-shacl-class-uri-cardinality-bleed
+prefixes:
+  linkml: https://w3id.org/linkml/
+  ex: https://example.org/
+default_range: string
+default_prefix: ex
+imports:
+  - linkml:types
+
+classes:
+  Entity:
+    class_uri: ex:Entity
+    description: >-
+      A plain entity -- never declares anything about `value`, required or
+      otherwise.
+  QualitativeAttribute:
+    class_uri: ex:Entity
+    description: >-
+      Shares Entity's own class_uri deliberately (the same pattern
+      dcat-ap-plus uses for Entity/EvaluatedEntity/AnalysisSourceData/
+      QualitativeAttribute, all class_uri: prov:Entity). Requires `value`.
+    slots:
+      - value
+
+slots:
+  value:
+    range: string
+    required: true
+    description: >-
+      Required on QualitativeAttribute only -- but the generated SHACL
+      constraint ends up on the single merged ex:Entity NodeShape, so it
+      applies to every ex:Entity instance, not just QualitativeAttribute
+      ones.
