@@ -31,7 +31,7 @@
 @prefix cv: <http://data.europa.eu/m8g/> .
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix dcatap: <http://data.europa.eu/r5r/> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
 @prefix default1: <http://data.europa.eu/r5r#> .
 @prefix default2: <https://semiceu.github.io/DCAT-AP/releases/3.0.0/html/shacl/range.ttl#> .
 @prefix dpv: <https://w3id.org/dpv#> .
@@ -57,19 +57,19 @@ default1:Catalog_ShapeCV a sh:NodeShape ;
     sh:property [ sh:message "A non-EU managed concept is used to indicate the language. Please align with a concept from http://publications.europa.eu/resource/authority/language. If no match is found, inform the maintainer of the EU language NAL." ;
             sh:node default1:LanguageRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:language ;
+            sh:path dct:language ;
             sh:severity sh:Violation ],
         [ sh:message "A non EU managed concept is used to indicate the publisher, check if a corresponding exists in the EU corporates bodies NAL" ;
             sh:node default1:CorporateBodyRestriction,
                 default1:Publisher_ShapeCV ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:publisher ;
+            sh:path dct:publisher ;
             sh:severity sh:Warning ],
         [ sh:message "A non-managed concept is used to indicate a spatial description. Please align with a concept from one of the following sources: https://publications.europa.eu/resource/authority/continent, https://publications.europa.eu/resource/authority/country, https://publications.europa.eu/resource/authority/place, https://sws.geonames.org/. check if a corresponding exists." ;
             sh:node [ a sh:NodeShape ;
                     sh:or ( default1:CountryRestriction default1:PlaceRestriction default1:ContinentRestriction default1:GeoNamesRestriction ) ] ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:spatial ;
+            sh:path dct:spatial ;
             sh:severity sh:Warning ],
         [ sh:hasValue <http://publications.europa.eu/resource/authority/data-theme> ;
             sh:message "Multiple themes can be used but at least <http://publications.europa.eu/resource/authority/data-theme> should be present" ;
@@ -88,22 +88,22 @@ default1:DataService_ShapeCV a sh:NodeShape ;
     sh:property [ sh:message "A non-EU managed concept is used to indicate the access right. Please align with a concept from http://publications.europa.eu/resource/authority/access-right. If no match is found, inform the maintainer of the EU access-right NAL." ;
             sh:node default1:AccessRightRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:accessRights ;
+            sh:path dct:accessRights ;
             sh:severity sh:Violation ],
         [ sh:message "A non-EU managed concept is used to indicate the file format. Please align with a concept from http://publications.europa.eu/resource/authority/file-type. If no match is found, inform the maintainer of the EU file-type NAL." ;
             sh:node default1:FileTypeRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:format ;
+            sh:path dct:format ;
             sh:severity sh:Violation ] ;
     sh:targetClass dcat:DataService .
 
 default1:DatasetDeprecation_Shape a sh:NodeShape ;
     rdfs:label "Dataset Deprecation properties"@en ;
     sh:property [ sh:message "replace property dct:hasVersion with dcat:hasVersion"@en ;
-            sh:path dcterms:hasVersion ;
+            sh:path dct:hasVersion ;
             sh:severity sh:Warning ],
         [ sh:message "replace dct:isVersionOf with dcat:isVersionOf"@en ;
-            sh:path dcterms:isVersionOf ;
+            sh:path dct:isVersionOf ;
             sh:severity sh:Warning ],
         [ sh:message "replace owl:versionInfo with dcat:version"@en ;
             sh:path owl:versionInfo ;
@@ -152,10 +152,10 @@ default1:Dataset_Shape a sh:NodeShape ;
             sh:path adms:sample ;
             sh:severity sh:Warning ],
         [ sh:minCount 1 ;
-            sh:path dcterms:source ;
+            sh:path dct:source ;
             sh:severity sh:Warning ],
         [ sh:minCount 1 ;
-            sh:path dcterms:temporal ;
+            sh:path dct:temporal ;
             sh:severity sh:Warning ],
         [ sh:minCount 1 ;
             sh:path dcat:temporalResolution ;
@@ -164,7 +164,7 @@ default1:Dataset_Shape a sh:NodeShape ;
             sh:path dcat:landingPage ;
             sh:severity sh:Warning ],
         [ sh:minCount 1 ;
-            sh:path dcterms:relation ;
+            sh:path dct:relation ;
             sh:severity sh:Warning ],
         [ sh:minCount 1 ;
             sh:path geodcatap:custodian ;
@@ -173,22 +173,22 @@ default1:Dataset_Shape a sh:NodeShape ;
             sh:path healthdcatap:hasCodingSystem ;
             sh:severity sh:Warning ],
         [ sh:minCount 1 ;
-            sh:path dcterms:conformsTo ;
+            sh:path dct:conformsTo ;
             sh:severity sh:Warning ],
         [ sh:minCount 1 ;
             sh:path foaf:page ;
             sh:severity sh:Warning ],
         [ sh:minCount 1 ;
-            sh:path dcterms:accrualPeriodicity ;
+            sh:path dct:accrualPeriodicity ;
             sh:severity sh:Warning ],
         [ sh:minCount 1 ;
             sh:path healthdcatap:healthTheme ;
             sh:severity sh:Warning ],
         [ sh:minCount 1 ;
-            sh:path dcterms:isReferencedBy ;
+            sh:path dct:isReferencedBy ;
             sh:severity sh:Warning ],
         [ sh:minCount 1 ;
-            sh:path dcterms:language ;
+            sh:path dct:language ;
             sh:severity sh:Warning ] ;
     sh:targetClass dcat:Dataset .
 
@@ -196,22 +196,22 @@ default1:Dataset_ShapeCV a sh:NodeShape ;
     sh:property [ sh:message "A non-EU managed concept is used to indicate the accrualPeriodicity frequency. Please align with a concept from http://publications.europa.eu/resource/authority/frequency. If no match is found, inform the maintainer of the EU frequency NAL." ;
             sh:node default1:FrequencyRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:accrualPeriodicity ;
+            sh:path dct:accrualPeriodicity ;
             sh:severity sh:Violation ],
         [ sh:message "A non-EU managed concept is used to indicate the language. Please align with a concept from http://publications.europa.eu/resource/authority/language. If no match is found, inform the maintainer of the EU language NAL." ;
             sh:node default1:LanguageRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:language ;
+            sh:path dct:language ;
             sh:severity sh:Violation ],
         [ sh:message "A non-EU managed concept is used to indicate the publisher type. Please align with a concept from https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/publisher-type. If no match is found, inform the maintainer of the EU publisher-type NAL." ;
             sh:node default1:HealthPublisherAgent_ShapeCV ;
-            sh:path dcterms:publisher ;
+            sh:path dct:publisher ;
             sh:severity sh:Violation ],
         [ sh:message "A non-managed concept is used to indicate a spatial description. Please align with a concept from one of the following sources: https://publications.europa.eu/resource/authority/continent, https://publications.europa.eu/resource/authority/country, https://publications.europa.eu/resource/authority/place, https://sws.geonames.org/. check if a corresponding exists." ;
             sh:node [ a sh:NodeShape ;
                     sh:or ( default1:CountryRestriction default1:PlaceRestriction default1:ContinentRestriction default1:GeoNamesRestriction ) ] ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:spatial ;
+            sh:path dct:spatial ;
             sh:severity sh:Warning ],
         [ sh:message "A non-EU managed concept is used to indicate the dataset theme. Please align with a concept from http://publications.europa.eu/resource/authority/data-theme If no match is found, inform the maintainer of the EU data-theme NAL." ;
             sh:node default1:DataThemeRestriction ;
@@ -226,12 +226,12 @@ default1:Dataset_ShapeCV a sh:NodeShape ;
         [ sh:message "Multiple types can be used but it is recommended to also provide at least one concept of <http://publications.europa.eu/resource/authority/dataset-type> should be present" ;
             sh:node default1:DatasetTypeRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:type ;
+            sh:path dct:type ;
             sh:severity sh:Warning ],
         [ sh:message "A non-EU managed concept is used to indicate the access right. Please align with a concept from http://publications.europa.eu/resource/authority/access-right. If no match is found, inform the maintainer of the EU access rights NAL." ;
             sh:node default1:AccessRightRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:accessRights ;
+            sh:path dct:accessRights ;
             sh:severity sh:Violation ],
         [ sh:description "A health Category According to the Article 51 of EHDS regulation." ;
             sh:message "A non-EU managed concept is used to indicate the health category. Please align with a concept from https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories, based on Article 51 of the EHDS regulation." ;
@@ -247,7 +247,7 @@ default1:Dataset_ShapeCV a sh:NodeShape ;
         [ sh:message "A non-EU managed concept is used to indicate the standard (dct:conformsTo). Please align with a concept from https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard. If no match is found, inform the vocabulary maintainer." ;
             sh:node default1:ConformsToRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:conformsTo ;
+            sh:path dct:conformsTo ;
             sh:severity sh:Violation ],
         [ sh:message "A non-EU managed concept is used to indicate the health theme. Please align with a concept from https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme. If no match is found, inform the maintainer of the EU health-theme NAL." ;
             sh:node default1:HealthThemeRestriction ;
@@ -265,12 +265,12 @@ default1:Distribution_ShapeCV a sh:NodeShape ;
     sh:property [ sh:message "A non-EU managed concept is used to indicate the file format. Please align with a concept from http://publications.europa.eu/resource/authority/file-type. If no match is found, inform the maintainer of the EU file-type NAL." ;
             sh:node default1:FileTypeRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:format ;
+            sh:path dct:format ;
             sh:severity sh:Violation ],
         [ sh:message "A non-EU managed concept is used to indicate the language. Please align with a concept from http://publications.europa.eu/resource/authority/language. If no match is found, inform the maintainer of the EU language NAL." ;
             sh:node default1:LanguageRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:language ;
+            sh:path dct:language ;
             sh:severity sh:Violation ],
         [ sh:message "A non-EU managed concept is used to indicate the distribution status. Please align with a concept from http://publications.europa.eu/resource/authority/distribution-status. If no match is found, inform the maintainer of the EU distribution-status NAL." ;
             sh:node default1:StatusRestriction ;
@@ -302,8 +302,8 @@ default1:Distribution_ShapeCV a sh:NodeShape ;
 default1:LicenseDocument_ShapeCV a sh:NodeShape ;
     sh:property [ sh:node default1:LicenceTypeRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:type ] ;
-    sh:targetClass dcterms:LicenseDocument .
+            sh:path dct:type ] ;
+    sh:targetClass dct:LicenseDocument .
 
 default1:PeriodOfTimeDeprecation_Shape a sh:NodeShape ;
     rdfs:label "PeriodOfTime Deprecation properties"@en ;
@@ -313,7 +313,7 @@ default1:PeriodOfTimeDeprecation_Shape a sh:NodeShape ;
         [ sh:message "replace property schema:startDate with dcat:startDate"@en ;
             sh:path schema1:startDate ;
             sh:severity sh:Warning ] ;
-    sh:targetClass dcterms:PeriodOfTime .
+    sh:targetClass dct:PeriodOfTime .
 
 default1:TemporalEntity_ShapeCV a sh:NodeShape ;
     rdfs:label "Temporal Entity" ;
@@ -325,19 +325,19 @@ default1:TemporalEntity_ShapeCV a sh:NodeShape ;
             sh:severity sh:Violation ] ;
     sh:targetClass time:TemporalEntity .
 
-<https://code.europa.eu/healthdataeu/healthdcat-ap/range.ttl> dcterms:conformsTo <https://www.w3.org/TR/shacl> ;
-    dcterms:description "This file defines the SHACL class range constraints applied to DCAT-AP properties."@en ;
-    dcterms:format <http://publications.europa.eu/resource/authority/file-type/RDF_TURTLE> .
+<https://code.europa.eu/healthdataeu/healthdcat-ap/range.ttl> dct:conformsTo <https://www.w3.org/TR/shacl> ;
+    dct:description "This file defines the SHACL class range constraints applied to DCAT-AP properties."@en ;
+    dct:format <http://publications.europa.eu/resource/authority/file-type/RDF_TURTLE> .
 
-<https://code.europa.eu/healthdataeu/healthdcat-ap/shapes.ttl> dcterms:conformsTo <https://www.w3.org/TR/shacl> ;
-    dcterms:description "This file defines the core SHACL constraints used by HealthDCAT-AP to validate classes and properties."@en ;
-    dcterms:format <http://publications.europa.eu/resource/authority/file-type/RDF_TURTLE> .
+<https://code.europa.eu/healthdataeu/healthdcat-ap/shapes.ttl> dct:conformsTo <https://www.w3.org/TR/shacl> ;
+    dct:description "This file defines the core SHACL constraints used by HealthDCAT-AP to validate classes and properties."@en ;
+    dct:format <http://publications.europa.eu/resource/authority/file-type/RDF_TURTLE> .
 
-<https://code.europa.eu/healthdataeu/healthdcat-ap/shapes_recommended.ttl> dcterms:conformsTo <https://www.w3.org/TR/shacl> ;
-    dcterms:description "This file defines the recommended SHACL constraints used by HealthDCAT-AP to support additional metadata quality for NON_PUBLIC data."@en ;
-    dcterms:format <http://publications.europa.eu/resource/authority/file-type/RDF_TURTLE> .
+<https://code.europa.eu/healthdataeu/healthdcat-ap/shapes_recommended.ttl> dct:conformsTo <https://www.w3.org/TR/shacl> ;
+    dct:description "This file defines the recommended SHACL constraints used by HealthDCAT-AP to support additional metadata quality for NON_PUBLIC data."@en ;
+    dct:format <http://publications.europa.eu/resource/authority/file-type/RDF_TURTLE> .
 
-<https://healthdcat-ap.github.io/mdr-vocabularies.shape.ttl> dcterms:description "This file contains the controlled vocabulary constraints used in HealthDCAT-AP. It ensures that property values are taken from approved reference lists and code lists."@en .
+<https://healthdcat-ap.github.io/mdr-vocabularies.shape.ttl> dct:description "This file contains the controlled vocabulary constraints used in HealthDCAT-AP. It ensures that property values are taken from approved reference lists and code lists."@en .
 
 default2:CSVWTableGroup_Shape a sh:NodeShape ;
     rdfs:label "Csvw Table Group"@en ;
@@ -360,10 +360,10 @@ default2:Dataset_Shape a sh:NodeShape ;
             sh:severity sh:Violation ],
         [ sh:path healthdcatap:hasCodeValues ;
             sh:severity sh:Violation ],
-        [ sh:class dcterms:Standard ;
+        [ sh:class dct:Standard ;
             sh:path healthdcatap:hasCodingSystem ;
             sh:severity sh:Violation ],
-        [ sh:class dcterms:PeriodOfTime ;
+        [ sh:class dct:PeriodOfTime ;
             sh:path healthdcatap:retentionPeriod ;
             sh:severity sh:Violation ],
         [ sh:class dpv:Purpose ;
@@ -401,7 +401,7 @@ default2:Dataset_Shape a sh:NodeShape ;
         [ sh:message "Each csvw:Table must have at least one title (dct:title) as a literal." ;
             sh:minCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:path dcterms:title ;
+            sh:path dct:title ;
             sh:severity sh:Violation ],
         [ sh:message "Each csvw:Table should have one or many keyword (dcat:keyword) as a literal." ;
             sh:nodeKind sh:Literal ;
@@ -476,16 +476,16 @@ default2:Dataset_Shape a sh:NodeShape ;
         [ sh:message "Each dcat:Dataset must have at least one dct:identifier." ;
             sh:minCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:path dcterms:identifier ;
+            sh:path dct:identifier ;
             sh:severity sh:Violation ],
         [ sh:maxCount 1 ;
             sh:message "Each dcat:Dataset may have at most one dct:publisher." ;
             sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:path dcterms:publisher ;
+            sh:path dct:publisher ;
             sh:severity sh:Violation ],
         [ sh:message "dct:publisher must conform to the :HealthPublisherAgent_Shape, which requires exactly one cv:contactPoint, at most one dct:description" ;
             sh:node :HealthPublisherAgent_Shape ;
-            sh:path dcterms:publisher ;
+            sh:path dct:publisher ;
             sh:severity sh:Violation ],
         [ sh:node :Distribution_Shape ;
             sh:path adms:sample ;
@@ -574,7 +574,7 @@ default2:Dataset_Shape a sh:NodeShape ;
             sh:path healthdcatap:populationCoverage ;
             sh:severity sh:Violation ],
         [ sh:nodeKind sh:Literal ;
-            sh:path dcterms:alternative ;
+            sh:path dct:alternative ;
             sh:severity sh:Violation ],
         [ sh:maxCount 1 ;
             sh:message "Each dcat:Dataset must have at most one healthdcatap:retentionPeriod as a dct:PeriodOfTime." ;
@@ -594,18 +594,18 @@ default2:Dataset_Shape a sh:NodeShape ;
         [ sh:message "Each dcat:Dataset must have at least one dct:type." ;
             sh:minCount 1 ;
             sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:path dcterms:type ;
+            sh:path dct:type ;
             sh:severity sh:Violation ],
         [ sh:message "Each dcat:Dataset must have at least one dct:provenance." ;
             sh:minCount 1 ;
             sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:path dcterms:provenance ;
+            sh:path dct:provenance ;
             sh:severity sh:Violation ],
         [ sh:hasValue <http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC> ;
             sh:maxCount 1 ;
             sh:message "Each Dataset must have exactly one dct:accessRights, and its value must be http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC." ;
             sh:minCount 1 ;
-            sh:path dcterms:accessRights ;
+            sh:path dct:accessRights ;
             sh:severity sh:Violation ],
         [ sh:message "Each dcat:Dataset must have at least one dcatap:applicableLegislation." ;
             sh:minCount 1 ;
@@ -637,9 +637,9 @@ default2:Dataset_Shape a sh:NodeShape ;
     sh:property [ sh:message "Each time:TemporalEntity must have at least one dct:description as a literal." ;
             sh:minCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:path dcterms:description ;
+            sh:path dct:description ;
             sh:severity sh:Violation ],
-        [ sh:class dcterms:Frequency ;
+        [ sh:class dct:Frequency ;
             sh:message "cv:frequency must be an IRI referencing a dct:Frequency from the EU frequency vocabulary." ;
             sh:nodeKind sh:IRI ;
             sh:path cv:frequency ;
@@ -650,23 +650,23 @@ default2:Dataset_Shape a sh:NodeShape ;
     rdfs:comment "See [DCAT-AP specs:LegalResource](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#LegalResource)" ;
     sh:closed true ;
     sh:ignoredProperties ( rdf:type ) ;
-    sh:property [ sh:description "A slot to provide an URI for an entity within this schema." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 0 ;
-            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
-        [ sh:datatype xsd:string ;
+    sh:property [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 1 ;
-            sh:path dcterms:title ],
+            sh:path dct:title ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 2 ;
-            sh:path dcterms:description ] ;
+            sh:path dct:description ],
+        [ sh:description "A slot to provide an URI for an entity within this schema." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 0 ;
+            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ] ;
     sh:targetClass <eli:LegalResource> .
 
 default1:AvailabilityRestriction a sh:NodeShape ;
@@ -738,7 +738,7 @@ default1:HealthActivity_ShapeCV a sh:NodeShape ;
     sh:property [ sh:description "A non-EU managed concept is used to indicate the health activity type. Please align with a concept from https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-activity. If no match is found, inform the maintainer of the EU health-activity NAL." ;
             sh:node default1:HealthActivityRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:type ;
+            sh:path dct:type ;
             sh:severity sh:Violation ] .
 
 default1:HealthCategoryRestriction a sh:NodeShape ;
@@ -755,7 +755,7 @@ default1:HealthPublisherAgent_ShapeCV a sh:NodeShape ;
     sh:property [ sh:description "A non-EU managed concept is used to indicate the publisher type. Please align with a concept from https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/publisher-type. If no match is found, inform the maintainer of the EU publisher-type NAL." ;
             sh:node default1:HealthPublisherTypeRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:type ;
+            sh:path dct:type ;
             sh:severity sh:Violation ] .
 
 default1:HealthPublisherTypeRestriction a sh:NodeShape ;
@@ -796,7 +796,7 @@ default1:Publisher_ShapeCV a sh:NodeShape ;
     sh:property [ sh:description "A non EU managed concept is used to indicate the type of the publisher. If no corresponding can be found inform the maintainer of the adms:publishertype codelist." ;
             sh:node default1:PublisherTypeRestriction ;
             sh:nodeKind sh:IRI ;
-            sh:path dcterms:type ;
+            sh:path dct:type ;
             sh:severity sh:Violation ] .
 
 default1:StatusRestriction a sh:NodeShape ;
@@ -808,17 +808,11 @@ default1:StatusRestriction a sh:NodeShape ;
             sh:nodeKind sh:IRI ;
             sh:path skos:inScheme ] .
 
-dcterms:Location a sh:NodeShape ;
+dct:Location a sh:NodeShape ;
     rdfs:comment "See [DCAT-AP specs:Location](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Location)" ;
     sh:closed true ;
     sh:ignoredProperties ( rdf:type ) ;
     sh:property [ sh:datatype xsd:string ;
-            sh:description "The geographic center (centroid) of a resource." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcat:centroid ],
-        [ sh:datatype xsd:string ;
             sh:description "The geographic bounding box of a resource." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
@@ -829,10 +823,16 @@ dcterms:Location a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 2 ;
-            sh:path lcon:geometry ] ;
-    sh:targetClass dcterms:Location .
+            sh:path lcon:geometry ],
+        [ sh:datatype xsd:string ;
+            sh:description "The geographic center (centroid) of a resource." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dcat:centroid ] ;
+    sh:targetClass dct:Location .
 
-dcterms:ProvenanceStatement a sh:NodeShape ;
+dct:ProvenanceStatement a sh:NodeShape ;
     rdfs:comment "See [DCAT-AP specs:ProvenanceStatement](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#ProvenanceStatement)" ;
     sh:closed true ;
     sh:ignoredProperties ( rdf:type ) ;
@@ -841,14 +841,14 @@ dcterms:ProvenanceStatement a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 1 ;
-            sh:path dcterms:description ],
+            sh:path dct:description ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 0 ;
-            sh:path dcterms:title ] ;
-    sh:targetClass dcterms:ProvenanceStatement .
+            sh:path dct:title ] ;
+    sh:targetClass dct:ProvenanceStatement .
 
 time:Instant a sh:NodeShape ;
     rdfs:comment "See [DCAT-AP specs:TimeInstant](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#TimeInstant)" ;
@@ -858,14 +858,14 @@ time:Instant a sh:NodeShape ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:order 0 ;
-            sh:path dcterms:title ],
+            sh:order 1 ;
+            sh:path dct:description ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:description ] ;
+            sh:order 0 ;
+            sh:path dct:title ] ;
     sh:targetClass time:Instant .
 
 dcat:Relationship a sh:NodeShape ;
@@ -877,7 +877,7 @@ dcat:Relationship a sh:NodeShape ;
             sh:minCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 1 ;
-            sh:path dcterms:relation ],
+            sh:path dct:relation ],
         [ sh:class dcat:Role ;
             sh:description "A function of an entity or agent with respect to another entity or resource." ;
             sh:minCount 1 ;
@@ -894,56 +894,56 @@ odrl:Policy a sh:NodeShape ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:order 0 ;
-            sh:path dcterms:title ],
+            sh:order 1 ;
+            sh:path dct:description ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:description ] ;
+            sh:order 0 ;
+            sh:path dct:title ] ;
     sh:targetClass odrl:Policy .
 
 prov:Attribution a sh:NodeShape ;
     rdfs:comment "See [DCAT-AP specs:Attribution](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Attribution)" ;
     sh:closed true ;
     sh:ignoredProperties ( rdf:type ),
-        ( rdf:type dcat:hadRole prov:agent ) ;
+        ( prov:agent dcat:hadRole rdf:type ) ;
     sh:property [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:description ],
-        [ sh:datatype xsd:string ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:Literal ;
-            sh:order 2 ;
-            sh:path dcterms:title ],
+            sh:order 3 ;
+            sh:path dct:description ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 0 ;
-            sh:path dcterms:title ],
+            sh:path dct:title ],
+        [ sh:datatype xsd:string ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dct:title ],
         [ sh:class foaf:Agent ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 0 ;
             sh:path prov:agent ],
-        [ sh:datatype xsd:string ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:Literal ;
-            sh:order 3 ;
-            sh:path dcterms:description ],
         [ sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 1 ;
-            sh:path dcat:hadRole ] ;
+            sh:path dcat:hadRole ],
+        [ sh:datatype xsd:string ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dct:description ] ;
     sh:targetClass prov:Attribution .
 
 foaf:Document a sh:NodeShape ;
@@ -955,18 +955,18 @@ foaf:Document a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 1 ;
-            sh:path dcterms:title ],
-        [ sh:description "A slot to provide an URI for an entity within this schema." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 0 ;
-            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
+            sh:path dct:title ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 2 ;
-            sh:path dcterms:description ] ;
+            sh:path dct:description ],
+        [ sh:description "A slot to provide an URI for an entity within this schema." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 0 ;
+            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ] ;
     sh:targetClass foaf:Document .
 
 <https://semiceu.github.io/DCAT-AP/releases/3.0.0/html/shacl/range.ttl> a owl:Ontology ;
@@ -983,7 +983,7 @@ foaf:Document a sh:NodeShape ;
         [ sh:message "Each csvw:Column must have at least one description (dct:description) as a literal." ;
             sh:minCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:path dcterms:description ],
+            sh:path dct:description ],
         [ sh:message "Each csvw:Column must have at least one title (csvw:titles) as a literal." ;
             sh:minCount 1 ;
             sh:nodeKind sh:Literal ;
@@ -1020,7 +1020,7 @@ foaf:Document a sh:NodeShape ;
         [ sh:description "Each dct:publisher must have at most one dct:description (Publisher Note) as a literal." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:path dcterms:description ;
+            sh:path dct:description ;
             sh:severity sh:Violation ] .
 
 <https://semiceu.github.io/DCAT-AP/releases/3.0.0/html/shacl/shapes_recommended.ttl> a owl:Ontology ;
@@ -1035,13 +1035,13 @@ foaf:Document a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 1 ;
-            sh:path dcterms:description ],
+            sh:path dct:description ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 0 ;
-            sh:path dcterms:title ] ;
+            sh:path dct:title ] ;
     sh:targetClass <https://w3id.org/linkml/Any> .
 
 <https://w3id.org/nfdi-de/dcat-ap-plus/ClassifierMixin> a sh:NodeShape ;
@@ -1053,7 +1053,7 @@ foaf:Document a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 0 ;
-            sh:path dcterms:type ],
+            sh:path dct:type ],
         [ sh:class <schema:DefinedTerm> ;
             sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
             sh:maxCount 1 ;
@@ -1065,19 +1065,19 @@ foaf:Document a sh:NodeShape ;
 <https://w3id.org/nfdi-de/dcat-ap-plus/SupportiveEntity> a sh:NodeShape ;
     rdfs:comment "The supportive entities are supporting the main entities in the Application Profile. They are included in the Application Profile because they form the range of properties." ;
     sh:closed true ;
-    sh:ignoredProperties ( time:hasBeginning rdf:type prov:hadRole skos:notation skos:prefLabel <https://w3id.org/nfdi-de/dcat-ap-plus/id> dcterms:type dcat:endDate dcat:startDate dcat:hadRole prov:agent time:hasEnd ) ;
+    sh:ignoredProperties ( prov:hadRole dcat:endDate skos:notation <https://w3id.org/nfdi-de/dcat-ap-plus/id> prov:agent dcat:hadRole rdf:type skos:prefLabel dct:type dcat:startDate time:hasBeginning time:hasEnd ) ;
     sh:property [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:order 0 ;
-            sh:path dcterms:title ],
+            sh:order 1 ;
+            sh:path dct:description ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:description ] ;
+            sh:order 0 ;
+            sh:path dct:title ] ;
     sh:targetClass <https://w3id.org/nfdi-de/dcat-ap-plus/SupportiveEntity> .
 
 default1:AccessRightRestriction a sh:NodeShape ;
@@ -1141,57 +1141,57 @@ dcat:CatalogRecord a sh:NodeShape ;
     rdfs:comment "See [DCAT-AP specs:CatalogueRecord](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#CatalogueRecord)" ;
     sh:closed true ;
     sh:ignoredProperties ( rdf:type ) ;
-    sh:property [ sh:class skos:Concept ;
-            sh:description "The status of the catalogue record in the context of editorial flow of the dataset and data service descriptions." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 1 ;
-            sh:path adms:status ],
-        [ sh:datatype xsd:string ;
-            sh:description "A name given to the Catalogue Record." ;
-            sh:nodeKind sh:Literal ;
-            sh:order 8 ;
-            sh:path dcterms:title ],
-        [ sh:description "A link to the Dataset, Data service or Catalog described in the record." ;
+    sh:property [ sh:description "A link to the Dataset, Data service or Catalog described in the record." ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:or ( [ sh:class dcat:Catalog ] [ sh:class dcat:Dataset ] [ sh:class dcat:DatasetSeries ] [ sh:class dcat:DataService ] ) ;
             sh:order 6 ;
             sh:path foaf:primaryTopic ],
-        [ sh:class dcterms:LinguisticSystem ;
-            sh:description "A language used in the textual metadata describing titles, descriptions, etc. of the Catalogued Resource." ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 3 ;
-            sh:path dcterms:language ],
         [ sh:datatype xsd:date ;
             sh:description "The most recent date on which the Catalogue entry was changed or modified." ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 5 ;
-            sh:path dcterms:modified ],
+            sh:path dct:modified ],
         [ sh:datatype xsd:string ;
             sh:description "A free-text account of the record. This property can be repeated for parallel language versions of the description." ;
             sh:nodeKind sh:Literal ;
             sh:order 2 ;
-            sh:path dcterms:description ],
+            sh:path dct:description ],
+        [ sh:class dct:LinguisticSystem ;
+            sh:description "A language used in the textual metadata describing titles, descriptions, etc. of the Catalogued Resource." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path dct:language ],
         [ sh:class dcat:CatalogRecord ;
             sh:description "The original metadata that was used in creating metadata for the Dataset, Data Service or Dataset Series." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 7 ;
-            sh:path dcterms:source ],
+            sh:path dct:source ],
+        [ sh:class dct:Standard ;
+            sh:description "An Application Profile that the Catalogued Resource&#39;s metadata conforms to." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path dct:conformsTo ],
         [ sh:datatype xsd:date ;
             sh:description "The date on which the description of the Resource was included in the Catalogue." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 4 ;
-            sh:path dcterms:issued ],
-        [ sh:class dcterms:Standard ;
-            sh:description "An Application Profile that the Catalogued Resource&#39;s metadata conforms to." ;
+            sh:path dct:issued ],
+        [ sh:datatype xsd:string ;
+            sh:description "A name given to the Catalogue Record." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 8 ;
+            sh:path dct:title ],
+        [ sh:class skos:Concept ;
+            sh:description "The status of the catalogue record in the context of editorial flow of the dataset and data service descriptions." ;
+            sh:maxCount 1 ;
             sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 0 ;
-            sh:path dcterms:conformsTo ] ;
+            sh:order 1 ;
+            sh:path adms:status ] ;
     sh:targetClass dcat:CatalogRecord .
 
 dqv:QualityCertificate a sh:NodeShape ;
@@ -1222,7 +1222,7 @@ This class, and the ready-to-use qualified_association slot below (already corre
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 2 ;
-            sh:path dcterms:title ],
+            sh:path dct:title ],
         [ sh:description """The role an agent played in a qualified Association -- PROV-O's own prov:hadRole, distinct from DatasetAttribution's had_role (dcat:hadRole, already defined by dcat-ap-plus and reused as-is): Association needed its own slot since dcat-ap-plus's had_role is hardwired to the dcat: predicate, not prov:. Range is a plain uriorcurie into an external codelist, not a nested Role object with title/description -- matches HealthDCAT-AP's own real qualifiedAttribution example (a bare ISO 19115 CI_RoleCode URI, not an inline dcat:Role), and avoids a real LinkML limitation found by testing: a class-plus-scalar any_of union between Role and uriorcurie doesn't reliably validate both shapes (see DatasetAttribution's own had_role in the port script for the fuller writeup of that test).
 Deliberately left with NO values_from here -- moved down to the specializing repo instead (ResHealth-DCAT-AP's own HealthAssociation, is_a: Association, narrowing this one slot via slot_usage). Matches dcat-ap-plus's own stated intent for the Association proposal (keep DCAT-AP+'s ontological commitment open, let sub-profiles bind controlled vocabularies) and the had_role precedent right above: this repo already treats predicate-level role slots as reused as-is, un-narrowed, at the merge layer. Confirmed directly, not assumed, that the subclass-plus-slot_usage mechanism works cleanly for this exact case (SchemaView, gen-python, gen-shacl all clean) before moving it -- see ResHealth-DCAT-AP's own reshealth_dcat_ap.yaml.""" ;
             sh:maxCount 1 ;
@@ -1235,18 +1235,29 @@ Deliberately left with NO values_from here -- moved down to the specializing rep
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 3 ;
-            sh:path dcterms:description ] ;
+            sh:path dct:description ] ;
     sh:targetClass prov:Association .
 
 prov:SoftwareAgent a sh:NodeShape ;
     rdfs:comment "An instrument composed of a series of instructions that can be interpreted by or directly executed by a computer." ;
     sh:closed true ;
     sh:ignoredProperties ( rdf:type ) ;
-    sh:property [ sh:class adms:Identifier ;
-            sh:description "A slot to provide a secondary identifier for a Software." ;
+    sh:property [ sh:class <schema:DefinedTerm> ;
+            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 9 ;
+            sh:path rdf:type ],
+        [ sh:class <qudt:Quantity> ;
+            sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
             sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 3 ;
-            sh:path adms:identifier ],
+            sh:order 5 ;
+            sh:path dct:relation ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path dct:relation ],
         [ sh:description "A slot to provide an URI for an entity within this schema." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
@@ -1256,46 +1267,35 @@ prov:SoftwareAgent a sh:NodeShape ;
             sh:description "The slot to provide the AgenticEntity of which theAgenticEntity is a part." ;
             sh:nodeKind sh:IRI ;
             sh:order 7 ;
-            sh:path dcterms:isPartOf ],
-        [ sh:class <qudt:Quantity> ;
-            sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 5 ;
-            sh:path dcterms:relation ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 9 ;
-            sh:path rdf:type ],
+            sh:path dct:isPartOf ],
         [ sh:class <schema:DefinedTerm> ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 8 ;
-            sh:path dcterms:type ],
-        [ sh:datatype xsd:string ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:Literal ;
-            sh:order 2 ;
-            sh:path dcterms:description ],
+            sh:path dct:type ],
+        [ sh:class adms:Identifier ;
+            sh:description "A slot to provide a secondary identifier for a Software." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path adms:identifier ],
         [ sh:class prov:SoftwareAgent ;
             sh:description "The slot to specify parts of a Software that are themselves Software." ;
             sh:nodeKind sh:IRI ;
             sh:order 6 ;
-            sh:path dcterms:hasPart ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 4 ;
-            sh:path dcterms:relation ],
+            sh:path dct:hasPart ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 1 ;
-            sh:path dcterms:title ] ;
+            sh:path dct:title ],
+        [ sh:datatype xsd:string ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dct:description ] ;
     sh:targetClass prov:SoftwareAgent .
 
 :HealthAgent_Shape a sh:NodeShape ;
@@ -1317,18 +1317,18 @@ prov:SoftwareAgent a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 1 ;
-            sh:path dcterms:title ],
+            sh:path dct:title ],
+        [ sh:description "A slot to provide an URI for an entity within this schema." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 0 ;
+            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 2 ;
-            sh:path dcterms:description ],
-        [ sh:description "A slot to provide an URI for an entity within this schema." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 0 ;
-            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ] ;
+            sh:path dct:description ] ;
     sh:targetClass <rdfs:Resource> .
 
 default1:IANARestriction a sh:NodeShape ;
@@ -1361,26 +1361,26 @@ prov:Location a sh:NodeShape ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:order 0 ;
-            sh:path dcterms:title ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 3 ;
-            sh:path rdf:type ],
+            sh:order 1 ;
+            sh:path dct:description ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:description ],
+            sh:order 0 ;
+            sh:path dct:title ],
         [ sh:class <schema:DefinedTerm> ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 2 ;
-            sh:path dcterms:type ] ;
+            sh:path dct:type ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 3 ;
+            sh:path rdf:type ] ;
     sh:targetClass prov:Location .
 
 prov:Plan a sh:NodeShape ;
@@ -1392,13 +1392,7 @@ prov:Plan a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 1 ;
-            sh:path dcterms:description ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 2 ;
-            sh:path dcterms:type ],
+            sh:path dct:description ],
         [ sh:class <schema:DefinedTerm> ;
             sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
             sh:maxCount 1 ;
@@ -1410,7 +1404,13 @@ prov:Plan a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 0 ;
-            sh:path dcterms:title ] ;
+            sh:path dct:title ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 2 ;
+            sh:path dct:type ] ;
     sh:targetClass prov:Plan .
 
 adms:Identifier a sh:NodeShape ;
@@ -1429,13 +1429,13 @@ adms:Identifier a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 2 ;
-            sh:path dcterms:description ],
+            sh:path dct:description ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 1 ;
-            sh:path dcterms:title ] ;
+            sh:path dct:title ] ;
     sh:targetClass adms:Identifier .
 
 prov:Agent a sh:NodeShape ;
@@ -1444,108 +1444,108 @@ prov:Agent a sh:NodeShape ;
     sh:closed true ;
     sh:ignoredProperties ( rdf:type ),
         ( rdf:type ) ;
-    sh:property [ sh:class adms:Identifier ;
-            sh:description "A slot to provide a secondary identifier for an Instrument." ;
+    sh:property [ sh:class <qudt:Quantity> ;
+            sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
             sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 3 ;
-            sh:path adms:identifier ],
+            sh:order 5 ;
+            sh:path dct:relation ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path dct:relation ],
         [ sh:class <qudt:Quantity> ;
             sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 5 ;
-            sh:path dcterms:relation ],
-        [ sh:datatype xsd:string ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:title ],
-        [ sh:class prov:Agent ;
-            sh:description "The slot to provide the AgenticEntity of which theAgenticEntity is a part." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 7 ;
-            sh:path dcterms:isPartOf ],
-        [ sh:class prov:Agent ;
-            sh:description "The slot to specify parts of an AgenticEntity that are themselves AgenticEntities." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 6 ;
-            sh:path dcterms:hasPart ],
-        [ sh:class adms:Identifier ;
-            sh:description "A slot to provide a secondary identifier for a Device." ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 3 ;
-            sh:path adms:identifier ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 8 ;
-            sh:path dcterms:type ],
+            sh:path dct:relation ],
         [ sh:description "A slot to provide an URI for an entity within this schema." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 0 ;
             sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path dct:relation ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:title ],
+            sh:order 2 ;
+            sh:path dct:description ],
+        [ sh:class adms:Identifier ;
+            sh:description "A slot to provide a secondary identifier for a Device." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path adms:identifier ],
         [ sh:class prov:Agent ;
-            sh:description "The slot to specify parts of a Device that are themselves Devices." ;
+            sh:description "The slot to provide the AgenticEntity of which theAgenticEntity is a part." ;
             sh:nodeKind sh:IRI ;
-            sh:order 6 ;
-            sh:path dcterms:hasPart ],
+            sh:order 7 ;
+            sh:path dct:isPartOf ],
+        [ sh:datatype xsd:string ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dct:description ],
+        [ sh:class prov:Agent ;
+            sh:description "The slot to provide the AgenticEntity of which theAgenticEntity is a part." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 7 ;
+            sh:path dct:isPartOf ],
         [ sh:class <schema:DefinedTerm> ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 8 ;
-            sh:path dcterms:type ],
-        [ sh:datatype xsd:string ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:Literal ;
-            sh:order 2 ;
-            sh:path dcterms:description ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 4 ;
-            sh:path dcterms:relation ],
+            sh:path dct:type ],
         [ sh:class prov:Agent ;
-            sh:description "The slot to provide the AgenticEntity of which theAgenticEntity is a part." ;
+            sh:description "The slot to specify parts of an AgenticEntity that are themselves AgenticEntities." ;
             sh:nodeKind sh:IRI ;
-            sh:order 7 ;
-            sh:path dcterms:isPartOf ],
+            sh:order 6 ;
+            sh:path dct:hasPart ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:order 2 ;
-            sh:path dcterms:description ],
+            sh:order 1 ;
+            sh:path dct:title ],
+        [ sh:datatype xsd:string ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dct:title ],
         [ sh:class <schema:DefinedTerm> ;
             sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 9 ;
             sh:path rdf:type ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 8 ;
+            sh:path dct:type ],
         [ sh:description "A slot to provide an URI for an entity within this schema." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 0 ;
             sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+        [ sh:class adms:Identifier ;
+            sh:description "A slot to provide a secondary identifier for an Instrument." ;
             sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 4 ;
-            sh:path dcterms:relation ],
-        [ sh:class <qudt:Quantity> ;
-            sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 5 ;
-            sh:path dcterms:relation ],
+            sh:order 3 ;
+            sh:path adms:identifier ],
+        [ sh:class prov:Agent ;
+            sh:description "The slot to specify parts of a Device that are themselves Devices." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 6 ;
+            sh:path dct:hasPart ],
         [ sh:class <schema:DefinedTerm> ;
             sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
             sh:maxCount 1 ;
@@ -1558,31 +1558,19 @@ prov:Agent a sh:NodeShape ;
     rdfs:comment "A quantifiable piece of information that is attributed to an Entity, Activity or AgenticEntity." ;
     sh:closed true ;
     sh:ignoredProperties ( rdf:type ) ;
-    sh:property [ sh:datatype xsd:string ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:description ],
-        [ sh:class <schema:DefinedTerm> ;
+    sh:property [ sh:class <schema:DefinedTerm> ;
             sh:description "The type of quality that is quantifiable according to the QUDT ontology." ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 3 ;
             sh:path <qudt:hasQuantityKind> ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 6 ;
-            sh:path rdf:type ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
-            sh:order 0 ;
-            sh:path dcterms:title ],
+            sh:order 1 ;
+            sh:path dct:description ],
         [ sh:datatype xsd:float ;
             sh:description "The slot to provide the literal value of the QuantitativeAttribute." ;
             sh:maxCount 1 ;
@@ -1591,16 +1579,28 @@ prov:Agent a sh:NodeShape ;
             sh:order 2 ;
             sh:path prov:value ],
         [ sh:class <schema:DefinedTerm> ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
-            sh:order 5 ;
-            sh:path dcterms:type ],
+            sh:order 6 ;
+            sh:path rdf:type ],
         [ sh:class <schema:DefinedTerm> ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 4 ;
-            sh:path <qudt:unit> ] ;
+            sh:path <qudt:unit> ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 5 ;
+            sh:path dct:type ],
+        [ sh:datatype xsd:string ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dct:title ] ;
     sh:targetClass <qudt:Quantity> .
 
 prov:Activity a sh:NodeShape ;
@@ -1611,318 +1611,154 @@ prov:Activity a sh:NodeShape ;
 Can't be done by narrowing HealthDataset.was_generated_by's range directly onto this class from either file: HealthDataset lives in the generated healthdcat_ap_non_public.yaml, which doesn't import this file (this file imports it, not the reverse, so it can't see Association/qualified_association), and this file can't reopen HealthDataset's own already-imported slot_usage either (confirmed elsewhere this session: reopening an imported class throws "Conflicting URIs"). Used directly instead, by constructing real instances of this class in place of plain DataGeneratingActivity ones -- isinstance-compatible since it's a real subclass, so LinkML's own inlined-list construction (_normalize_inlined_as_list) accepts an already-built instance as-is without needing to touch was_generated_by's declared range at all. See tests/test_shacl_validation.py for the real instance.""",
         "See [DCAT-AP specs:Activity](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Activity)" ;
     sh:closed true ;
-    sh:ignoredProperties ( rdf:type prov:qualifiedAssociation ),
+    sh:ignoredProperties ( rdf:type prov:qualifiedAssociation prov:atLocation ),
         ( rdf:type ),
-        ( rdf:type prov:qualifiedAssociation prov:atLocation ),
         ( rdf:type ),
+        ( rdf:type prov:qualifiedAssociation ),
         ( rdf:type ) ;
-    sh:property [ sh:class <schema:DefinedTerm> ;
-            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 17 ;
-            sh:path rdf:type ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 13 ;
-            sh:path dcterms:relation ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide an Activity of which the Activity is a part." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 11 ;
-            sh:path dcterms:isPartOf ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide an Activity of which the Activity is a part." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 15 ;
-            sh:path dcterms:isPartOf ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 9 ;
-            sh:path dcterms:relation ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to specify the Entity that was used as an input of an Activity that is to be changed, consumed or transformed." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 5 ;
-            sh:path prov:used ],
-        [ sh:class prov:Plan ;
-            sh:description "The slot to specify the Plan (i.e. directive information or procedure) that was realized by an Activity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 2 ;
-            sh:path prov:used ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a title for the Activity." ;
-            sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:title ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide a previous Activity that informed the Activity by being causally via a shared participant." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 11 ;
-            sh:path prov:wasInformedBy ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to specify the Entity that was used as an input of an Activity that is to be changed, consumed or transformed." ;
+    sh:property [ sh:class prov:Entity ;
+            sh:description "The slot to specify the Entity that was generated as an output of an Activity." ;
             sh:nodeKind sh:IRI ;
             sh:order 10 ;
-            sh:path prov:used ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide an Activity of which the Activity is a part." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 16 ;
-            sh:path dcterms:isPartOf ],
-        [ sh:class prov:Agent ;
-            sh:description "The slot to specify the AgenticEntity that played a certain part in carrying out the Activity, either via having a specific role, function or disposition that was realized in the Activity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 13 ;
-            sh:path prov:wasAssociatedWith ],
+            sh:path prov:generated ],
         [ sh:class <schema:DefinedTerm> ;
             sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 18 ;
             sh:path rdf:type ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 17 ;
-            sh:path dcterms:type ],
-        [ sh:class prov:Agent ;
-            sh:description "The slot to specify the AgenticEntity that played a certain part in carrying out the Activity, either via having a specific role, function or disposition that was realized in the Activity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 12 ;
-            sh:path prov:wasAssociatedWith ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 14 ;
-            sh:path dcterms:relation ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide an Activity of which the Activity is a part." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 15 ;
-            sh:path dcterms:isPartOf ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 16 ;
-            sh:path dcterms:type ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide a previous Activity that informed the Activity by being causally via a shared participant." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 7 ;
-            sh:path prov:wasInformedBy ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to specify the Entity about which the DataGeneratingActivity produced information." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 1 ;
-            sh:path prov:used ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide a previous Activity that informed the Activity by being causally via a shared participant." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 7 ;
-            sh:path prov:wasInformedBy ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to specify the Entity that was generated as an output of an Activity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 6 ;
-            sh:path prov:generated ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 12 ;
-            sh:path dcterms:type ],
-        [ sh:class adms:Identifier ;
-            sh:description "The slot to provide a secondary identifier of the Activity." ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 8 ;
-            sh:path adms:identifier ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 12 ;
-            sh:path dcterms:type ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide an Activity that is part of the Activity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 4 ;
-            sh:path dcterms:hasPart ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a title for the Activity." ;
-            sh:nodeKind sh:Literal ;
-            sh:order 6 ;
-            sh:path dcterms:title ],
         [ sh:class prov:Activity ;
             sh:description "The slot to provide an Activity of which the Activity is a part." ;
             sh:nodeKind sh:IRI ;
             sh:order 11 ;
-            sh:path dcterms:isPartOf ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a description for the Activity." ;
-            sh:nodeKind sh:Literal ;
-            sh:order 6 ;
-            sh:path dcterms:description ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide an Activity that is part of the Activity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 4 ;
-            sh:path dcterms:hasPart ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to specify the Activity about which the DataGeneratingActivity produced information." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 2 ;
-            sh:path prov:wasInformedBy ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to specify the Activity about which the DataGeneratingActivity produced information." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 1 ;
-            sh:path prov:wasInformedBy ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a description for the Activity." ;
-            sh:nodeKind sh:Literal ;
-            sh:order 7 ;
-            sh:path dcterms:description ],
-        [ sh:class adms:Identifier ;
-            sh:description "The slot to provide a secondary identifier of the Activity." ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 7 ;
-            sh:path adms:identifier ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide an Activity that is part of the Activity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 8 ;
-            sh:path dcterms:hasPart ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 9 ;
-            sh:path dcterms:relation ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 13 ;
-            sh:path rdf:type ],
-        [ sh:class adms:Identifier ;
-            sh:description "The slot to provide a secondary identifier of the Activity." ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 3 ;
-            sh:path adms:identifier ],
+            sh:path dct:isPartOf ],
         [ sh:class prov:Activity ;
             sh:description "The slot to provide a previous Activity that informed the Activity by being causally via a shared participant." ;
             sh:nodeKind sh:IRI ;
-            sh:order 12 ;
+            sh:order 11 ;
             sh:path prov:wasInformedBy ],
+        [ sh:datatype xsd:string ;
+            sh:description "The slot to provide a description for the Activity." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dct:description ],
         [ sh:class adms:Identifier ;
             sh:description "The slot to provide a secondary identifier of the Activity." ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 7 ;
             sh:path adms:identifier ],
+        [ sh:class prov:Location ;
+            sh:description "The slot to specify the Surrounding in which an Activity took place." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path prov:atLocation ],
+        [ sh:datatype xsd:string ;
+            sh:description "The slot to provide a title for the Activity." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 6 ;
+            sh:path dct:title ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 12 ;
+            sh:path dct:type ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide an Activity that is part of the Activity." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 9 ;
+            sh:path dct:hasPart ],
         [ sh:class <schema:DefinedTerm> ;
             sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 17 ;
             sh:path rdf:type ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to specify the Entity that was used as an input of an Activity that is to be changed, consumed or transformed." ;
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
+            sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
-            sh:order 9 ;
-            sh:path prov:used ],
-        [ sh:class prov:Agent ;
-            sh:description "The slot to specify the AgenticEntity that played a certain part in carrying out the Activity, either via having a specific role, function or disposition that was realized in the Activity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 12 ;
-            sh:path prov:wasAssociatedWith ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to specify the Activity about which the DataGeneratingActivity produced information." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 1 ;
-            sh:path prov:wasInformedBy ],
-        [ sh:class adms:Identifier ;
-            sh:description "A slot to provide a secondary identifier of the EvaluatedActivity." ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 3 ;
-            sh:path adms:identifier ],
+            sh:order 17 ;
+            sh:path rdf:type ],
         [ sh:class prov:Entity ;
             sh:description "A slot to provide the data that was analysed by the DataAnalysis." ;
             sh:nodeKind sh:IRI ;
             sh:order 0 ;
             sh:path prov:used ],
-        [ sh:class prov:Location ;
-            sh:description "The slot to specify the Surrounding in which an Activity took place." ;
-            sh:maxCount 1 ;
+        [ sh:class <qudt:Quantity> ;
+            sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
             sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 14 ;
+            sh:path dct:relation ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 17 ;
+            sh:path dct:type ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 13 ;
+            sh:path dct:relation ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide an Activity that is part of the Activity." ;
+            sh:nodeKind sh:IRI ;
             sh:order 4 ;
-            sh:path prov:atLocation ],
+            sh:path dct:hasPart ],
         [ sh:class prov:Plan ;
             sh:description "The slot to specify the Plan (i.e. directive information or procedure) that was realized by an Activity." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 3 ;
+            sh:order 2 ;
             sh:path prov:used ],
         [ sh:class <qudt:Quantity> ;
             sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
             sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 10 ;
+            sh:path dct:relation ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide an Activity of which the Activity is a part." ;
+            sh:nodeKind sh:IRI ;
             sh:order 15 ;
-            sh:path dcterms:relation ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a title for the Activity." ;
-            sh:nodeKind sh:Literal ;
-            sh:order 5 ;
-            sh:path dcterms:title ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a description for the Activity." ;
-            sh:nodeKind sh:Literal ;
-            sh:order 2 ;
-            sh:path dcterms:description ],
-        [ sh:class prov:Agent ;
-            sh:description "The slot to specify the AgenticEntity that played a certain part in carrying out the Activity, either via having a specific role, function or disposition that was realized in the Activity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 8 ;
-            sh:path prov:wasAssociatedWith ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide a previous Activity that informed the Activity by being causally via a shared participant." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 11 ;
-            sh:path prov:wasInformedBy ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide an Activity that is part of the Activity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 8 ;
-            sh:path dcterms:hasPart ],
+            sh:path dct:isPartOf ],
         [ sh:class prov:Entity ;
             sh:description "The slot to specify the Entity that was generated as an output of an Activity." ;
             sh:nodeKind sh:IRI ;
             sh:order 6 ;
             sh:path prov:generated ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a description for the Activity." ;
-            sh:nodeKind sh:Literal ;
-            sh:order 6 ;
-            sh:path dcterms:description ],
-        [ sh:class prov:Location ;
-            sh:description "The slot to specify the Surrounding in which an Activity took place." ;
+        [ sh:class prov:Plan ;
+            sh:description "The slot to specify the Plan (i.e. directive information or procedure) that was realized by an Activity." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 3 ;
-            sh:path prov:atLocation ],
-        [ sh:description "A slot to provide an URI for an entity within this schema." ;
-            sh:maxCount 1 ;
+            sh:path prov:used ],
+        [ sh:class <qudt:Quantity> ;
+            sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 10 ;
+            sh:path dct:relation ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to specify the Entity that was used as an input of an Activity that is to be changed, consumed or transformed." ;
             sh:nodeKind sh:IRI ;
-            sh:order 5 ;
-            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a description for the Activity." ;
-            sh:nodeKind sh:Literal ;
-            sh:order 2 ;
-            sh:path dcterms:description ],
+            sh:order 10 ;
+            sh:path prov:used ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide a previous Activity that informed the Activity by being causally via a shared participant." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 7 ;
+            sh:path prov:wasInformedBy ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to specify the Entity that was generated as an output of an Activity." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 6 ;
+            sh:path prov:generated ],
+        [ sh:class adms:Identifier ;
+            sh:description "The slot to provide a secondary identifier of the Activity." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path adms:identifier ],
         [ sh:class prov:Agent ;
             sh:description "The slot to specify the AgenticEntity that played a certain part in carrying out the Activity, either via having a specific role, function or disposition that was realized in the Activity." ;
             sh:nodeKind sh:IRI ;
@@ -1931,122 +1767,286 @@ Can't be done by narrowing HealthDataset.was_generated_by's range directly onto 
         [ sh:class <qudt:Quantity> ;
             sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
             sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 10 ;
-            sh:path dcterms:relation ],
-        [ sh:class prov:Association ;
-            sh:description "The qualified form of carried_out_by/prov:wasAssociatedWith. Ready to use, not yet used by anything in this repo: reference this slot from whichever Activity-side class the specialization repo defines (its own is_a: DataGeneratingActivity class, the way HealthDataset already narrows qualified_attribution to DatasetAttribution here) and its range is already correctly set -- no further schema work needed there just to make the mechanism usable." ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 0 ;
-            sh:path prov:qualifiedAssociation ],
-        [ sh:class prov:Plan ;
-            sh:description "The slot to specify the Plan (i.e. directive information or procedure) that was realized by an Activity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 2 ;
-            sh:path prov:used ],
+            sh:order 15 ;
+            sh:path dct:relation ],
         [ sh:class prov:Entity ;
-            sh:description "The slot to specify the Entity about which the DataGeneratingActivity produced information." ;
+            sh:description "The slot to specify the Entity that was used as an input of an Activity that is to be changed, consumed or transformed." ;
             sh:nodeKind sh:IRI ;
-            sh:order 0 ;
+            sh:order 9 ;
             sh:path prov:used ],
-        [ sh:class <qudt:Quantity> ;
-            sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 16 ;
+            sh:path dct:type ],
+        [ sh:class adms:Identifier ;
+            sh:description "A slot to provide a secondary identifier of the EvaluatedActivity." ;
             sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 14 ;
-            sh:path dcterms:relation ],
+            sh:order 3 ;
+            sh:path adms:identifier ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide an Activity of which the Activity is a part." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 15 ;
+            sh:path dct:isPartOf ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 12 ;
+            sh:path dct:type ],
+        [ sh:class prov:Agent ;
+            sh:description "The slot to specify the AgenticEntity that played a certain part in carrying out the Activity, either via having a specific role, function or disposition that was realized in the Activity." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 12 ;
+            sh:path prov:wasAssociatedWith ],
         [ sh:description "A slot to provide an URI for an entity within this schema." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 4 ;
             sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to specify the Activity about which the DataGeneratingActivity produced information." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 1 ;
+            sh:path prov:wasInformedBy ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to specify the Activity about which the DataGeneratingActivity produced information." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 2 ;
+            sh:path prov:wasInformedBy ],
         [ sh:class prov:Entity ;
             sh:description "The slot to specify the Entity that was used as an input of an Activity that is to be changed, consumed or transformed." ;
             sh:nodeKind sh:IRI ;
             sh:order 5 ;
             sh:path prov:used ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide an Activity that is part of the Activity." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 4 ;
+            sh:path dct:hasPart ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide a previous Activity that informed the Activity by being causally via a shared participant." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 12 ;
+            sh:path prov:wasInformedBy ],
+        [ sh:class prov:Association ;
+            sh:description "The qualified form of carried_out_by/prov:wasAssociatedWith. Ready to use, not yet used by anything in this repo: reference this slot from whichever Activity-side class the specialization repo defines (its own is_a: DataGeneratingActivity class, the way HealthDataset already narrows qualified_attribution to DatasetAttribution here) and its range is already correctly set -- no further schema work needed there just to make the mechanism usable." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path prov:qualifiedAssociation ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to specify the Entity that was generated as an output of an Activity." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 11 ;
+            sh:path prov:generated ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to specify the Entity about which the DataGeneratingActivity produced information." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 1 ;
+            sh:path prov:used ],
+        [ sh:datatype xsd:string ;
+            sh:description "The slot to provide a description for the Activity." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 6 ;
+            sh:path dct:description ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to specify the Entity about which the DataGeneratingActivity produced information." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 0 ;
+            sh:path prov:used ],
+        [ sh:datatype xsd:string ;
+            sh:description "The slot to provide a description for the Activity." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dct:description ],
+        [ sh:datatype xsd:string ;
+            sh:description "The slot to provide a description for the Activity." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 7 ;
+            sh:path dct:description ],
         [ sh:class <schema:DefinedTerm> ;
             sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 13 ;
             sh:path rdf:type ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to specify the Entity that was generated as an output of an Activity." ;
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide an Activity that is part of the Activity." ;
             sh:nodeKind sh:IRI ;
-            sh:order 11 ;
-            sh:path prov:generated ],
+            sh:order 8 ;
+            sh:path dct:hasPart ],
+        [ sh:class adms:Identifier ;
+            sh:description "The slot to provide a secondary identifier of the Activity." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 7 ;
+            sh:path adms:identifier ],
         [ sh:class prov:Entity ;
-            sh:description "The slot to specify the Entity that was generated as an output of an Activity." ;
+            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 9 ;
+            sh:path dct:relation ],
+        [ sh:class prov:Agent ;
+            sh:description "The slot to specify the AgenticEntity that played a certain part in carrying out the Activity, either via having a specific role, function or disposition that was realized in the Activity." ;
             sh:nodeKind sh:IRI ;
-            sh:order 10 ;
-            sh:path prov:generated ],
+            sh:order 12 ;
+            sh:path prov:wasAssociatedWith ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide an Activity that is part of the Activity." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 8 ;
+            sh:path dct:hasPart ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to specify the Entity that was used as an input of an Activity that is to be changed, consumed or transformed." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 9 ;
+            sh:path prov:used ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide an Activity of which the Activity is a part." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 16 ;
+            sh:path dct:isPartOf ],
         [ sh:class <qudt:Quantity> ;
             sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
             sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 10 ;
-            sh:path dcterms:relation ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to specify the Entity that was generated as an output of an Activity." ;
+            sh:order 14 ;
+            sh:path dct:relation ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide a previous Activity that informed the Activity by being causally via a shared participant." ;
             sh:nodeKind sh:IRI ;
-            sh:order 10 ;
-            sh:path prov:generated ],
-        [ sh:description "A slot to provide an URI for an entity within this schema." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 0 ;
-            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
+            sh:order 7 ;
+            sh:path prov:wasInformedBy ],
         [ sh:class prov:Location ;
             sh:description "The slot to specify the Surrounding in which an Activity took place." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 3 ;
             sh:path prov:atLocation ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a title for the Activity." ;
-            sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:title ],
+        [ sh:class prov:Location ;
+            sh:description "The slot to specify the Surrounding in which an Activity took place." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path prov:atLocation ],
+        [ sh:description "A slot to provide an URI for an entity within this schema." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 5 ;
+            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
         [ sh:description "A slot to provide an URI for an entity within this schema." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 4 ;
             sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide an Activity of which the Activity is a part." ;
             sh:nodeKind sh:IRI ;
-            sh:order 16 ;
-            sh:path dcterms:type ],
+            sh:order 11 ;
+            sh:path dct:isPartOf ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to provide a previous Activity that informed the Activity by being causally via a shared participant." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 11 ;
+            sh:path prov:wasInformedBy ],
+        [ sh:class prov:Agent ;
+            sh:description "The slot to specify the AgenticEntity that played a certain part in carrying out the Activity, either via having a specific role, function or disposition that was realized in the Activity." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 8 ;
+            sh:path prov:wasAssociatedWith ],
+        [ sh:class prov:Activity ;
+            sh:description "The slot to specify the Activity about which the DataGeneratingActivity produced information." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 1 ;
+            sh:path prov:wasInformedBy ],
         [ sh:datatype xsd:string ;
             sh:description "The slot to provide a title for the Activity." ;
             sh:nodeKind sh:Literal ;
             sh:order 5 ;
-            sh:path dcterms:title ],
+            sh:path dct:title ],
+        [ sh:datatype xsd:string ;
+            sh:description "The slot to provide a title for the Activity." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dct:title ],
         [ sh:class prov:Entity ;
-            sh:description "The slot to specify the Entity that was used as an input of an Activity that is to be changed, consumed or transformed." ;
+            sh:description "The slot to specify the Entity that was generated as an output of an Activity." ;
             sh:nodeKind sh:IRI ;
-            sh:order 9 ;
-            sh:path prov:used ],
+            sh:order 10 ;
+            sh:path prov:generated ],
         [ sh:description "A slot to provide an URI for an entity within this schema." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 0 ;
             sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
-        [ sh:class <qudt:Quantity> ;
-            sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+        [ sh:datatype xsd:string ;
+            sh:description "The slot to provide a title for the Activity." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 5 ;
+            sh:path dct:title ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 9 ;
+            sh:path dct:relation ],
+        [ sh:datatype xsd:string ;
+            sh:description "The slot to provide a title for the Activity." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dct:title ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 13 ;
+            sh:path rdf:type ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 16 ;
+            sh:path dct:type ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 14 ;
-            sh:path dcterms:relation ],
-        [ sh:class prov:Activity ;
-            sh:description "The slot to provide an Activity that is part of the Activity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 9 ;
-            sh:path dcterms:hasPart ],
+            sh:path dct:relation ],
         [ sh:class prov:Entity ;
             sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 13 ;
-            sh:path dcterms:relation ] ;
+            sh:path dct:relation ],
+        [ sh:class prov:Agent ;
+            sh:description "The slot to specify the AgenticEntity that played a certain part in carrying out the Activity, either via having a specific role, function or disposition that was realized in the Activity." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 13 ;
+            sh:path prov:wasAssociatedWith ],
+        [ sh:class adms:Identifier ;
+            sh:description "The slot to provide a secondary identifier of the Activity." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 8 ;
+            sh:path adms:identifier ],
+        [ sh:datatype xsd:string ;
+            sh:description "The slot to provide a description for the Activity." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 6 ;
+            sh:path dct:description ],
+        [ sh:description "A slot to provide an URI for an entity within this schema." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 0 ;
+            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to specify the Entity that was used as an input of an Activity that is to be changed, consumed or transformed." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 5 ;
+            sh:path prov:used ],
+        [ sh:class prov:Plan ;
+            sh:description "The slot to specify the Plan (i.e. directive information or procedure) that was realized by an Activity." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path prov:used ] ;
     sh:targetClass prov:Activity .
 
 prov:Entity a sh:NodeShape ;
@@ -2057,58 +2057,106 @@ prov:Entity a sh:NodeShape ;
     sh:closed true ;
     sh:ignoredProperties ( rdf:type ),
         ( rdf:type ),
-        ( prov:wasGeneratedBy rdf:type ),
+        ( rdf:type prov:wasGeneratedBy ),
         ( rdf:type ) ;
     sh:property [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a title for the Entity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:Literal ;
-            sh:order 0 ;
-            sh:path dcterms:title ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to specify an Entity of which the Entity is a part." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 7 ;
-            sh:path dcterms:isPartOf ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a description for the Entity." ;
+            sh:description "The slot to provide a title for the EvaluatedEntity." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 1 ;
-            sh:path dcterms:description ],
-        [ sh:description "A slot to provide an URI for an entity within this schema." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 2 ;
-            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 9 ;
-            sh:path dcterms:type ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 3 ;
-            sh:path dcterms:type ],
+            sh:path dct:title ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path dct:relation ],
         [ sh:datatype xsd:string ;
             sh:description "The slot to provide a description for the EvaluatedEntity." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 2 ;
-            sh:path dcterms:description ],
+            sh:path dct:description ],
+        [ sh:datatype xsd:string ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dct:description ],
+        [ sh:class prov:Entity ;
+            sh:description "A slot to provide a part of the Entity." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 6 ;
+            sh:path dct:hasPart ],
+        [ sh:class prov:Entity ;
+            sh:description "A slot to provide a part of the Entity." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 7 ;
+            sh:path dct:hasPart ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 8 ;
+            sh:path dct:type ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 10 ;
+            sh:path rdf:type ],
         [ sh:class <qudt:Quantity> ;
             sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 6 ;
-            sh:path dcterms:relation ],
+            sh:path dct:relation ],
+        [ sh:datatype xsd:string ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dct:title ],
+        [ sh:description "A slot to provide an URI for an entity within this schema." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 2 ;
+            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
+        [ sh:description "A slot to provide an URI for an entity within this schema." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 3 ;
+            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
+        [ sh:datatype xsd:string ;
+            sh:description "The slot to provide a description for the EvaluatedEntity." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dct:description ],
+        [ sh:class <qudt:Quantity> ;
+            sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path dct:relation ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 9 ;
+            sh:path dct:type ],
+        [ sh:class <qudt:Quantity> ;
+            sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 6 ;
+            sh:path dct:relation ],
         [ sh:class prov:Entity ;
             sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 4 ;
-            sh:path dcterms:relation ],
+            sh:path dct:relation ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to specify an Entity of which the Entity is a part." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 8 ;
+            sh:path dct:isPartOf ],
         [ sh:datatype xsd:string ;
             sh:description "The slot to provide the literal value of the QualitativeAttribute." ;
             sh:maxCount 1 ;
@@ -2116,88 +2164,6 @@ prov:Entity a sh:NodeShape ;
             sh:nodeKind sh:Literal ;
             sh:order 2 ;
             sh:path prov:value ],
-        [ sh:datatype xsd:string ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:description ],
-        [ sh:class prov:Entity ;
-            sh:description "A slot to provide a part of the Entity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 7 ;
-            sh:path dcterms:hasPart ],
-        [ sh:description "A slot to provide an URI for an entity within this schema." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 3 ;
-            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 8 ;
-            sh:path dcterms:type ],
-        [ sh:class prov:Entity ;
-            sh:description "A slot to provide a part of the Entity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 7 ;
-            sh:path dcterms:hasPart ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a title for the EvaluatedEntity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:title ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 5 ;
-            sh:path dcterms:relation ],
-        [ sh:class prov:Activity ;
-            sh:description "A slot to provide the Activity which created the EvaluatedEntity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 0 ;
-            sh:path prov:wasGeneratedBy ],
-        [ sh:class prov:Entity ;
-            sh:description "A slot to provide a part of the Entity." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 6 ;
-            sh:path dcterms:hasPart ],
-        [ sh:description "A slot to provide an URI for an entity within this schema." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 3 ;
-            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a description for the EvaluatedEntity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:Literal ;
-            sh:order 2 ;
-            sh:path dcterms:description ],
-        [ sh:class prov:Entity ;
-            sh:description "The slot to specify an Entity of which the Entity is a part." ;
-            sh:nodeKind sh:IRI ;
-            sh:order 8 ;
-            sh:path dcterms:isPartOf ],
-        [ sh:datatype xsd:string ;
-            sh:description "The slot to provide a title for the EvaluatedEntity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:Literal ;
-            sh:order 1 ;
-            sh:path dcterms:title ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 10 ;
-            sh:path rdf:type ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 9 ;
-            sh:path dcterms:type ],
         [ sh:class prov:Activity ;
             sh:description "A slot to provide the Activity which created the AnalysisSourceData." ;
             sh:nodeKind sh:IRI ;
@@ -2209,22 +2175,28 @@ prov:Entity a sh:NodeShape ;
             sh:nodeKind sh:IRI ;
             sh:order 10 ;
             sh:path rdf:type ],
+        [ sh:class prov:Activity ;
+            sh:description "A slot to provide the Activity which created the EvaluatedEntity." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 0 ;
+            sh:path prov:wasGeneratedBy ],
         [ sh:class prov:Entity ;
             sh:description "The slot to specify an Entity of which the Entity is a part." ;
             sh:nodeKind sh:IRI ;
-            sh:order 8 ;
-            sh:path dcterms:isPartOf ],
+            sh:order 7 ;
+            sh:path dct:isPartOf ],
         [ sh:class <schema:DefinedTerm> ;
             sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:IRI ;
             sh:order 9 ;
             sh:path rdf:type ],
-        [ sh:class adms:Identifier ;
-            sh:description "A slot to provide a secondary identifier of the EvaluatedEntity." ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
             sh:order 4 ;
-            sh:path adms:identifier ],
+            sh:path rdf:type ],
         [ sh:class adms:Identifier ;
             sh:description "A slot to provide a secondary identifier of the EvaluatedEntity." ;
             sh:nodeKind sh:BlankNodeOrIRI ;
@@ -2235,33 +2207,61 @@ prov:Entity a sh:NodeShape ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 3 ;
             sh:path adms:identifier ],
-        [ sh:class <qudt:Quantity> ;
-            sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
+        [ sh:description "A slot to provide an URI for an entity within this schema." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 3 ;
+            sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
+        [ sh:class adms:Identifier ;
+            sh:description "A slot to provide a secondary identifier of the EvaluatedEntity." ;
             sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 5 ;
-            sh:path dcterms:relation ],
+            sh:order 4 ;
+            sh:path adms:identifier ],
+        [ sh:class prov:Entity ;
+            sh:description "The slot to specify an Entity of which the Entity is a part." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 8 ;
+            sh:path dct:isPartOf ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 3 ;
+            sh:path dct:type ],
+        [ sh:datatype xsd:string ;
+            sh:description "The slot to provide a title for the EvaluatedEntity." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dct:title ],
+        [ sh:datatype xsd:string ;
+            sh:description "The slot to provide a description for the Entity." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dct:description ],
         [ sh:class prov:Entity ;
             sh:description "The slot to relate a qualitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
             sh:nodeKind sh:BlankNodeOrIRI ;
             sh:order 5 ;
-            sh:path dcterms:relation ],
-        [ sh:class <schema:DefinedTerm> ;
-            sh:description "The slot to specify the ontology class that is instantiated by an entity." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 4 ;
-            sh:path rdf:type ],
-        [ sh:class <qudt:Quantity> ;
-            sh:description "The slot to relate a quantitative attribute to an EvaluatedEntity, EvaluatedActivity or AgenticEntity" ;
-            sh:nodeKind sh:BlankNodeOrIRI ;
-            sh:order 6 ;
-            sh:path dcterms:relation ],
+            sh:path dct:relation ],
         [ sh:datatype xsd:string ;
-            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:description "The slot to provide a title for the Entity." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 0 ;
-            sh:path dcterms:title ] ;
+            sh:path dct:title ],
+        [ sh:class <schema:DefinedTerm> ;
+            sh:description "This slot is described in more detail within the class in which it is used." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 9 ;
+            sh:path dct:type ],
+        [ sh:class prov:Entity ;
+            sh:description "A slot to provide a part of the Entity." ;
+            sh:nodeKind sh:IRI ;
+            sh:order 7 ;
+            sh:path dct:hasPart ] ;
     sh:targetClass prov:Entity .
 
 <schema:DefinedTerm> a sh:NodeShape ;
@@ -2273,17 +2273,17 @@ prov:Entity a sh:NodeShape ;
             sh:nodeKind sh:IRI ;
             sh:order 0 ;
             sh:path <https://w3id.org/nfdi-de/dcat-ap-plus/id> ],
-        [ sh:description "The URL of the controlled vocabulary." ;
-            sh:maxCount 1 ;
-            sh:nodeKind sh:IRI ;
-            sh:order 2 ;
-            sh:path <schema:inDefinedTermSet> ],
         [ sh:datatype xsd:string ;
             sh:description "This slot is described in more detail within the class in which it is used." ;
             sh:maxCount 1 ;
             sh:nodeKind sh:Literal ;
             sh:order 1 ;
-            sh:path <schema:name> ] ;
+            sh:path <schema:name> ],
+        [ sh:description "The URL of the controlled vocabulary." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:IRI ;
+            sh:order 2 ;
+            sh:path <schema:inDefinedTermSet> ] ;
     sh:targetClass <schema:DefinedTerm> .
 
 [] sh:message "If healthdcatap:hasStructuredData is true, the dataset must include at least one healthdcatap:hasVariables." ;

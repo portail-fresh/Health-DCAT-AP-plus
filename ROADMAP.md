@@ -100,6 +100,24 @@ repeat of that forensic record.
   full misdiagnosis-then-correction narrative.
   `KNOWN_OWN_SHAPES_VIOLATIONS` is now 14 (was 30);
   `KNOWN_MERGED_SHAPES_VIOLATIONS` is now 2 (`type`, `value` — see above).
+- **The genuinely generic pieces extracted into a real, installable
+  package**: [linkml-merge-toolkit](https://github.com/portail-fresh/linkml-merge-toolkit)
+  (`post_init_shielding`'s shield-map computation, `shacl_merge`'s
+  base+profile shape-filtering logic) — first package the user has ever
+  published, done step by step: new repo, `pyproject.toml`/`LICENSE`/
+  `README`, a standalone test suite with its own minimal fixtures (zero
+  dependency on this repo), CI, then both existing repos wired to depend
+  on it via `git+https://...` (not published to PyPI — a deliberate
+  choice, see the package's own commit history) instead of reaching
+  directly into `scripts/`. `scripts/patch_post_init_shielding.py` is
+  gone entirely (replaced by the package's own `patch-post-init-shielding`
+  console script); `scripts/gen_merged_shacl.py` keeps only what's
+  genuinely project-specific (which files to load, `EXTERNAL_VOCABULARY_STUB_CLASSES`,
+  `foaf:Agent`) and imports the generic filtering logic. Regenerated
+  everything afterward and confirmed byte-for-byte equivalent output
+  (module-level diffs only: a generation timestamp, and the `xsd:` prefix
+  the previous fix added but hadn't been regenerated through yet) — the
+  extraction changed where the code lives, not what it does.
 
 ## Problems that still need fixing
 
@@ -119,8 +137,11 @@ repeat of that forensic record.
   `non-public` exists today. The port script's own README says the other
   two "should port the same way" — never actually run.
 - **The sibling-checkout dependency pattern is a real, known limitation**
-  (see "Future improvements" below) — not urgent, but it's the main thing
-  standing between "works for us" and "ready for someone else to copy."
+  for the *remaining* case (cloning `repos/healthdcat-ap` for real-shapes/
+  vocabulary testing) — see "Future improvements" below. The `scripts/`
+  half of this same problem is fixed (see "What's done" above); not
+  urgent, but the sibling-clone half is still what's standing between
+  "works for us" and "ready for someone else to copy."
 
 ## Blocked, waiting on external input
 
@@ -149,17 +170,11 @@ does, is the *current* way ResHealth-DCAT-AP depends on Health-DCAT-AP-plus
 what they should copy? Honest answer: not as-is. Almost everything fragile
 in that relationship turns out to be either a genuine upstream LinkML bug,
 or generic tooling that happens to live in the wrong repo — not something
-inherent to Health-DCAT-AP-plus itself. In order:
+inherent to Health-DCAT-AP-plus itself. In order (step 1 is done — see
+"What's done" above):
 
-1. **Extract the genuinely generic pieces into a small, real, versioned,
-   installable package** — `patch_post_init_shielding.py`'s shield-map
-   computation and `gen_merged_shacl.py`'s filtering logic
-   (`filtered_own_shapes_graph`/`excluded_target_classes`/`_blank_closure`)
-   are both schema-agnostic; neither has anything to do with health data
-   specifically. Today ResHealth-DCAT-AP reaches into Health-DCAT-AP-plus's
-   own `scripts/` directory directly, with no version pinning — the
-   highest-leverage fix here, benefiting any future specializer, not just
-   this one.
+1. ~~Extract the genuinely generic pieces into a small, real, versioned,
+   installable package.~~ **Done** — `linkml-merge-toolkit`.
 2. **Check whether LinkML's own `SchemaLoader` "Conflicting URIs" bug
    (2+-level CURIE-resolved import chains) is already a known/reported
    issue, and report it if not.** Confirmed present even with direct

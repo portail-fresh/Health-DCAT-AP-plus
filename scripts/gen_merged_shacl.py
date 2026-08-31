@@ -40,6 +40,14 @@ Distribution/Agent/Catalog, this exclusion set is stable by construction --
 it tracks what HealthDCAT-AP's real shapes (and reality's own vocabulary
 authorities) already own, not our own schema's ever-growing class list.
 
+The generic half of "drop shapes for excluded target classes" (walking a
+shape's own blank-node structure to remove it cleanly) lives in
+linkml-merge-toolkit (https://github.com/portail-fresh/linkml-merge-toolkit)
+now, not here -- it had nothing to do with health data or dcat-ap-plus.
+What stays here is genuinely project-specific: which files to load, the
+two upstream bug workarounds below, and which classes to exclude beyond
+plain sh:targetClass overlap (EXTERNAL_VOCABULARY_STUB_CLASSES, foaf:Agent).
+
 Requires the sibling HealthDCAT-AP shapes clone (see README.md).
 
 HealthDCAT-AP's own real shapes are Copyright (c) 2025 European Union,
@@ -57,6 +65,7 @@ import sys
 from pathlib import Path
 
 from linkml.generators.shaclgen import ShaclGenerator
+from linkml_merge_toolkit.shacl_merge import filtered_shapes_graph, targeted_classes
 from rdflib import Graph, Namespace, URIRef
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -152,56 +161,26 @@ def load_own_shapes_graph() -> Graph:
     return g
 
 
-def _blank_closure(g: Graph, node) -> set:
-    """All blank nodes transitively reachable from `node`, stopping at
-    non-blank nodes (named IRIs, literals) -- those are never part of
-    *this* shape's own private structure in LinkML-generated SHACL.
-    """
-    seen: set = set()
-    stack = [node]
-    while stack:
-        n = stack.pop()
-        if n in seen:
-            continue
-        seen.add(n)
-        for _p, o in g.predicate_objects(n):
-            if o.__class__.__name__ == "BNode" and o not in seen:
-                stack.append(o)
-    return seen
-
-
 def excluded_target_classes(real_graph: Graph) -> set:
     """Every class our own generated shapes should NOT independently
     target: whatever the real shapes already own (sh:targetClass), plus
     foaf:Agent (owned via sh:node, not sh:targetClass -- see this module's
-    docstring), plus the external-vocabulary-stub classes above.
+    docstring), plus the external-vocabulary-stub classes above. The
+    "whatever real shapes already own" part is generic (linkml-merge-toolkit's
+    own targeted_classes); the two additions are this schema's own
+    knowledge, not something a generic toolkit could guess -- see
+    linkml-merge-toolkit's own README for why that split exists.
     """
-    classes = {o for _, _, o in real_graph.triples((None, SH.targetClass, None))}
+    classes = targeted_classes(real_graph)
     classes.add(FOAF.Agent)
     classes.update(URIRef(c) for c in EXTERNAL_VOCABULARY_STUB_CLASSES)
     return classes
 
 
-def filtered_own_shapes_graph(own_graph: Graph, excluded: set) -> Graph:
-    to_drop_shapes = {s for s, _, cls in own_graph.triples((None, SH.targetClass, None)) if cls in excluded}
-
-    triples_to_remove = set()
-    for shape_node in to_drop_shapes:
-        triples_to_remove.update(own_graph.triples((shape_node, None, None)))
-        for bnode in _blank_closure(own_graph, shape_node):
-            triples_to_remove.update(own_graph.triples((bnode, None, None)))
-
-    filtered = Graph()
-    for t in own_graph:
-        if t not in triples_to_remove:
-            filtered.add(t)
-    return filtered
-
-
 def build_merged_shapes_graph() -> Graph:
     real = load_real_shapes_graph()
     own = load_own_shapes_graph()
-    filtered_own = filtered_own_shapes_graph(own, excluded_target_classes(real))
+    filtered_own = filtered_shapes_graph(own, excluded_target_classes(real))
     return filtered_own + real
 
 

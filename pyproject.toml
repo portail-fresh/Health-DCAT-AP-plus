@@ -34,6 +34,12 @@ dev = [
     # checks) -- against both our own generated SHACL and HealthDCAT-AP's
     # real upstream shapes directly, see docs/architecture-verification.md.
     "pyshacl>=0.30.0",
+    # The schema-agnostic half of post-init shielding (just gen-python)
+    # and SHACL-shape merge filtering (just gen-shacl, scripts/gen_merged_shacl.py)
+    # -- extracted out of this repo once ResHealth-DCAT-AP needed the same
+    # logic too. See https://github.com/portail-fresh/linkml-merge-toolkit.
+    # Not published to PyPI -- see [tool.uv.sources] below.
+    "linkml-merge-toolkit",
 ]
 
 # See https://hatch.pypa.io/latest/config/build/#file-selection for how to
@@ -88,3 +94,6 @@ extend-exclude = [
   "src/health_dcat_ap_plus/datamodel/health_dcat_ap_plus_pydantic.py",
   "src/health_dcat_ap_plus/datamodel/health_dcat_ap_plus.py",
 ]
+
+[tool.uv.sources]
+linkml-merge-toolkit = { git = "https://github.com/portail-fresh/linkml-merge-toolkit" }

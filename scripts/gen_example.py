@@ -97,7 +97,8 @@ HEADER = """\
 # not embedded here). Getting this far needed a real port-script fix
 # (scripts/port_healthdcat_ap_shacl_to_linkml.py's
 # _FORCE_NON_INLINED_ON_RECOVERED_RANGE) plus a real gap fix in
-# scripts/patch_post_init_shielding.py's own shield-map computation.
+# linkml-merge-toolkit's post_init_shielding module's own shield-map
+# computation (https://github.com/portail-fresh/linkml-merge-toolkit).
 #
 # dqv:hasQualityAnnotation's own value is now a real, correctly-typed
 # QualityCertificate object (see below), not a bare reference either --

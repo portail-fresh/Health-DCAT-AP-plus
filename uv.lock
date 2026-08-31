@@ -986,6 +986,7 @@ dependencies = [
 dev = [
     { name = "jupyter" },
     { name = "linkml" },
+    { name = "linkml-merge-toolkit" },
     { name = "mkdocs-material" },
     { name = "mkdocs-mermaid2-plugin" },
     { name = "mkdocs-pymdownx-material-extras" },
@@ -1002,6 +1003,7 @@ requires-dist = [{ name = "linkml-runtime", specifier = ">=1.9.4" }]
 dev = [
     { name = "jupyter", specifier = ">=1.0.0" },
     { name = "linkml", specifier = ">=1.9.3" },
+    { name = "linkml-merge-toolkit", git = "https://github.com/portail-fresh/linkml-merge-toolkit" },
     { name = "mkdocs-material", specifier = ">=8.2.8" },
     { name = "mkdocs-mermaid2-plugin", specifier = ">=1.1.1" },
     { name = "mkdocs-pymdownx-material-extras", specifier = ">=2.5.6" },
@@ -1613,6 +1615,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/b4/26/38e7340959cd4a87bfe5403cfcf5311d9fe2ff4382fa00e96008a1342760/linkml-1.11.1.tar.gz", hash = "sha256:2f6774e13628270cadaeecda3313db0437ecc15cd44ee35c6c2655dbe31c8524", size = 374853, upload-time = "2026-05-20T17:05:42.359Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1f/fb/3068f649cc436be915f51b2f5ac0656c83dc9bcc6d4f8940633e295042c0/linkml-1.11.1-py3-none-any.whl", hash = "sha256:d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed", size = 483751, upload-time = "2026-05-20T17:05:38.663Z" },
+]
+
+[[package]]
+name = "linkml-merge-toolkit"
+version = "0.0.0.post2.dev0+990992a"
+source = { git = "https://github.com/portail-fresh/linkml-merge-toolkit#990992a4eb974ab74a59e058ed78af7b7f938c1a" }
+dependencies = [
+    { name = "linkml-runtime" },
+    { name = "rdflib" },
 ]
 
 [[package]]

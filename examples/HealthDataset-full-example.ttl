@@ -32,7 +32,8 @@
 # not embedded here). Getting this far needed a real port-script fix
 # (scripts/port_healthdcat_ap_shacl_to_linkml.py's
 # _FORCE_NON_INLINED_ON_RECOVERED_RANGE) plus a real gap fix in
-# scripts/patch_post_init_shielding.py's own shield-map computation.
+# linkml-merge-toolkit's post_init_shielding module's own shield-map
+# computation (https://github.com/portail-fresh/linkml-merge-toolkit).
 #
 # dqv:hasQualityAnnotation's own value is now a real, correctly-typed
 # QualityCertificate object (see below), not a bare reference either --
@@ -154,14 +155,14 @@
 <https://example.org/activity/cancer-registry-collection-2024> a prov:Activity ;
     dcterms:title "Cancer registry data collection process" ;
     prov:qualifiedAssociation [ a prov:Association ;
-            prov:agent <https://orcid.org/0000-0002-1825-0097> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ],
+            prov:agent <https://ror.org/00k4n6c32> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
         [ a prov:Association ;
             prov:agent <https://ror.org/03yrm5c26> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ],
         [ a prov:Association ;
-            prov:agent <https://ror.org/00k4n6c32> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ] .
+            prov:agent <https://orcid.org/0000-0002-1825-0097> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ] .
 
 <https://example.org/activity/diagnostic-reporting-process> a prov:Activity ;
     dcterms:title "Diagnostic reporting and coding process" .

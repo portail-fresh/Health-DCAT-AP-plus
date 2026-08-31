@@ -84,9 +84,11 @@ def _build_test_dataset_graph() -> Graph:
     slot_usage) used to crash on construction, because the parent class's
     own generated __post_init__ unconditionally re-processed the
     already-correctly-narrowed value under its own, stale assumption.
-    scripts/patch_post_init_shielding.py now fixes this at the generated
-    source level, as a permanent step of `just gen-python`/`just
-    gen-project` -- see that script's own docstring for the full mechanism.
+    linkml-merge-toolkit's post_init_shielding module
+    (https://github.com/portail-fresh/linkml-merge-toolkit) now fixes this
+    at the generated source level, as a permanent step of `just
+    gen-python`/`just gen-project` -- see that package's own README for
+    the full mechanism.
     Confirmed directly: constructing HealthDataset(**data) here needs
     nothing beyond plain dataclass construction.
     """
@@ -514,9 +516,10 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
 # not a fixture-only change: port_healthdcat_ap_shacl_to_linkml.py's
 # _FORCE_NON_INLINED_ON_RECOVERED_RANGE (stop forcing eager nested
 # construction for a value that's meant to be an independent, separately-
-# published resource) and patch_post_init_shielding.py's compute_shield_map
-# gaining an inlined/inlined_as_list check it was missing entirely before
-# (range/multivalued only) -- see both scripts' own docstrings.
+# published resource) and linkml-merge-toolkit's post_init_shielding
+# module gaining an inlined/inlined_as_list check it was missing entirely
+# before (range/multivalued only) -- see the port script's own docstring
+# and linkml-merge-toolkit's own README.
 #
 # FIXED 2026-08-28: hasQualityAnnotation is gone too, the same day --
 # turned out genuinely fixable, not a permanent limitation. The earlier
