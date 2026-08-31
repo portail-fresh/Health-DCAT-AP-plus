@@ -161,6 +161,10 @@ repeat of that forensic record.
   and the design-patterns.md "three distinct node shapes" claim, which is
   empirically inaccurate (shapes get merged by `class_uri`, not kept
   distinct) — background only, not part of the issue text itself.
+- **[linkml/linkml#3933](https://github.com/linkml/linkml/issues/3933)**
+  (the `SchemaView.namespaces()` `@lru_cache` staleness finding): filed,
+  cross-link comments drafted for #3574 and PR #3575 — post those next,
+  then wait on maintainer response.
 
 ## Future improvements (the "would a third party want to copy this" pass)
 
@@ -214,11 +218,11 @@ inherent to Health-DCAT-AP-plus itself. In order (step 1 is done — see
    mention this. Reproduced standalone (three tiny synthetic schemas, zero
    network dependency, exact call-stack trace to the buggy line, plus a
    live demonstration that PR #3575's fix doesn't help) at
-   `examples/issues_for_linkml/namespaces-cache-staleness.ipynb`. **To be
-   filed as its own new LinkML issue**, cross-linked from #3574 and PR
-   #3575 rather than folded into either — see "Blocked" below once filed.
-   See `docs/architecture-verification.md`'s "A tenth finding" section for
-   the original `xsd:` story this grew out of.
+   `examples/issues_for_linkml/namespaces-cache-staleness.ipynb`. **Filed
+   as [linkml/linkml#3933](https://github.com/linkml/linkml/issues/3933)**,
+   cross-linked from #3574 and PR #3575 rather than folded into either —
+   see "Blocked" below. See `docs/architecture-verification.md`'s "A tenth
+   finding" section for the original `xsd:` story this grew out of.
 3. **Have ResHealth-DCAT-AP clone `repos/healthdcat-ap` directly**,
    instead of reading it through Health-DCAT-AP-plus's own copy — simpler
    dependency graph, and it's what any third party would naturally do.
