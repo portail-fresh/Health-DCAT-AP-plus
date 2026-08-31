@@ -163,8 +163,9 @@ repeat of that forensic record.
   distinct) — background only, not part of the issue text itself.
 - **[linkml/linkml#3933](https://github.com/linkml/linkml/issues/3933)**
   (the `SchemaView.namespaces()` `@lru_cache` staleness finding): filed,
-  cross-link comments drafted for #3574 and PR #3575 — post those next,
-  then wait on maintainer response.
+  with cross-link comments posted on both #3574 and PR #3575 explaining
+  why the PR's own fix doesn't resolve this manifestation. Waiting on
+  maintainer response on all three now.
 
 ## Future improvements (the "would a third party want to copy this" pass)
 
