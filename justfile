@@ -121,7 +121,7 @@ deploy: site
 
 # Run all tests
 [group('model development')]
-test: _test-schema _test-python _test-examples
+test: _test-iris _test-schema _test-python _test-examples
 
 # Run linting
 [group('model development')]
@@ -259,6 +259,14 @@ _update-template:
 # Update LinkML runtime and LinkML to latest versions
 _update-linkml:
   uv lock --upgrade-package linkml-runtime --upgrade-package linkml
+
+# Fail fast, with a readable message, if anything we generate carries an
+# unexpanded CURIE (a prefix an imported schema declares but the root schema
+# doesn't). Runs first on purpose: since LinkML 1.12, gen-project/gen-shacl
+# stall on exactly this defect instead of failing, so it has to be caught
+# before anything calls ShaclGenerator.serialize().
+_test-iris:
+  uv run python -m pytest tests/test_shacl_validation.py -k unexpanded_iris -q -x
 
 # Test schema generation
 _test-schema:

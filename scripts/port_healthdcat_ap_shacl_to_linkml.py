@@ -127,7 +127,9 @@ TIER_FILES = {
 PREFIXES = {
     "health_dcat_ap_plus": "https://w3id.org/portail-fresh/Health-DCAT-AP-plus/",
     "linkml": "https://w3id.org/linkml/",
-    "dcatapplus": "https://w3id.org/nfdi-de/dcat-ap-plus/",
+    # dcat-ap-plus renamed its own prefix dcatapplus -> dcatap_plus in
+    # v0.1.0rc5 (same namespace IRI); keep in step with the root schema.
+    "dcatap_plus": "https://w3id.org/nfdi-de/dcat-ap-plus/",
     "healthdcatap": "http://healthdataportal.eu/ns/health#",
     "dcterms": "http://purl.org/dc/terms/",
     "dcat": "http://www.w3.org/ns/dcat#",
@@ -166,6 +168,13 @@ PREFIXES = {
     # prefix-propagation gap. See docs/architecture-verification.md for
     # the full misdiagnosis-then-correction narrative.
     "xsd": "http://www.w3.org/2001/XMLSchema#",
+    # Same gap again, for the four prefixes dcat-ap-plus's own class/slot URIs
+    # use beyond the ones above (qudt:, schema:, rdfs:, eli:); the root
+    # schema's prefixes: block has the full story.
+    "qudt": "http://qudt.org/schema/qudt/",
+    "schema": "http://schema.org/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "eli": "http://data.europa.eu/eli/ontology#",
 }
 
 
@@ -961,7 +970,7 @@ def main() -> None:
         "prefixes": dict(PREFIXES),
         "default_prefix": "health_dcat_ap_plus",
         "default_range": "string",
-        "imports": ["linkml:types", "dcatapplus:latest/schema/dcat_ap_plus"],
+        "imports": ["linkml:types", "dcatap_plus:latest/schema/dcat_ap_plus"],
         "classes": classes,
         "slots": slots,
     }

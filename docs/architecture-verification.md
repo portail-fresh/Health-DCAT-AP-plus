@@ -23,7 +23,7 @@ does:
 
 | Rule (their docs, verbatim) | This repo |
 | --- | --- |
-| "Import the full DCAT-AP+ schema in your LinkML schema's `imports` section" | `health_dcat_ap_plus.yaml` imports `dcatapplus:latest/schema/dcat_ap_plus` (the w3id permalink, full schema) — not a cherry-picked subset. |
+| "Import the full DCAT-AP+ schema in your LinkML schema's `imports` section" | `health_dcat_ap_plus.yaml` imports `dcatap_plus:latest/schema/dcat_ap_plus` (the w3id permalink, full schema) — not a cherry-picked subset. (The label was `dcatapplus` until dcat-ap-plus v0.1.0rc5 renamed its own prefix — see the eleventh finding below.) |
 | Extend classes via `is_a` | Every ported class (`HealthDataset`, `HealthAgent`, `HealthCatalogue`, ...) is `is_a: <base class>` — the core mechanism of the whole port script, not an afterthought. |
 | "Create sub-slots using `is_a` on slots for stricter constraints" | Not yet used — see open item below. |
 | Never modify `class_uri`/`slot_uri` on imported elements | Confirmed by construction: every `slot_usage` override in the port script only ever sets `range`/`required`/`multivalued`/`values_from` — never `slot_uri`. `class_uri` on a `Health<X>` class is always the *same* URI as its base, never a modification of the base's own definition (checked in §1 Check a — one shared SHACL shape, not two). |
@@ -1307,3 +1307,110 @@ into generated Turtle" mechanism is a separate, open question (this
 project has hit it three times now: the original `dcterms:`/`dcat:`/etc.
 block, `dcatap:`, and now `xsd:`) — worth a duplicate check and a report,
 tracked in `ROADMAP.md`, not done as part of this fix.
+
+### An eleventh finding: the same prefix gap, now fatal — LinkML 1.12 meets dcat-ap-plus rc5
+
+Picked up again on 2026-10-16 after a few weeks away: LinkML 1.12.0/1.12.1
+and dcat-ap-plus v0.1.0rc5 had both been released, and `latest` — the w3id
+permalink this schema imports — now serves rc5. rc5 is semantically the same
+schema as rc4 (all 51 classes compared, none changed), but it renamed its own
+prefix `dcatapplus` → `dcatap_plus` (same namespace IRI) and dropped the
+trailing slash from its schema `id`. On LinkML 1.11.1 that would have gone
+unnoticed. On 1.12 it made `ShaclGenerator.serialize()` — and with it
+`gen-project`, `gen-shacl` and every SHACL test — never finish.
+
+**The mechanism, observed rather than inferred:**
+
+1. The prefix-propagation gap from the tenth finding
+   ([linkml/linkml#3574](https://github.com/linkml/linkml/issues/3574),
+   [#3933](https://github.com/linkml/linkml/issues/3933)): `dcatap_plus` is
+   declared by the imported schema, not by ours, so the generator emits
+   dcat-ap-plus's own `class_uri`/`slot_uri` values
+   (`dcatap_plus:ClassifierMixin`, `dcatap_plus:SupportiveEntity`,
+   `dcatap_plus:id`) as raw strings used as IRIs.
+2. 1.12 makes `serialize()` canonicalise its output (RDFC-1.0, via
+   pyoxigraph). pyoxigraph parses the graph's N-Triples dump and rejects
+   exactly those three IRIs (`Invalid IRI code point ':'`, first at line 14
+   of the dump). Controlled check: `dcatapplus:`, `dcatap-plus:`,
+   `dcatap.plus:` and `qudt:` all parse; `dcatap_plus:` alone does not — `_`
+   is not a legal URI-scheme character, so it is not an absolute IRI at all.
+3. On that `SyntaxError`, `canonicalize_rdf_graph` quietly falls back to
+   rdflib's `to_canonical_graph`, which did not finish on this graph. No
+   error, no output.
+
+(Worth recording how easy this was to get wrong: a first check of the eleven
+IRIs one by one "showed" pyoxigraph accepting all of them, because
+`pyoxigraph.parse` is lazy and the check never consumed it.)
+
+**What the gap had been doing silently.** Scanning the generated SHACL for
+IRIs without a `scheme://` found eight more unexpanded ones, under four
+prefixes that dcat-ap-plus's own URIs use and this schema had never
+redeclared: `qudt:` (`Quantity`, `hasQuantityKind`, `unit`), `schema:`
+(`DefinedTerm`, `inDefinedTermSet`, `name`), `rdfs:Resource` and
+`eli:LegalResource`. Those are syntactically legal IRIs, so nothing ever hung
+or failed — they were just wrong:
+
+- `gen_merged_shacl.py` excludes `http://schema.org/DefinedTerm` by its real
+  IRI, but our own shape targeted `schema:DefinedTerm`, so the exclusion
+  **never matched** and a shape the merge was written to drop shipped in the
+  merged file anyway. It is excluded now — the one semantic change in the
+  merged SHACL besides the IRIs themselves (old and new graphs compared
+  triple by triple, not by eye).
+- The shapes for `qudt:Quantity`, `rdfs:Resource` and `eli:LegalResource`, and
+  every `sh:class` constraint on `qudt:Quantity` / `schema:DefinedTerm` /
+  `rdfs:Resource` (11 + 34 + 1 property shapes), pointed at classes no
+  instance could ever be typed with. They are real now; no allowlist entry
+  changed (own 14, merged 2, real 0).
+- The dumped example instance typed five resources `a <rdfs:Resource>`; it now
+  says `a rdfs:Resource`.
+
+**Fixed** by renaming the prefix and the import to `dcatap_plus` (root schema
+and port script) and redeclaring the four others in both
+`health_dcat_ap_plus.yaml`'s `prefixes:` block and the port script's
+`PREFIXES` (so `healthdcat_ap_non_public.yaml` regenerates with them).
+Afterwards: no unexpanded IRIs in the generated SHACL, OWL or JSON-LD
+context, and SHACL generation takes about a second again.
+
+**Guarded**, because a repeat is cheap:
+`test_own_generated_shacl_has_no_unexpanded_iris` and
+`test_dumped_instance_rdf_has_no_unexpanded_iris` fail on any IRI without a
+`scheme://` (`urn:`/`mailto:`/`tel:` aside). They build the graph with
+`ShaclGenerator.as_graph()` rather than `serialize()`, so a regression is
+*reported* instead of hung on, and `just test` runs them first
+(`_test-iris`), before `gen-project` can hang. The test helper and
+`gen_merged_shacl.py` use `as_graph()` too — the same triples, minus a text
+round-trip and the canonicalisation. The guard was checked against the
+pre-fix schema from git: it reports exactly the 11 IRIs above, in under a
+second.
+
+**Left alone, on purpose.** The published merged YAML still carries six
+mapping CURIEs — `OBI:` ×2, `IAO:` ×2, `NCIT:`, `epos:` — whose prefixes only
+dcat-ap-plus declares. They are annotations (`exact_mappings`/
+`close_mappings`) that reach no generated SHACL, OWL, JSON-LD or Python, so
+declaring four more prefixes in three places seemed worse than the cosmetic
+gap.
+
+**A correction to an earlier diagnosis.** The `subject` entry of
+`KNOWN_OWN_SHAPES_VIOLATIONS` had been filed with the DPV/DQV class-membership
+group. It isn't one: `is_about_entity` and `is_about_activity` share the
+`slot_uri` `dcterms:subject`, so the generated `dcat:Dataset` shape carries
+paired property shapes on that one path — `sh:class prov:Entity` and
+`sh:class prov:Activity` — and no single value satisfies both. It is the
+shared-`slot_uri` sibling of the shared-`class_uri` findings above;
+StroemPhi's generalisation of
+[linkml/linkml#3931](https://github.com/linkml/linkml/issues/3931) names
+`dcterms:subject` as exactly that case. The entry stays in the allowlist; its
+comment now says why.
+
+**Upstream, checked the same day.**
+[#3931](https://github.com/linkml/linkml/issues/3931),
+[#3932](https://github.com/linkml/linkml/issues/3932),
+[#3933](https://github.com/linkml/linkml/issues/3933),
+[#3574](https://github.com/linkml/linkml/issues/3574), PR
+[#3575](https://github.com/linkml/linkml/pull/3575) and PR
+[#4116](https://github.com/linkml/linkml/pull/4116) (a fix proposal for
+#3933) are all still open, so nothing in 1.12.1 changes the two merged-shape
+violations still allowlisted. The three standalone reproductions under
+`examples/issues_for_linkml/` were re-run on 1.12.1 and show the same
+verdicts; the only differences are the generated Turtle's ordering and
+blank-node labels (now RDFC-1.0's `_:c14n0`, …).

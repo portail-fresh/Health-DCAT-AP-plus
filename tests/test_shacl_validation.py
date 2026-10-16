@@ -117,10 +117,66 @@ def _build_test_dataset_graph() -> Graph:
 
 
 def _own_generated_shapes_graph() -> Graph:
-    ttl = ShaclGenerator(str(SCHEMA_PATH)).serialize()
-    g = Graph()
-    g.parse(data=ttl, format="turtle")
-    return g
+    # as_graph(), not serialize() + re-parse: the same triples, minus a text
+    # round-trip and the RDFC-1.0 canonicalisation LinkML 1.12 added to
+    # serialize() for byte-stable output -- which stalls instead of failing
+    # when the graph holds an unexpanded CURIE (see the guard tests below).
+    return ShaclGenerator(str(SCHEMA_PATH)).as_graph()
+
+
+# ---------------------------------------------------------------------------
+# Guard: no unexpanded CURIEs in anything we generate
+# ---------------------------------------------------------------------------
+# LinkML's generators don't carry an imported schema's prefixes into their
+# output (linkml/linkml#3574, #3933), so a prefix the root schema's own
+# `prefixes:` block doesn't redeclare comes out as a raw "prefix:local"
+# string used as if it were an IRI. Before LinkML 1.12 that was silent: still
+# a parseable IRI, just a wrong one (our schema:DefinedTerm shape quietly
+# escaped gen_merged_shacl's exclusion list, which names the real
+# http://schema.org/DefinedTerm). Since 1.12 it can be loud in the worst way:
+# ShaclGenerator.serialize() canonicalises through pyoxigraph, which rejects
+# the IRI outright when the prefix label isn't a legal URI scheme
+# (dcat-ap-plus v0.1.0rc5's dcatap_plus: -- an underscore), and the rdflib
+# fallback it then drops to did not finish on this graph, so generation
+# stalls instead of failing. These tests build the graph with as_graph()
+# (no canonicalisation) so a regression is reported rather than hung on, and
+# `just test` runs them first (_test-iris), before anything calls serialize().
+_SCHEMES_WITHOUT_AUTHORITY = frozenset({"urn", "mailto", "tel"})
+
+
+def _unexpanded_iris(graph: Graph) -> list:
+    """Every IRI in `graph` that is a CURIE nobody expanded: a legitimate
+    absolute IRI here has a `scheme://` authority part (the only exceptions
+    this schema family emits are urn:/mailto:/tel: ones)."""
+    bad = set()
+    for triple in graph:
+        for term in triple:
+            if isinstance(term, URIRef):
+                iri = str(term)
+                if "://" not in iri and iri.split(":", 1)[0] not in _SCHEMES_WITHOUT_AUTHORITY:
+                    bad.add(iri)
+    return sorted(bad)
+
+
+def _assert_no_unexpanded_iris(graph: Graph, what: str) -> None:
+    bad = _unexpanded_iris(graph)
+    assert not bad, (
+        f"{what} contains {len(bad)} unexpanded CURIE(s) used as IRIs: {bad}. A prefix some imported "
+        "schema declares is missing from the root schema's own prefixes: block "
+        "(src/health_dcat_ap_plus/schema/health_dcat_ap_plus.yaml) -- LinkML does not propagate imported "
+        "prefixes into generated output. Declare each missing prefix there (and in the PREFIXES dict of "
+        "scripts/port_healthdcat_ap_shacl_to_linkml.py)."
+    )
+
+
+def test_own_generated_shacl_has_no_unexpanded_iris():
+    _assert_no_unexpanded_iris(_own_generated_shapes_graph(), "the generated SHACL")
+
+
+def test_dumped_instance_rdf_has_no_unexpanded_iris():
+    # The data side of the same gap: rdflib_dumper types instances through
+    # the same namespace table, so a missing prefix shows up as `a <rdfs:Resource>`.
+    _assert_no_unexpanded_iris(_build_test_dataset_graph(), "the dumped example instance graph")
 
 
 # Real upstream typo (confirmed via grep across every copy of these files in
@@ -414,8 +470,8 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # Same predicate-URI-collision family as relation/source/conformsTo
         # above, confirmed by checking dcat-ap-plus's own schema: hasLegalBasis
         # -> dpv:hasLegalBasis, hasPersonalData -> dpv:hasPersonalData,
-        # hasPurpose -> dpv:hasPurpose, hasQualityAnnotation ->
-        # dqv:hasQualityAnnotation, and "subject" all carry sh:class
+        # hasPurpose -> dpv:hasPurpose and hasQualityAnnotation ->
+        # dqv:hasQualityAnnotation all carry sh:class
         # constraints our port's own value (a bare term IRI, per
         # HealthDCAT-AP's real qualifiedAttribution-style usage) doesn't
         # satisfy without the real DPV/DQV ontologies loaded for
@@ -429,6 +485,18 @@ KNOWN_OWN_SHAPES_VIOLATIONS: FrozenSet[Signature] = frozenset(
         # gone now that has_quality_annotation gained inlined_as_list: true
         # (port script), constructing a real QualityCertificate object
         # instead of a bare reference. See the fixture YAML's own comment.
+        # NOT part of the DPV/DQV group above, although it sits next to it
+        # (re-diagnosed 2026-10-16 -- an earlier version of this comment
+        # wrongly lumped it in): Dataset.is_about_entity and
+        # Dataset.is_about_activity share one slot_uri, dcterms:subject, so
+        # the generated dcat:Dataset shape carries two property shapes on that
+        # single path -- sh:class prov:Entity and sh:class prov:Activity -- and
+        # no one value can be both. Confirmed by reading the generated shapes
+        # directly, not inferred. It is the shared-slot_uri sibling of the
+        # shared-class_uri findings above; StroemPhi's generalisation of
+        # linkml/linkml#3931 names dcterms:subject as exactly this case (a
+        # general predicate reused by several slots), so it stays here until
+        # ShaclGenerator emits an sh:or across the colliding slots.
         ("Violation", "ClassConstraintComponent", "subject"),
         # FIXED 2026-08-31 (this entry plus 16 more that used to follow it
         # here, and the merged-shapes `title` entry too -- 17 in total).

@@ -155,10 +155,11 @@ def load_real_shapes_graph() -> Graph:
 
 
 def load_own_shapes_graph() -> Graph:
-    ttl = ShaclGenerator(str(SCHEMA_PATH)).serialize()
-    g = Graph()
-    g.parse(data=ttl, format="turtle")
-    return g
+    # as_graph(), not serialize() + re-parse: the same triples, minus a text
+    # round-trip and the canonicalisation LinkML 1.12 added to serialize(),
+    # which stalls instead of failing on an unexpanded CURIE -- see
+    # tests/test_shacl_validation.py's guard tests.
+    return ShaclGenerator(str(SCHEMA_PATH)).as_graph()
 
 
 def excluded_target_classes(real_graph: Graph) -> set:

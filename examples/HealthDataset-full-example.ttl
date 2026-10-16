@@ -75,6 +75,7 @@
 @prefix geodcatap: <http://data.europa.eu/930/> .
 @prefix healthdcatap: <http://healthdataportal.eu/ns/health#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -155,34 +156,34 @@
 <https://example.org/activity/cancer-registry-collection-2024> a prov:Activity ;
     dcterms:title "Cancer registry data collection process" ;
     prov:qualifiedAssociation [ a prov:Association ;
-            prov:agent <https://ror.org/00k4n6c32> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
-        [ a prov:Association ;
             prov:agent <https://ror.org/03yrm5c26> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ],
         [ a prov:Association ;
             prov:agent <https://orcid.org/0000-0002-1825-0097> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ] .
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ],
+        [ a prov:Association ;
+            prov:agent <https://ror.org/00k4n6c32> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ] .
 
 <https://example.org/activity/diagnostic-reporting-process> a prov:Activity ;
     dcterms:title "Diagnostic reporting and coding process" .
 
-<https://example.org/dataset/cancer-mortality-2024> a <rdfs:Resource> .
+<https://example.org/dataset/cancer-mortality-2024> a rdfs:Resource .
 
-<https://example.org/dataset/cancer-registry-2024/analytics> a <rdfs:Resource> .
+<https://example.org/dataset/cancer-registry-2024/analytics> a rdfs:Resource .
 
-<https://example.org/dataset/cancer-registry-2024/download> a <rdfs:Resource> .
+<https://example.org/dataset/cancer-registry-2024/download> a rdfs:Resource .
 
 <https://example.org/dataset/cancer-registry-2024/landing> a foaf:Document .
 
-<https://example.org/dataset/cancer-registry-2024/sample> a <rdfs:Resource> .
+<https://example.org/dataset/cancer-registry-2024/sample> a rdfs:Resource .
 
 <https://example.org/doc/methodology> a foaf:Document .
 
 <https://example.org/population/regional-cancer-patients-2024> a prov:Entity ;
     dcterms:title "Regional cancer patient population, 2024 cohort" .
 
-<https://example.org/publications/cancer-registry-report-2024> a <rdfs:Resource> .
+<https://example.org/publications/cancer-registry-report-2024> a rdfs:Resource .
 
 <https://example.org/quality-certificate/iso-27001> a dqv:QualityCertificate .
 

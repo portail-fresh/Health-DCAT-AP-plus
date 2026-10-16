@@ -11,9 +11,14 @@ see_also:
 prefixes:
   health_dcat_ap_plus: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/
   linkml: https://w3id.org/linkml/
-  dcatapplus: https://w3id.org/nfdi-de/dcat-ap-plus/
+  # dcat-ap-plus renamed its own prefix dcatapplus -> dcatap_plus in v0.1.0rc5
+  # (same namespace IRI). Its class/slot URIs carry that label (e.g.
+  # dcatap_plus:ClassifierMixin), so it has to be declared here under exactly
+  # that name -- see the comment on the next prefix group for why -- and the
+  # import below goes through the same label.
+  dcatap_plus: https://w3id.org/nfdi-de/dcat-ap-plus/
   healthdcatap: http://healthdataportal.eu/ns/health#
-  # The prefixes below are already declared in dcatapplus's/healthdcat_ap_non_public's
+  # The prefixes below are already declared in dcatap_plus's/healthdcat_ap_non_public's
   # own prefixes: block, but LinkML's gen-shacl/gen-owl don't propagate an
   # imported schema's prefixes into the generated Turtle -- confirmed on
   # HealthStudy-DCAT-AP by testing, not assumed. Without these, every
@@ -56,12 +61,29 @@ prefixes:
   # -- see docs/architecture-verification.md for the full
   # misdiagnosis-then-correction narrative.
   xsd: http://www.w3.org/2001/XMLSchema#
+  # Four more of the same, found by scanning the generated SHACL for IRIs
+  # that are still unexpanded CURIEs: dcat-ap-plus's own class/slot URIs use
+  # qudt: (Quantity, hasQuantityKind, unit), schema: (DefinedTerm,
+  # inDefinedTermSet, name), rdfs: (Resource) and eli: (LegalResource), and
+  # without a binding here each rendered as a bogus IRI like "qudt:Quantity"
+  # in the shapes -- silently wrong, but still parseable, so nothing flagged
+  # it. The dcatap_plus rename above is what makes the gap loud: since
+  # LinkML 1.12, ShaclGenerator canonicalises its output with pyoxigraph,
+  # which rejects "dcatap_plus:ClassifierMixin" (an underscore is not legal
+  # in a URI scheme) and falls back to rdflib's canonicaliser, which did not
+  # finish on this graph -- generation stalls instead of failing.
+  # tests/test_shacl_validation.py now fails on any unexpanded IRI in the
+  # generated shapes, so the next upstream prefix can't slip through.
+  qudt: http://qudt.org/schema/qudt/
+  schema: http://schema.org/
+  rdfs: http://www.w3.org/2000/01/rdf-schema#
+  eli: http://data.europa.eu/eli/ontology#
 default_prefix: health_dcat_ap_plus
 default_range: string
 
 imports:
   - linkml:types
-  - dcatapplus:latest/schema/dcat_ap_plus
+  - dcatap_plus:latest/schema/dcat_ap_plus
   # Mechanically ported from HealthDCAT-AP's SHACL shapes by
   # scripts/port_healthdcat_ap_shacl_to_linkml.py -- see that file for the
   # method (same targetClass/sh:property-walking approach NFDI4Chem used for

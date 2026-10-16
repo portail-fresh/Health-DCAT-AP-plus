@@ -29,7 +29,7 @@ from pydantic import (
 )
 
 
-metamodel_version = "1.11.0"
+metamodel_version = "1.12.0"
 version = "None"
 
 
@@ -73,7 +73,7 @@ linkml_meta = LinkMLMeta({'default_prefix': 'health_dcat_ap_plus',
                     '(DataGeneratingActivity, Entity, AgenticEntity, Plan).',
      'id': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus',
      'imports': ['linkml:types',
-                 'dcatapplus:latest/schema/dcat_ap_plus',
+                 'dcatap_plus:latest/schema/dcat_ap_plus',
                  'healthdcat_ap_non_public'],
      'license': 'MIT',
      'name': 'Health-DCAT-AP-plus',
@@ -87,14 +87,16 @@ linkml_meta = LinkMLMeta({'default_prefix': 'health_dcat_ap_plus',
                            'prefix_reference': 'http://www.w3.org/ns/dcat#'},
                   'dcatap': {'prefix_prefix': 'dcatap',
                              'prefix_reference': 'http://data.europa.eu/r5r/'},
-                  'dcatapplus': {'prefix_prefix': 'dcatapplus',
-                                 'prefix_reference': 'https://w3id.org/nfdi-de/dcat-ap-plus/'},
+                  'dcatap_plus': {'prefix_prefix': 'dcatap_plus',
+                                  'prefix_reference': 'https://w3id.org/nfdi-de/dcat-ap-plus/'},
                   'dcterms': {'prefix_prefix': 'dcterms',
                               'prefix_reference': 'http://purl.org/dc/terms/'},
                   'dpv': {'prefix_prefix': 'dpv',
                           'prefix_reference': 'https://w3id.org/dpv#'},
                   'dqv': {'prefix_prefix': 'dqv',
                           'prefix_reference': 'http://www.w3.org/ns/dqv#'},
+                  'eli': {'prefix_prefix': 'eli',
+                          'prefix_reference': 'http://data.europa.eu/eli/ontology#'},
                   'foaf': {'prefix_prefix': 'foaf',
                            'prefix_reference': 'http://xmlns.com/foaf/0.1/'},
                   'geodcatap': {'prefix_prefix': 'geodcatap',
@@ -111,8 +113,14 @@ linkml_meta = LinkMLMeta({'default_prefix': 'health_dcat_ap_plus',
                            'prefix_reference': 'http://www.w3.org/ns/odrl/2/'},
                   'prov': {'prefix_prefix': 'prov',
                            'prefix_reference': 'http://www.w3.org/ns/prov#'},
+                  'qudt': {'prefix_prefix': 'qudt',
+                           'prefix_reference': 'http://qudt.org/schema/qudt/'},
                   'rdf': {'prefix_prefix': 'rdf',
                           'prefix_reference': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'},
+                  'rdfs': {'prefix_prefix': 'rdfs',
+                           'prefix_reference': 'http://www.w3.org/2000/01/rdf-schema#'},
+                  'schema': {'prefix_prefix': 'schema',
+                             'prefix_reference': 'http://schema.org/'},
                   'skos': {'prefix_prefix': 'skos',
                            'prefix_reference': 'http://www.w3.org/2004/02/skos/core#'},
                   'spdx': {'prefix_prefix': 'spdx',
@@ -124,7 +132,7 @@ linkml_meta = LinkMLMeta({'default_prefix': 'health_dcat_ap_plus',
                   'xsd': {'prefix_prefix': 'xsd',
                           'prefix_reference': 'http://www.w3.org/2001/XMLSchema#'}},
      'see_also': ['https://portail-fresh.github.io/Health-DCAT-AP-plus'],
-     'source_file': 'src/health_dcat_ap_plus/schema/health_dcat_ap_plus.yaml',
+     'source_file': 'src\\health_dcat_ap_plus\\schema\\health_dcat_ap_plus.yaml',
      'title': 'Health-DCAT-AP-plus'} )
 
 class DatasetThemes(str, Enum):
@@ -220,7 +228,7 @@ class Agent(ConfiguredBaseModel):
     See [DCAT-AP specs:Agent](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Agent)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'foaf:Agent',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'name': {'description': 'A name of the agent.',
                                  'inlined_as_list': True,
                                  'multivalued': True,
@@ -248,7 +256,7 @@ class Catalogue(ConfiguredBaseModel):
     See [DCAT-AP specs:Catalogue](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Catalogue)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Catalog',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'applicable_legislation': {'description': 'The legislation '
                                                                   'that mandates the '
                                                                   'creation or '
@@ -542,7 +550,7 @@ class CatalogueRecord(ConfiguredBaseModel):
     See [DCAT-AP specs:CatalogueRecord](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#CatalogueRecord)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:CatalogRecord',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'application_profile': {'description': 'An Application Profile '
                                                                'that the Catalogued '
                                                                'Resource&#39;s '
@@ -749,7 +757,7 @@ class Checksum(ConfiguredBaseModel):
     See [DCAT-AP specs:Checksum](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Checksum)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'spdx:Checksum',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'algorithm': {'description': 'The algorithm used to produce '
                                                      'the subject Checksum.',
                                       'inlined_as_list': True,
@@ -778,7 +786,7 @@ class ClassifierMixin(ConfiguredBaseModel):
     A mixin with which an entity of this schema can be classified via an additional rdf:type or dcterms:type assertion.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'abstract': True,
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'mixin': True,
          'slot_usage': {'type': {'inlined': True,
@@ -798,7 +806,7 @@ class Activity(ClassifierMixin):
     See [DCAT-AP specs:Activity](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Activity)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Activity',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'mixins': ['ClassifierMixin'],
          'notes': ['The specified properties (slots) of this class are part of our '
@@ -999,7 +1007,7 @@ class AgenticEntity(ClassifierMixin):
     An entity that is somehow responsible for an Activity to take place.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Agent',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'mixins': ['ClassifierMixin'],
          'slot_usage': {'has_part': {'description': 'The slot to specify parts of an '
@@ -1150,7 +1158,7 @@ class DataGeneratingActivity(Activity):
     An Activity (process) that has the objective to produce information (in form of a dataset) about another Activity or Entity.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Activity',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core']})
 
     evaluated_entity: Optional[list[EvaluatedEntity]] = Field(default=None, description="""The slot to specify the Entity about which the DataGeneratingActivity produced information.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataGeneratingActivity'],
@@ -1320,7 +1328,7 @@ class DataAnalysis(DataGeneratingActivity):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Activity',
          'close_mappings': ['NCIT:C25391'],
          'exact_mappings': ['OBI:0200000'],
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'slot_usage': {'evaluated_entity': {'description': 'A slot to provide the '
                                                             'data that was analysed by '
@@ -1495,7 +1503,7 @@ class DataService(ConfiguredBaseModel):
     See [DCAT-AP specs:DataService](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#DataService)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:DataService',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'access_rights': {'description': 'Information regarding access '
                                                          'or restrictions based on '
                                                          'privacy, security, or other '
@@ -1763,7 +1771,7 @@ class Dataset(ConfiguredBaseModel):
     A collection of data, published or curated by a single agent, and available for access or download in one or more representations.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Dataset',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'slot_usage': {'access_rights': {'description': 'Information that indicates '
                                                          'whether the Dataset is '
@@ -2258,7 +2266,7 @@ class AnalysisDataset(Dataset):
     A Dataset that was generated by an analysis of some previously generated data. For example, a dataset that contains the data of an assignment of a chemical structure to a sample based on the spectral data obtained from the sample is an AnalyticalDataset.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Dataset',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'slot_usage': {'was_generated_by': {'inlined_as_list': True,
                                              'multivalued': True,
@@ -2438,7 +2446,7 @@ class DatasetSeries(ConfiguredBaseModel):
     See [DCAT-AP specs:DatasetSeries](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#DatasetSeries)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:DatasetSeries',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'applicable_legislation': {'description': 'The legislation '
                                                                   'that mandates the '
                                                                   'creation or '
@@ -2638,7 +2646,7 @@ class DefinedTerm(ConfiguredBaseModel):
     A word, name, acronym or phrase that is defined in a controlled vocabulary (CV) and that is used to provide an additional rdf:type or dcterms:type of a class within this schema.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'schema:DefinedTerm',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'slot_usage': {'title': {'name': 'title', 'slot_uri': 'schema:name'}}})
 
@@ -2709,7 +2717,7 @@ class Device(AgenticEntity):
                             'http://purl.obolibrary.org/obo/NCIT_C62103',
                             'http://semanticscience.org/resource/SIO_000956',
                             'http://purl.allotrope.org/ontologies/equipment#AFE_0000354'],
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'slot_usage': {'has_part': {'description': 'The slot to specify parts of a '
                                                     'Device that are themselves '
@@ -2851,7 +2859,7 @@ class Distribution(ConfiguredBaseModel):
     See [DCAT-AP specs:Distribution](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Distribution)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Distribution',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'access_URL': {'description': 'A URL that gives access to a '
                                                       'Distribution of the Dataset.',
                                        'inlined_as_list': True,
@@ -3204,7 +3212,7 @@ class Entity(ClassifierMixin):
     A physical, digital, conceptual, or other kind of thing with some fixed aspects; entities may be real or imaginary.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Entity',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'mixins': ['ClassifierMixin'],
          'slot_usage': {'description': {'description': 'The slot to provide a '
@@ -3358,7 +3366,7 @@ class EvaluatedActivity(Activity):
     An activity or process that is being evaluated in a DataGeneratingActivity.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Activity',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'slot_usage': {'other_identifier': {'description': 'A slot to provide a '
                                                             'secondary identifier of '
@@ -3518,7 +3526,7 @@ class EvaluatedEntity(Entity):
     An Entity that is being evaluated in a DataGeneratingActivity.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Entity',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'slot_usage': {'description': {'description': 'The slot to provide a '
                                                        'description for the '
@@ -3667,7 +3675,7 @@ class AnalysisSourceData(EvaluatedEntity):
     Information that was evaluated within a DataAnalysis.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Entity',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'slot_usage': {'was_generated_by': {'description': 'A slot to provide the '
                                                             'Activity which created '
@@ -3801,7 +3809,7 @@ class Kind(ConfiguredBaseModel):
     See [DCAT-AP specs:Kind](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Kind)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'vcard:Kind',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     pass
 
@@ -3811,7 +3819,7 @@ class Location(ConfiguredBaseModel):
     See [DCAT-AP specs:Location](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Location)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcterms:Location',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'bbox': {'description': 'The geographic bounding box of a '
                                                 'resource.',
                                  'inlined_as_list': False,
@@ -3855,7 +3863,7 @@ class Plan(ClassifierMixin):
                                       'settings: pulse sequence: zgpg30, temperature: '
                                       '298.0 K, number of scans: 1024, Solvent : '
                                       'chloroform-D1 (CDCl3).'}],
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'mixins': ['ClassifierMixin']})
 
@@ -3951,7 +3959,7 @@ class QualitativeAttribute(ClassifierMixin):
     A piece of information that is attributed to an Entity, Activity or AgenticEntity.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Entity',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'mixins': ['ClassifierMixin'],
          'slot_usage': {'value': {'description': 'The slot to provide the literal '
@@ -4054,7 +4062,7 @@ class QuantitativeAttribute(ClassifierMixin):
     A quantifiable piece of information that is attributed to an Entity, Activity or AgenticEntity.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'qudt:Quantity',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'mixins': ['ClassifierMixin'],
          'slot_usage': {'value': {'description': 'The slot to provide the literal '
@@ -4174,7 +4182,7 @@ class Relationship(ConfiguredBaseModel):
     See [DCAT-AP specs:Relationship](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Relationship)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Relationship',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'had_role': {'description': 'A function of an entity or agent '
                                                     'with respect to another entity or '
                                                     'resource.',
@@ -4203,7 +4211,7 @@ class Software(AgenticEntity):
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:SoftwareAgent',
          'exact_mappings': ['schema:SoftwareApplication'],
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'slot_usage': {'has_part': {'description': 'The slot to specify parts of a '
                                                     'Software that are themselves '
@@ -4344,7 +4352,7 @@ class SupportiveEntity(ConfiguredBaseModel):
     """
     The supportive entities are supporting the main entities in the Application Profile. They are included in the Application Profile because they form the range of properties.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4432,7 +4440,7 @@ class Attribution(SupportiveEntity):
     See [DCAT-AP specs:Attribution](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Attribution)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Attribution',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4520,7 +4528,7 @@ class ChecksumAlgorithm(SupportiveEntity):
     See [DCAT-AP specs:ChecksumAlgorithm](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#ChecksumAlgorithm)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'spdx:ChecksumAlgorithm',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4608,7 +4616,7 @@ class Concept(SupportiveEntity):
     See [DCAT-AP specs:Concept](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Concept)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'skos:Concept',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'preferred_label': {'description': 'A preferred label of the '
                                                            'concept.',
                                             'inlined_as_list': True,
@@ -4705,7 +4713,7 @@ class ConceptScheme(SupportiveEntity):
     See [DCAT-AP specs:ConceptScheme](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#ConceptScheme)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'skos:ConceptScheme',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'title': {'description': 'A name of the concept scheme.',
                                   'inlined_as_list': True,
                                   'multivalued': True,
@@ -4800,7 +4808,7 @@ class Document(SupportiveEntity):
     See [DCAT-AP specs:Document](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Document)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'foaf:Document',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     id: str = Field(default=..., description="""A slot to provide an URI for an entity within this schema.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4902,7 +4910,7 @@ class Frequency(SupportiveEntity):
     See [DCAT-AP specs:Frequency](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Frequency)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcterms:Frequency',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4990,7 +4998,7 @@ class Geometry(SupportiveEntity):
     See [DCAT-AP specs:Geometry](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Geometry)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'locn:Geometry',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5078,7 +5086,7 @@ class Identifier(SupportiveEntity):
     See [DCAT-AP specs:Identifier](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Identifier)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'adms:Identifier',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'notation': {'description': 'A string that is an identifier in '
                                                     'the context of the identifier '
                                                     'scheme referenced by its '
@@ -5177,7 +5185,7 @@ class LegalResource(SupportiveEntity):
     See [DCAT-AP specs:LegalResource](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#LegalResource)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'eli:LegalResource',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     id: str = Field(default=..., description="""A slot to provide an URI for an entity within this schema.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5279,7 +5287,7 @@ class LicenseDocument(SupportiveEntity):
     See [DCAT-AP specs:LicenseDocument](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#LicenseDocument)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcterms:LicenseDocument',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'type': {'description': 'A type of licence, e.g. indicating '
                                                 "'public domain' or 'royalties "
                                                 "required'.",
@@ -5394,7 +5402,7 @@ class LinguisticSystem(SupportiveEntity):
     See [DCAT-AP specs:LinguisticSystem](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#LinguisticSystem)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcterms:LinguisticSystem',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5482,7 +5490,7 @@ class MediaType(SupportiveEntity):
     See [DCAT-AP specs:MediaType](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#MediaType)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcterms:MediaType',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5570,7 +5578,7 @@ class MediaTypeOrExtent(SupportiveEntity):
     See [DCAT-AP specs:MediaTypeOrExtent](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#MediaTypeOrExtent)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcterms:MediaTypeOrExtent',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5658,7 +5666,7 @@ class PeriodOfTime(SupportiveEntity):
     See [DCAT-AP specs:PeriodOfTime](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#PeriodOfTime)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcterms:PeriodOfTime',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'slot_usage': {'beginning': {'description': 'The beginning of a period or '
                                                      'interval.',
                                       'inlined_as_list': True,
@@ -5783,7 +5791,7 @@ class Policy(SupportiveEntity):
     See [DCAT-AP specs:Policy](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Policy)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'odrl:Policy',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5871,7 +5879,7 @@ class ProvenanceStatement(SupportiveEntity):
     See [DCAT-AP specs:ProvenanceStatement](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#ProvenanceStatement)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcterms:ProvenanceStatement',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5959,7 +5967,7 @@ class Resource(SupportiveEntity):
     See [DCAT-AP specs:Resource](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Resource)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'rdfs:Resource',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     id: str = Field(default=..., description="""A slot to provide an URI for an entity within this schema.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6061,7 +6069,7 @@ class RightsStatement(SupportiveEntity):
     See [DCAT-AP specs:RightsStatement](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#RightsStatement)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcterms:RightsStatement',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6149,7 +6157,7 @@ class Role(SupportiveEntity):
     See [DCAT-AP specs:Role](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Role)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcat:Role',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6237,7 +6245,7 @@ class Standard(SupportiveEntity):
     See [DCAT-AP specs:Standard](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#Standard)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'dcterms:Standard',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6325,7 +6333,7 @@ class Surrounding(ClassifierMixin):
     The surrounding in which the dataset creating activity took place (e.g. a lab).
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'prov:Location',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/',
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus',
          'in_subset': ['domain_agnostic_core'],
          'mixins': ['ClassifierMixin']})
 
@@ -6421,7 +6429,7 @@ class TimeInstant(SupportiveEntity):
     See [DCAT-AP specs:TimeInstant](https://semiceu.github.io/DCAT-AP/releases/3.0.0/#TimeInstant)
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'time:Instant',
-         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus/'})
+         'from_schema': 'https://w3id.org/nfdi-de/dcat-ap-plus'})
 
     title: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',

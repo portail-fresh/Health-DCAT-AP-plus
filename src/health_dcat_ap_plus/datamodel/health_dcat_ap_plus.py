@@ -1,5 +1,4 @@
 # Auto generated from health_dcat_ap_plus.yaml by pythongen.py version: 0.0.1
-# Generation date: 2026-08-31T13:34:03
 # Schema: Health-DCAT-AP-plus
 #
 # id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus
@@ -56,10 +55,10 @@ from rdflib import (
     URIRef
 )
 
-from linkml_runtime.linkml_model.types import Boolean, Date, Decimal, Float, String, Uriorcurie
+from linkml_runtime.linkml_model.types import Boolean, Date, Decimal, Float, Integer, String, Uriorcurie
 from linkml_runtime.utils.metamodelcore import Bool, Decimal, URIorCURIE, XSDDate
 
-metamodel_version = "1.11.0"
+metamodel_version = "1.12.0"
 version = None
 
 # Namespaces
@@ -73,7 +72,7 @@ CSVW = CurieNamespace('csvw', 'http://www.w3.org/ns/csvw#')
 CV = CurieNamespace('cv', 'http://data.europa.eu/m8g/')
 DCAT = CurieNamespace('dcat', 'http://www.w3.org/ns/dcat#')
 DCATAP = CurieNamespace('dcatap', 'http://data.europa.eu/r5r/')
-DCATAPPLUS = CurieNamespace('dcatapplus', 'https://w3id.org/nfdi-de/dcat-ap-plus/')
+DCATAP_PLUS = CurieNamespace('dcatap_plus', 'https://w3id.org/nfdi-de/dcat-ap-plus/')
 DCTERMS = CurieNamespace('dcterms', 'http://purl.org/dc/terms/')
 DPV = CurieNamespace('dpv', 'https://w3id.org/dpv#')
 DQV = CurieNamespace('dqv', 'http://www.w3.org/ns/dqv#')
@@ -100,7 +99,7 @@ DEFAULT_ = HEALTH_DCAT_AP_PLUS
 
 
 # Types
-class Duration(str):
+class Duration(String):
     """ The datatype that represents durations of time. """
     type_class_uri = XSD["duration"]
     type_class_curie = "xsd:duration"
@@ -108,7 +107,7 @@ class Duration(str):
     type_model_uri = HEALTH_DCAT_AP_PLUS.Duration
 
 
-class HexBinary(str):
+class HexBinary(String):
     """ The datatype that represents arbitrary hex-encoded binary data. """
     type_class_uri = XSD["hexBinary"]
     type_class_curie = "xsd:hexBinary"
@@ -116,7 +115,7 @@ class HexBinary(str):
     type_model_uri = HEALTH_DCAT_AP_PLUS.HexBinary
 
 
-class NonNegativeInteger(int):
+class NonNegativeInteger(Integer):
     """ The datatype that represents non-negative integers. """
     type_class_uri = XSD["nonNegativeInteger"]
     type_class_curie = "xsd:nonNegativeInteger"
@@ -483,7 +482,7 @@ class CatalogueRecord(YAMLRoot):
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.CatalogueRecord
 
     modification_date: Union[str, XSDDate] = None
-    primary_topic: Union[dict, Any] = None
+    primary_topic: Union[dict, Catalogue, str, DatasetId, "DatasetSeries", "DataService"] = None
     application_profile: Optional[Union[Union[dict, "Standard"], list[Union[dict, "Standard"]]]] = empty_list()
     change_type: Optional[Union[dict, "Concept"]] = None
     description: Optional[Union[str, list[str]]] = empty_list()
@@ -497,6 +496,19 @@ class CatalogueRecord(YAMLRoot):
             self.MissingRequiredField("modification_date")
         if not isinstance(self.modification_date, XSDDate):
             self.modification_date = XSDDate(self.modification_date)
+
+        if self._is_empty(self.primary_topic):
+            self.MissingRequiredField("primary_topic")
+        if not isinstance(self.primary_topic, (Catalogue, DatasetId, DatasetSeries, DataService)):
+            value = self.primary_topic
+            for _coerce in (lambda: Catalogue(**as_dict(value)), lambda: DatasetId(value), lambda: DatasetSeries(**as_dict(value)), lambda: DataService(**as_dict(value))):
+                try:
+                    self.primary_topic = _coerce()
+                    break
+                except (ValueError, TypeError):
+                    continue
+            else:
+                raise ValueError(f"None of the candidate types Union[Catalogue, DatasetId, DatasetSeries, DataService] could be constructed from {value!r} for slot primary_topic")
 
         if not isinstance(self.application_profile, list):
             self.application_profile = [self.application_profile] if self.application_profile is not None else []
@@ -539,7 +551,7 @@ class Checksum(YAMLRoot):
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.Checksum
 
     algorithm: Union[dict, "ChecksumAlgorithm"] = None
-    checksum_value: str = None
+    checksum_value: Union[str, HexBinary] = None
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.algorithm):
@@ -549,8 +561,8 @@ class Checksum(YAMLRoot):
 
         if self._is_empty(self.checksum_value):
             self.MissingRequiredField("checksum_value")
-        if not isinstance(self.checksum_value, str):
-            self.checksum_value = str(self.checksum_value)
+        if not isinstance(self.checksum_value, HexBinary):
+            self.checksum_value = HexBinary(self.checksum_value)
 
         super().__post_init__(**kwargs)
 
@@ -562,8 +574,8 @@ class ClassifierMixin(YAMLRoot):
     """
     _inherited_slots: ClassVar[list[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = DCATAPPLUS["ClassifierMixin"]
-    class_class_curie: ClassVar[str] = "dcatapplus:ClassifierMixin"
+    class_class_uri: ClassVar[URIRef] = DCATAP_PLUS["ClassifierMixin"]
+    class_class_curie: ClassVar[str] = "dcatap_plus:ClassifierMixin"
     class_name: ClassVar[str] = "ClassifierMixin"
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.ClassifierMixin
 
@@ -814,7 +826,7 @@ class Dataset(YAMLRoot):
     source: Optional[Union[dict[Union[str, DatasetId], Union[dict, "Dataset"]], list[Union[dict, "Dataset"]]]] = empty_dict()
     spatial_resolution: Optional[Decimal] = None
     temporal_coverage: Optional[Union[Union[dict, "PeriodOfTime"], list[Union[dict, "PeriodOfTime"]]]] = empty_list()
-    temporal_resolution: Optional[str] = None
+    temporal_resolution: Optional[Union[str, Duration]] = None
     theme: Optional[Union[Union[dict, "Concept"], list[Union[dict, "Concept"]]]] = empty_list()
     type: Optional[Union[Union[dict, "Concept"], list[Union[dict, "Concept"]]]] = empty_list()
     version: Optional[str] = None
@@ -930,8 +942,8 @@ class Dataset(YAMLRoot):
             self.temporal_coverage = [self.temporal_coverage] if self.temporal_coverage is not None else []
         self.temporal_coverage = [v if isinstance(v, PeriodOfTime) else PeriodOfTime(**as_dict(v)) for v in self.temporal_coverage]
 
-        if self.temporal_resolution is not None and not isinstance(self.temporal_resolution, str):
-            self.temporal_resolution = str(self.temporal_resolution)
+        if self.temporal_resolution is not None and not isinstance(self.temporal_resolution, Duration):
+            self.temporal_resolution = Duration(self.temporal_resolution)
 
         self._normalize_inlined_as_list(slot_name="theme", slot_type=Concept, key_name="preferred_label", keyed=False)
 
@@ -1124,7 +1136,7 @@ class Distribution(YAMLRoot):
     access_service: Optional[Union[Union[dict, DataService], list[Union[dict, DataService]]]] = empty_list()
     applicable_legislation: Optional[Union[dict[Union[str, LegalResourceId], Union[dict, "LegalResource"]], list[Union[dict, "LegalResource"]]]] = empty_dict()
     availability: Optional[Union[dict, "Concept"]] = None
-    byte_size: Optional[int] = None
+    byte_size: Optional[Union[int, NonNegativeInteger]] = None
     checksum: Optional[Union[dict, Checksum]] = None
     compression_format: Optional[Union[dict, "MediaType"]] = None
     description: Optional[Union[str, list[str]]] = empty_list()
@@ -1142,7 +1154,7 @@ class Distribution(YAMLRoot):
     rights: Optional[Union[dict, "RightsStatement"]] = None
     spatial_resolution: Optional[Decimal] = None
     status: Optional[Union[dict, "Concept"]] = None
-    temporal_resolution: Optional[str] = None
+    temporal_resolution: Optional[Union[str, Duration]] = None
     title: Optional[Union[str, list[str]]] = empty_list()
 
     def __post_init__(self, *_: str, **kwargs: Any):
@@ -1157,8 +1169,8 @@ class Distribution(YAMLRoot):
         if self.availability is not None and not isinstance(self.availability, Concept):
             self.availability = Concept(**as_dict(self.availability))
 
-        if self.byte_size is not None and not isinstance(self.byte_size, int):
-            self.byte_size = int(self.byte_size)
+        if self.byte_size is not None and not isinstance(self.byte_size, NonNegativeInteger):
+            self.byte_size = NonNegativeInteger(self.byte_size)
 
         if self.checksum is not None and not isinstance(self.checksum, Checksum):
             self.checksum = Checksum(**as_dict(self.checksum))
@@ -1212,8 +1224,8 @@ class Distribution(YAMLRoot):
         if self.status is not None and not isinstance(self.status, Concept):
             self.status = Concept(**as_dict(self.status))
 
-        if self.temporal_resolution is not None and not isinstance(self.temporal_resolution, str):
-            self.temporal_resolution = str(self.temporal_resolution)
+        if self.temporal_resolution is not None and not isinstance(self.temporal_resolution, Duration):
+            self.temporal_resolution = Duration(self.temporal_resolution)
 
         if not isinstance(self.title, list):
             self.title = [self.title] if self.title is not None else []
@@ -1599,8 +1611,8 @@ class SupportiveEntity(YAMLRoot):
     """
     _inherited_slots: ClassVar[list[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = DCATAPPLUS["SupportiveEntity"]
-    class_class_curie: ClassVar[str] = "dcatapplus:SupportiveEntity"
+    class_class_uri: ClassVar[URIRef] = DCATAP_PLUS["SupportiveEntity"]
+    class_class_curie: ClassVar[str] = "dcatap_plus:SupportiveEntity"
     class_name: ClassVar[str] = "SupportiveEntity"
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.SupportiveEntity
 
@@ -2452,17 +2464,17 @@ class HealthDataset(Dataset):
     has_quality_annotation: Optional[Union[list[Union[str, QualityCertificateId]], dict[Union[str, QualityCertificateId], Union[dict, "QualityCertificate"]]]] = empty_dict()
     has_variables: Optional[Union[Union[dict, "TableGroup"], list[Union[dict, "TableGroup"]]]] = empty_list()
     health_theme: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
-    max_typical_age: Optional[int] = None
-    min_typical_age: Optional[int] = None
-    number_of_records: Optional[int] = None
-    number_of_unique_individuals: Optional[int] = None
+    max_typical_age: Optional[Union[int, NonNegativeInteger]] = None
+    min_typical_age: Optional[Union[int, NonNegativeInteger]] = None
+    number_of_records: Optional[Union[int, NonNegativeInteger]] = None
+    number_of_unique_individuals: Optional[Union[int, NonNegativeInteger]] = None
     population_coverage: Optional[Union[str, list[str]]] = empty_list()
     retention_period: Optional[Union[dict, PeriodOfTime]] = None
     publisher: Optional[Union[dict, "HealthPublisherAgent"]] = None
     sample: Optional[Union[Union[dict, "HealthDistribution"], list[Union[dict, "HealthDistribution"]]]] = empty_list()
     frequency: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
     source: Optional[Union[Union[str, HealthDatasetId], list[Union[str, HealthDatasetId]]]] = empty_list()
-    temporal_resolution: Optional[Union[str, list[str]]] = empty_list()
+    temporal_resolution: Optional[Union[Union[str, Duration], list[Union[str, Duration]]]] = empty_list()
     language: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
     geographical_coverage: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
     conforms_to: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
@@ -2580,17 +2592,17 @@ class HealthDataset(Dataset):
             self.health_theme = [self.health_theme] if self.health_theme is not None else []
         self.health_theme = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.health_theme]
 
-        if self.max_typical_age is not None and not isinstance(self.max_typical_age, int):
-            self.max_typical_age = int(self.max_typical_age)
+        if self.max_typical_age is not None and not isinstance(self.max_typical_age, NonNegativeInteger):
+            self.max_typical_age = NonNegativeInteger(self.max_typical_age)
 
-        if self.min_typical_age is not None and not isinstance(self.min_typical_age, int):
-            self.min_typical_age = int(self.min_typical_age)
+        if self.min_typical_age is not None and not isinstance(self.min_typical_age, NonNegativeInteger):
+            self.min_typical_age = NonNegativeInteger(self.min_typical_age)
 
-        if self.number_of_records is not None and not isinstance(self.number_of_records, int):
-            self.number_of_records = int(self.number_of_records)
+        if self.number_of_records is not None and not isinstance(self.number_of_records, NonNegativeInteger):
+            self.number_of_records = NonNegativeInteger(self.number_of_records)
 
-        if self.number_of_unique_individuals is not None and not isinstance(self.number_of_unique_individuals, int):
-            self.number_of_unique_individuals = int(self.number_of_unique_individuals)
+        if self.number_of_unique_individuals is not None and not isinstance(self.number_of_unique_individuals, NonNegativeInteger):
+            self.number_of_unique_individuals = NonNegativeInteger(self.number_of_unique_individuals)
 
         if not isinstance(self.population_coverage, list):
             self.population_coverage = [self.population_coverage] if self.population_coverage is not None else []
@@ -2614,7 +2626,7 @@ class HealthDataset(Dataset):
 
         if not isinstance(self.temporal_resolution, list):
             self.temporal_resolution = [self.temporal_resolution] if self.temporal_resolution is not None else []
-        self.temporal_resolution = [v if isinstance(v, str) else str(v) for v in self.temporal_resolution]
+        self.temporal_resolution = [v if isinstance(v, Duration) else Duration(v) for v in self.temporal_resolution]
 
         if not isinstance(self.language, list):
             self.language = [self.language] if self.language is not None else []
@@ -3312,7 +3324,7 @@ slots.has_version = Slot(uri=DCAT.hasVersion, name="has_version", curie=DCAT.cur
 slots.homepage = Slot(uri=FOAF.homepage, name="homepage", curie=FOAF.curie('homepage'),
                    model_uri=HEALTH_DCAT_AP_PLUS.homepage, domain=None, range=Optional[str])
 
-slots.id = Slot(uri=DCATAPPLUS.id, name="id", curie=DCATAPPLUS.curie('id'),
+slots.id = Slot(uri=DCATAP_PLUS.id, name="id", curie=DCATAP_PLUS.curie('id'),
                    model_uri=HEALTH_DCAT_AP_PLUS.id, domain=None, range=URIRef)
 
 slots.identifier = Slot(uri=DCTERMS.identifier, name="identifier", curie=DCTERMS.curie('identifier'),
@@ -3529,16 +3541,16 @@ slots.has_coding_system = Slot(uri=HEALTHDCATAP.hasCodingSystem, name="has_codin
                    model_uri=HEALTH_DCAT_AP_PLUS.has_coding_system, domain=None, range=Optional[Union[Union[dict, Standard], list[Union[dict, Standard]]]])
 
 slots.min_typical_age = Slot(uri=HEALTHDCATAP.minTypicalAge, name="min_typical_age", curie=HEALTHDCATAP.curie('minTypicalAge'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.min_typical_age, domain=None, range=Optional[int])
+                   model_uri=HEALTH_DCAT_AP_PLUS.min_typical_age, domain=None, range=Optional[Union[int, NonNegativeInteger]])
 
 slots.max_typical_age = Slot(uri=HEALTHDCATAP.maxTypicalAge, name="max_typical_age", curie=HEALTHDCATAP.curie('maxTypicalAge'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.max_typical_age, domain=None, range=Optional[int])
+                   model_uri=HEALTH_DCAT_AP_PLUS.max_typical_age, domain=None, range=Optional[Union[int, NonNegativeInteger]])
 
 slots.number_of_records = Slot(uri=HEALTHDCATAP.numberOfRecords, name="number_of_records", curie=HEALTHDCATAP.curie('numberOfRecords'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.number_of_records, domain=None, range=Optional[int])
+                   model_uri=HEALTH_DCAT_AP_PLUS.number_of_records, domain=None, range=Optional[Union[int, NonNegativeInteger]])
 
 slots.number_of_unique_individuals = Slot(uri=HEALTHDCATAP.numberOfUniqueIndividuals, name="number_of_unique_individuals", curie=HEALTHDCATAP.curie('numberOfUniqueIndividuals'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.number_of_unique_individuals, domain=None, range=Optional[int])
+                   model_uri=HEALTH_DCAT_AP_PLUS.number_of_unique_individuals, domain=None, range=Optional[Union[int, NonNegativeInteger]])
 
 slots.population_coverage = Slot(uri=HEALTHDCATAP.populationCoverage, name="population_coverage", curie=HEALTHDCATAP.curie('populationCoverage'),
                    model_uri=HEALTH_DCAT_AP_PLUS.population_coverage, domain=None, range=Optional[Union[str, list[str]]])
@@ -3712,7 +3724,7 @@ slots.CatalogueRecord_modification_date = Slot(uri=DCTERMS.modified, name="Catal
                    model_uri=HEALTH_DCAT_AP_PLUS.CatalogueRecord_modification_date, domain=CatalogueRecord, range=Union[str, XSDDate])
 
 slots.CatalogueRecord_primary_topic = Slot(uri=FOAF.primaryTopic, name="CatalogueRecord_primary_topic", curie=FOAF.curie('primaryTopic'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.CatalogueRecord_primary_topic, domain=CatalogueRecord, range=Union[dict, Any])
+                   model_uri=HEALTH_DCAT_AP_PLUS.CatalogueRecord_primary_topic, domain=CatalogueRecord, range=Union[dict, Catalogue, str, DatasetId, "DatasetSeries", "DataService"])
 
 slots.CatalogueRecord_source_metadata = Slot(uri=DCTERMS.source, name="CatalogueRecord_source_metadata", curie=DCTERMS.curie('source'),
                    model_uri=HEALTH_DCAT_AP_PLUS.CatalogueRecord_source_metadata, domain=CatalogueRecord, range=Optional[Union[dict, "CatalogueRecord"]])
@@ -3724,7 +3736,7 @@ slots.Checksum_algorithm = Slot(uri=SPDX.algorithm, name="Checksum_algorithm", c
                    model_uri=HEALTH_DCAT_AP_PLUS.Checksum_algorithm, domain=Checksum, range=Union[dict, "ChecksumAlgorithm"])
 
 slots.Checksum_checksum_value = Slot(uri=SPDX.checksumValue, name="Checksum_checksum_value", curie=SPDX.curie('checksumValue'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.Checksum_checksum_value, domain=Checksum, range=str)
+                   model_uri=HEALTH_DCAT_AP_PLUS.Checksum_checksum_value, domain=Checksum, range=Union[str, HexBinary])
 
 slots.ClassifierMixin_type = Slot(uri=DCTERMS.type, name="ClassifierMixin_type", curie=DCTERMS.curie('type'),
                    model_uri=HEALTH_DCAT_AP_PLUS.ClassifierMixin_type, domain=None, range=Optional[Union[dict, "DefinedTerm"]])
@@ -3874,7 +3886,7 @@ slots.Dataset_temporal_coverage = Slot(uri=DCTERMS.temporal, name="Dataset_tempo
                    model_uri=HEALTH_DCAT_AP_PLUS.Dataset_temporal_coverage, domain=Dataset, range=Optional[Union[Union[dict, "PeriodOfTime"], list[Union[dict, "PeriodOfTime"]]]])
 
 slots.Dataset_temporal_resolution = Slot(uri=DCAT.temporalResolution, name="Dataset_temporal_resolution", curie=DCAT.curie('temporalResolution'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.Dataset_temporal_resolution, domain=Dataset, range=Optional[str])
+                   model_uri=HEALTH_DCAT_AP_PLUS.Dataset_temporal_resolution, domain=Dataset, range=Optional[Union[str, Duration]])
 
 slots.Dataset_theme = Slot(uri=DCAT.theme, name="Dataset_theme", curie=DCAT.curie('theme'),
                    model_uri=HEALTH_DCAT_AP_PLUS.Dataset_theme, domain=Dataset, range=Optional[Union[Union[dict, "Concept"], list[Union[dict, "Concept"]]]])
@@ -3946,7 +3958,7 @@ slots.Distribution_availability = Slot(uri=DCATAP.availability, name="Distributi
                    model_uri=HEALTH_DCAT_AP_PLUS.Distribution_availability, domain=Distribution, range=Optional[Union[dict, "Concept"]])
 
 slots.Distribution_byte_size = Slot(uri=DCAT.byteSize, name="Distribution_byte_size", curie=DCAT.curie('byteSize'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.Distribution_byte_size, domain=Distribution, range=Optional[int])
+                   model_uri=HEALTH_DCAT_AP_PLUS.Distribution_byte_size, domain=Distribution, range=Optional[Union[int, NonNegativeInteger]])
 
 slots.Distribution_checksum = Slot(uri=SPDX.checksum, name="Distribution_checksum", curie=SPDX.curie('checksum'),
                    model_uri=HEALTH_DCAT_AP_PLUS.Distribution_checksum, domain=Distribution, range=Optional[Union[dict, Checksum]])
@@ -4000,7 +4012,7 @@ slots.Distribution_status = Slot(uri=ADMS.status, name="Distribution_status", cu
                    model_uri=HEALTH_DCAT_AP_PLUS.Distribution_status, domain=Distribution, range=Optional[Union[dict, "Concept"]])
 
 slots.Distribution_temporal_resolution = Slot(uri=DCAT.temporalResolution, name="Distribution_temporal_resolution", curie=DCAT.curie('temporalResolution'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.Distribution_temporal_resolution, domain=Distribution, range=Optional[str])
+                   model_uri=HEALTH_DCAT_AP_PLUS.Distribution_temporal_resolution, domain=Distribution, range=Optional[Union[str, Duration]])
 
 slots.Distribution_title = Slot(uri=DCTERMS.title, name="Distribution_title", curie=DCTERMS.curie('title'),
                    model_uri=HEALTH_DCAT_AP_PLUS.Distribution_title, domain=Distribution, range=Optional[Union[str, list[str]]])
@@ -4138,7 +4150,7 @@ slots.HealthDataset_source = Slot(uri=DCTERMS.source, name="HealthDataset_source
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_source, domain=HealthDataset, range=Optional[Union[Union[str, HealthDatasetId], list[Union[str, HealthDatasetId]]]])
 
 slots.HealthDataset_temporal_resolution = Slot(uri=DCAT.temporalResolution, name="HealthDataset_temporal_resolution", curie=DCAT.curie('temporalResolution'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_temporal_resolution, domain=HealthDataset, range=Optional[Union[str, list[str]]])
+                   model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_temporal_resolution, domain=HealthDataset, range=Optional[Union[Union[str, Duration], list[Union[str, Duration]]]])
 
 slots.HealthDataset_language = Slot(uri=DCTERMS.language, name="HealthDataset_language", curie=DCTERMS.curie('language'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthDataset_language, domain=HealthDataset, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])

@@ -118,6 +118,27 @@ repeat of that forensic record.
   (module-level diffs only: a generation timestamp, and the `xsd:` prefix
   the previous fix added but hadn't been regenerated through yet) — the
   extraction changed where the code lives, not what it does.
+- **Brought up to date with LinkML 1.12.1 and dcat-ap-plus v0.1.0rc5**
+  (2026-10-16). rc5 is semantically identical to rc4 but renamed its own
+  prefix `dcatapplus` → `dcatap_plus`; under LinkML 1.12 that turned the
+  prefix-propagation gap from 2b below from *silent* into *fatal*:
+  `ShaclGenerator.serialize()` now canonicalises through pyoxigraph, which
+  rejects the unexpanded `dcatap_plus:…` IRIs (an underscore isn't legal in a
+  URI scheme), and the rdflib fallback it drops to did not finish on this
+  graph — `gen-project`, `gen-shacl` and the SHACL tests simply hung. Fixed by
+  renaming the prefix and import and redeclaring the four other prefixes
+  dcat-ap-plus's own URIs use (`qudt:`, `schema:`, `rdfs:`, `eli:`), which had
+  been producing eight silently wrong IRIs. One real bug fell out of it:
+  `gen_merged_shacl.py`'s exclusion of `schema:DefinedTerm` never matched (it
+  names the real IRI; our shape carried the unexpanded one), so a shape the
+  merge is meant to drop shipped anyway. A permanent guard
+  (`test_*_has_no_unexpanded_iris`, run first by `just test`) now turns a
+  repeat into an immediate, readable failure instead of a hang. Allowlists
+  unchanged (own 14, merged 2, real 0); dependency floors raised to
+  `linkml>=1.12.1`; `docs/schema/` regenerated (it was last refreshed
+  2026-08-25, five source commits ago). Also corrected: the `subject`
+  allowlist entry is the shared-`slot_uri` bug, not a DPV/DQV artifact. Full
+  narrative: `docs/architecture-verification.md`, "An eleventh finding".
 
 ## Problems that still need fixing
 
@@ -165,7 +186,11 @@ repeat of that forensic record.
   (the `SchemaView.namespaces()` `@lru_cache` staleness finding): filed,
   with cross-link comments posted on both #3574 and PR #3575 explaining
   why the PR's own fix doesn't resolve this manifestation. Waiting on
-  maintainer response on all three now.
+  maintainer response on all three now. Re-checked 2026-10-16: all still
+  open on LinkML 1.12.1, all three standalone reproductions under
+  `examples/issues_for_linkml/` still reproduce, and a fix proposal for #3933
+  specifically, [PR #4116](https://github.com/linkml/linkml/pull/4116), has
+  since been opened (not merged).
 
 ## Future improvements (the "would a third party want to copy this" pass)
 

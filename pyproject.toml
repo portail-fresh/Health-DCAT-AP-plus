@@ -15,12 +15,18 @@ requires-python = ">=3.10"
 dynamic = ["version"]
 
 dependencies = [
-  "linkml-runtime >=1.9.4",
+  # Same floor dcat-ap-plus v0.1.0rc5 (imported via its w3id `latest`
+  # permalink) declares for itself.
+  "linkml-runtime >=1.12.1",
 ]
 
 [dependency-groups]
 dev = [
-    "linkml>=1.9.3",
+    # 1.12 canonicalises ShaclGenerator output, which stalls on the prefix
+    # gap the `prefixes:` block of src/health_dcat_ap_plus/schema/
+    # health_dcat_ap_plus.yaml now closes; 1.12.1 is also the first 1.12
+    # release with correct dependency floors.
+    "linkml>=1.12.1",
     "mkdocs-material>=8.2.8",
     "mkdocs-mermaid2-plugin>=1.1.1",
     "mkdocs-pymdownx-material-extras>=2.5.6",
