@@ -601,7 +601,7 @@ does:</p>
 <tbody>
 <tr>
 <td>"Import the full DCAT-AP+ schema in your LinkML schema's <code>imports</code> section"</td>
-<td><code>health_dcat_ap_plus.yaml</code> imports <code>dcatapplus:latest/schema/dcat_ap_plus</code> (the w3id permalink, full schema) — not a cherry-picked subset.</td>
+<td><code>health_dcat_ap_plus.yaml</code> imports <code>dcatap_plus:latest/schema/dcat_ap_plus</code> (the w3id permalink, full schema) — not a cherry-picked subset. (The label was <code>dcatapplus</code> until dcat-ap-plus v0.1.0rc5 renamed its own prefix — see the eleventh finding below.)</td>
 </tr>
 <tr>
 <td>Extend classes via <code>is_a</code></td>
@@ -1789,6 +1789,105 @@ into generated Turtle" mechanism is a separate, open question (this
 project has hit it three times now: the original <code>dcterms:</code>/<code>dcat:</code>/etc.
 block, <code>dcatap:</code>, and now <code>xsd:</code>) — worth a duplicate check and a report,
 tracked in <code>ROADMAP.md</code>, not done as part of this fix.</p>
+<h3 id="an-eleventh-finding-the-same-prefix-gap-now-fatal-linkml-112-meets-dcat-ap-plus-rc5">An eleventh finding: the same prefix gap, now fatal — LinkML 1.12 meets dcat-ap-plus rc5</h3>
+<p>Picked up again on 2026-10-16 after a few weeks away: LinkML 1.12.0/1.12.1
+and dcat-ap-plus v0.1.0rc5 had both been released, and <code>latest</code> — the w3id
+permalink this schema imports — now serves rc5. rc5 is semantically the same
+schema as rc4 (all 51 classes compared, none changed), but it renamed its own
+prefix <code>dcatapplus</code> → <code>dcatap_plus</code> (same namespace IRI) and dropped the
+trailing slash from its schema <code>id</code>. On LinkML 1.11.1 that would have gone
+unnoticed. On 1.12 it made <code>ShaclGenerator.serialize()</code> — and with it
+<code>gen-project</code>, <code>gen-shacl</code> and every SHACL test — never finish.</p>
+<p><strong>The mechanism, observed rather than inferred:</strong></p>
+<ol>
+<li>The prefix-propagation gap from the tenth finding
+   (<a href="https://github.com/linkml/linkml/issues/3574">linkml/linkml#3574</a>,
+   <a href="https://github.com/linkml/linkml/issues/3933">#3933</a>): <code>dcatap_plus</code> is
+   declared by the imported schema, not by ours, so the generator emits
+   dcat-ap-plus's own <code>class_uri</code>/<code>slot_uri</code> values
+   (<code>dcatap_plus:ClassifierMixin</code>, <code>dcatap_plus:SupportiveEntity</code>,
+   <code>dcatap_plus:id</code>) as raw strings used as IRIs.</li>
+<li>1.12 makes <code>serialize()</code> canonicalise its output (RDFC-1.0, via
+   pyoxigraph). pyoxigraph parses the graph's N-Triples dump and rejects
+   exactly those three IRIs (<code>Invalid IRI code point ':'</code>, first at line 14
+   of the dump). Controlled check: <code>dcatapplus:</code>, <code>dcatap-plus:</code>,
+   <code>dcatap.plus:</code> and <code>qudt:</code> all parse; <code>dcatap_plus:</code> alone does not — <code>_</code>
+   is not a legal URI-scheme character, so it is not an absolute IRI at all.</li>
+<li>On that <code>SyntaxError</code>, <code>canonicalize_rdf_graph</code> quietly falls back to
+   rdflib's <code>to_canonical_graph</code>, which did not finish on this graph. No
+   error, no output.</li>
+</ol>
+<p>(Worth recording how easy this was to get wrong: a first check of the eleven
+IRIs one by one "showed" pyoxigraph accepting all of them, because
+<code>pyoxigraph.parse</code> is lazy and the check never consumed it.)</p>
+<p><strong>What the gap had been doing silently.</strong> Scanning the generated SHACL for
+IRIs without a <code>scheme://</code> found eight more unexpanded ones, under four
+prefixes that dcat-ap-plus's own URIs use and this schema had never
+redeclared: <code>qudt:</code> (<code>Quantity</code>, <code>hasQuantityKind</code>, <code>unit</code>), <code>schema:</code>
+(<code>DefinedTerm</code>, <code>inDefinedTermSet</code>, <code>name</code>), <code>rdfs:Resource</code> and
+<code>eli:LegalResource</code>. Those are syntactically legal IRIs, so nothing ever hung
+or failed — they were just wrong:</p>
+<ul>
+<li><code>gen_merged_shacl.py</code> excludes <code>http://schema.org/DefinedTerm</code> by its real
+  IRI, but our own shape targeted <code>schema:DefinedTerm</code>, so the exclusion
+  <strong>never matched</strong> and a shape the merge was written to drop shipped in the
+  merged file anyway. It is excluded now — the one semantic change in the
+  merged SHACL besides the IRIs themselves (old and new graphs compared
+  triple by triple, not by eye).</li>
+<li>The shapes for <code>qudt:Quantity</code>, <code>rdfs:Resource</code> and <code>eli:LegalResource</code>, and
+  every <code>sh:class</code> constraint on <code>qudt:Quantity</code> / <code>schema:DefinedTerm</code> /
+  <code>rdfs:Resource</code> (11 + 34 + 1 property shapes), pointed at classes no
+  instance could ever be typed with. They are real now; no allowlist entry
+  changed (own 14, merged 2, real 0).</li>
+<li>The dumped example instance typed five resources <code>a &lt;rdfs:Resource&gt;</code>; it now
+  says <code>a rdfs:Resource</code>.</li>
+</ul>
+<p><strong>Fixed</strong> by renaming the prefix and the import to <code>dcatap_plus</code> (root schema
+and port script) and redeclaring the four others in both
+<code>health_dcat_ap_plus.yaml</code>'s <code>prefixes:</code> block and the port script's
+<code>PREFIXES</code> (so <code>healthdcat_ap_non_public.yaml</code> regenerates with them).
+Afterwards: no unexpanded IRIs in the generated SHACL, OWL or JSON-LD
+context, and SHACL generation takes about a second again.</p>
+<p><strong>Guarded</strong>, because a repeat is cheap:
+<code>test_own_generated_shacl_has_no_unexpanded_iris</code> and
+<code>test_dumped_instance_rdf_has_no_unexpanded_iris</code> fail on any IRI without a
+<code>scheme://</code> (<code>urn:</code>/<code>mailto:</code>/<code>tel:</code> aside). They build the graph with
+<code>ShaclGenerator.as_graph()</code> rather than <code>serialize()</code>, so a regression is
+<em>reported</em> instead of hung on, and <code>just test</code> runs them first
+(<code>_test-iris</code>), before <code>gen-project</code> can hang. The test helper and
+<code>gen_merged_shacl.py</code> use <code>as_graph()</code> too — the same triples, minus a text
+round-trip and the canonicalisation. The guard was checked against the
+pre-fix schema from git: it reports exactly the 11 IRIs above, in under a
+second.</p>
+<p><strong>Left alone, on purpose.</strong> The published merged YAML still carries six
+mapping CURIEs — <code>OBI:</code> ×2, <code>IAO:</code> ×2, <code>NCIT:</code>, <code>epos:</code> — whose prefixes only
+dcat-ap-plus declares. They are annotations (<code>exact_mappings</code>/
+<code>close_mappings</code>) that reach no generated SHACL, OWL, JSON-LD or Python, so
+declaring four more prefixes in three places seemed worse than the cosmetic
+gap.</p>
+<p><strong>A correction to an earlier diagnosis.</strong> The <code>subject</code> entry of
+<code>KNOWN_OWN_SHAPES_VIOLATIONS</code> had been filed with the DPV/DQV class-membership
+group. It isn't one: <code>is_about_entity</code> and <code>is_about_activity</code> share the
+<code>slot_uri</code> <code>dcterms:subject</code>, so the generated <code>dcat:Dataset</code> shape carries
+paired property shapes on that one path — <code>sh:class prov:Entity</code> and
+<code>sh:class prov:Activity</code> — and no single value satisfies both. It is the
+shared-<code>slot_uri</code> sibling of the shared-<code>class_uri</code> findings above;
+StroemPhi's generalisation of
+<a href="https://github.com/linkml/linkml/issues/3931">linkml/linkml#3931</a> names
+<code>dcterms:subject</code> as exactly that case. The entry stays in the allowlist; its
+comment now says why.</p>
+<p><strong>Upstream, checked the same day.</strong>
+<a href="https://github.com/linkml/linkml/issues/3931">#3931</a>,
+<a href="https://github.com/linkml/linkml/issues/3932">#3932</a>,
+<a href="https://github.com/linkml/linkml/issues/3933">#3933</a>,
+<a href="https://github.com/linkml/linkml/issues/3574">#3574</a>, PR
+<a href="https://github.com/linkml/linkml/pull/3575">#3575</a> and PR
+<a href="https://github.com/linkml/linkml/pull/4116">#4116</a> (a fix proposal for</p>
+<h1 id="3933-are-all-still-open-so-nothing-in-1121-changes-the-two-merged-shape">3933) are all still open, so nothing in 1.12.1 changes the two merged-shape</h1>
+<p>violations still allowlisted. The three standalone reproductions under
+<code>examples/issues_for_linkml/</code> were re-run on 1.12.1 and show the same
+verdicts; the only differences are the generated Turtle's ordering and
+blank-node labels (now RDFC-1.0's <code>_:c14n0</code>, …).</p>
 
 
 
