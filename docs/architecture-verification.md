@@ -1371,6 +1371,19 @@ and port script) and redeclaring the four others in both
 Afterwards: no unexpanded IRIs in the generated SHACL, OWL or JSON-LD
 context, and SHACL generation takes about a second again.
 
+**What downstream schemas need to know.** LinkML expands a *nested* import's
+CURIE — this schema's own `dcatap_plus:latest/schema/dcat_ap_plus` — with the
+*root* schema's prefix map, not the importing file's. So a schema that
+imports this one (through the w3id permalink) must itself declare
+`dcatap_plus`; without it, loading fails outright with `Unknown CURIE
+prefix: dcatap_plus` (observed on ResHealth-DCAT-AP the moment its sibling
+checkout of this repo switched label). It should also redeclare `qudt:`,
+`rdfs:`, `eli:` and `schema:` for the same unexpanded-IRI reason as above.
+ResHealth-DCAT-AP did both, and a third-party specialization — or the
+template repo `ROADMAP.md` sketches — should start from that prefix list. The
+flip side: a downstream root that still declares only the old `dcatapplus`
+breaks at load time until it adds `dcatap_plus`.
+
 **Guarded**, because a repeat is cheap:
 `test_own_generated_shacl_has_no_unexpanded_iris` and
 `test_dumped_instance_rdf_has_no_unexpanded_iris` fail on any IRI without a
