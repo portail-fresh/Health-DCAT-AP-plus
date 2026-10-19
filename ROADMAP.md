@@ -154,9 +154,12 @@ repeat of that forensic record.
   Verified end to end, not assumed: against the real address,
   ResHealth-DCAT-AP generates Python, `gen-yaml`, Pydantic, SHACL, OWL, JSON
   Schema and the JSON-LD context with no importmap at all, with output
-  identical to what the importmap route gives; both repos' CI is green on
-  Linux (Python 3.10–3.14). `tests/test_published_schema.py` here and
-  ResHealth-DCAT-AP's `check_schema_resolves.py` keep it that way. Full
+  identical to what the importmap route gave; both repos' CI is green on
+  Linux (Python 3.10–3.14). ResHealth-DCAT-AP then **deleted its importmap
+  altogether**: its generation, its whole test suite (SHACL layers included)
+  and its docs build now run through the published schema, and its docs
+  workflows no longer clone this repo. `tests/test_published_schema.py` here
+  and ResHealth-DCAT-AP's `check_schema_resolves.py` keep it that way. Full
   narrative: `docs/architecture-verification.md`, "A twelfth finding".
 
 ## Problems that still need fixing
@@ -228,10 +231,9 @@ inherent to Health-DCAT-AP-plus itself. In order (step 1 is done — see
    (2+-level CURIE-resolved import chains) is already a known/reported
    issue, and report it if not.**~~ **It was never that bug** — the error
    came from what *we* published, and is gone (see "What's done",
-   2026-10-19). The importmap in ResHealth-DCAT-AP is no longer a
-   workaround: it now only points generation at the sibling checkout's
-   current source, and `check_schema_resolves.py` proves the published
-   schema needs none. What the investigation did turn up are two smaller,
+   2026-10-19). ResHealth-DCAT-AP has no importmap any more, and
+   `check_schema_resolves.py` there guards the published schema. What the
+   investigation did turn up are two smaller,
    genuine gaps in the same legacy loader, neither blocking and **neither
    reported yet** (checked the tracker 2026-10-19; reproductions in
    `docs/architecture-verification.md`, "A twelfth finding"):
@@ -280,7 +282,11 @@ inherent to Health-DCAT-AP-plus itself. In order (step 1 is done — see
    finding" section for the original `xsd:` story this grew out of.
 3. **Have ResHealth-DCAT-AP clone `repos/healthdcat-ap` directly**,
    instead of reading it through Health-DCAT-AP-plus's own copy — simpler
-   dependency graph, and it's what any third party would naturally do.
+   dependency graph, and it's what any third party would naturally do. Since
+   2026-10-19 this, plus reusing this repo's `scripts/gen_merged_shacl.py`,
+   is the *only* reason ResHealth-DCAT-AP still needs a Health-DCAT-AP-plus
+   checkout: its schema import, generation and docs build go through the
+   published w3id address.
 4. **Only then, build a template repo** (via `linkml-project-copier`,
    matching how both current repos were bootstrapped) — pre-wiring the
    w3id import, the shared toolkit package dependency from step 1, the

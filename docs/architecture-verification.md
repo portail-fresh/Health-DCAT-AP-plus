@@ -1501,10 +1501,14 @@ generates through all eight generators with no importmap. Python, Pydantic,
 OWL, JSON Schema, the JSON-LD context and the canonical SHACL are identical
 to what the importmap route produces (ignoring header lines that carry a date
 or a source path); `gen-yaml`'s output differs only in the sibling's entry in
-its `imports:` list. On Linux, both repos' CI (Python 3.10–3.14) is green, and
-ResHealth-DCAT-AP's `check_schema_resolves.py` now does the legacy-loader
-generation through w3id on every `just test`, so a regression in what is
-published shows up there.
+its `imports:` list. On Linux, both repos' CI (Python 3.10–3.14) is green.
+ResHealth-DCAT-AP then deleted its importmap (and the scripts that existed
+only for it): its generation, its tests — SHACL layers included — and its
+docs build all go through w3id now, on Linux as well as Windows, and its
+`check_schema_resolves.py` does the legacy-loader generation through the
+published schema on every `just test`, so a regression in what is published
+shows up there. It still clones this repo in CI, but only for the official
+HealthDCAT-AP shapes and vocabulary snapshots its SHACL tests read.
 
 **What is left for LinkML**, none of it blocking and none of it reported yet
 (the tracker was searched on 2026-10-19; nothing matched): (a) the two
