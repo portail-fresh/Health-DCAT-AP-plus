@@ -14,7 +14,7 @@ see_also:
 id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus
 imports:
 - linkml:types
-- dcatap_plus:latest/schema/dcat_ap_plus
+- dcatap_plus:v0.1.0rc5/schema/dcat_ap_plus
 - healthdcat_ap_non_public
 license: MIT
 prefixes:
@@ -10046,5 +10046,5 @@ classes:
     class_uri: prov:Attribution
 metamodel_version: 1.12.0
 source_file: health_dcat_ap_plus.yaml
-source_file_date: '2026-10-19T09:31:34'
-source_file_size: 11185
+source_file_date: '2026-10-19T10:01:17'
+source_file_size: 11741
