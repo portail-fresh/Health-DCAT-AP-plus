@@ -23,7 +23,7 @@ does:
 
 | Rule (their docs, verbatim) | This repo |
 | --- | --- |
-| "Import the full DCAT-AP+ schema in your LinkML schema's `imports` section" | `health_dcat_ap_plus.yaml` imports `dcatap_plus:latest/schema/dcat_ap_plus` (the w3id permalink, full schema) — not a cherry-picked subset. (The label was `dcatapplus` until dcat-ap-plus v0.1.0rc5 renamed its own prefix — see the eleventh finding below.) |
+| "Import the full DCAT-AP+ schema in your LinkML schema's `imports` section" | `health_dcat_ap_plus.yaml` imports `dcatap_plus:v0.1.0rc5/schema/dcat_ap_plus` (the w3id permalink, pinned to a release since 2026-10-19 rather than `latest`; full schema) — not a cherry-picked subset. (The label was `dcatapplus` until dcat-ap-plus v0.1.0rc5 renamed its own prefix — see the eleventh finding below.) |
 | Extend classes via `is_a` | Every ported class (`HealthDataset`, `HealthAgent`, `HealthCatalogue`, ...) is `is_a: <base class>` — the core mechanism of the whole port script, not an afterthought. |
 | "Create sub-slots using `is_a` on slots for stricter constraints" | Not yet used — see open item below. |
 | Never modify `class_uri`/`slot_uri` on imported elements | Confirmed by construction: every `slot_usage` override in the port script only ever sets `range`/`required`/`multivalued`/`values_from` — never `slot_uri`. `class_uri` on a `Health<X>` class is always the *same* URI as its base, never a modification of the base's own definition (checked in §1 Check a — one shared SHACL shape, not two). |
@@ -1372,7 +1372,7 @@ Afterwards: no unexpanded IRIs in the generated SHACL, OWL or JSON-LD
 context, and SHACL generation takes about a second again.
 
 **What downstream schemas need to know.** LinkML expands a *nested* import's
-CURIE — this schema's own `dcatap_plus:latest/schema/dcat_ap_plus` — with the
+CURIE — this schema's own `dcatap_plus:…/schema/dcat_ap_plus` — with the
 *root* schema's prefix map, not the importing file's. So a schema that
 imports this one (through the w3id permalink) must itself declare
 `dcatap_plus`; without it, loading fails outright with `Unknown CURIE

@@ -83,7 +83,15 @@ default_range: string
 
 imports:
   - linkml:types
-  - dcatap_plus:latest/schema/dcat_ap_plus
+  # Pinned to a dcat-ap-plus release rather than `latest`, so a new release
+  # changes nothing here -- or for anyone importing this schema -- until it
+  # is bumped on purpose (rc5's prefix rename broke generation the moment it
+  # became `latest`). Keep in step with DCAT_AP_PLUS_IMPORT in
+  # scripts/port_healthdcat_ap_shacl_to_linkml.py, which writes the same
+  # import into the generated file below; tests/test_published_schema.py
+  # fails if they disagree. To bump: change both, re-run that script
+  # (README.md has the command), `just test`.
+  - dcatap_plus:v0.1.0rc5/schema/dcat_ap_plus
   # Mechanically ported from HealthDCAT-AP's SHACL shapes by
   # scripts/port_healthdcat_ap_shacl_to_linkml.py -- see that file for the
   # method (same targetClass/sh:property-walking approach NFDI4Chem used for

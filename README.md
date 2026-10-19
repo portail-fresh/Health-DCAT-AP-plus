@@ -36,6 +36,14 @@ Only the `non-public` tier is ported so far; `public` and `restricted` use
 the same shape files (`--tier public` / `--tier restricted`) and should port
 the same way.
 
+dcat-ap-plus is imported at a **pinned release** (currently `v0.1.0rc5`), not
+`latest`, so a new release changes nothing — here or for anyone importing this
+schema — until it is bumped on purpose. To bump: change the import in
+`health_dcat_ap_plus.yaml` and `DCAT_AP_PLUS_IMPORT` in the port script, check
+out the same tag in `repos/dcat-ap-plus`, re-run the command above, run
+`just test` (`tests/test_published_schema.py` fails if the two disagree) and
+`just gen-doc` to refresh `docs/schema/`.
+
 ## Importing this schema from another schema
 
 Specializations import it through its w3id permalink, the way

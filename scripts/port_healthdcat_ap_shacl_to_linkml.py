@@ -121,6 +121,16 @@ TIER_FILES = {
     "restricted": ["restricted-shapes.ttl", "restricted-shapes_recommended.ttl", "range.ttl"],
 }
 
+# The dcat-ap-plus release the generated schema imports, pinned rather than
+# `latest`: a new dcat-ap-plus release then changes nothing here (or for
+# anyone importing this schema) until it is bumped on purpose -- the
+# dcatapplus -> dcatap_plus rename in rc5 broke generation the moment it
+# became `latest`. Keep in step with health_dcat_ap_plus.yaml's own import
+# (tests/test_published_schema.py fails if the two disagree); bump both
+# together, re-run this script, then `just test`. w3id serves every
+# dcat-ap-plus release at /<tag>/schema/dcat_ap_plus.yaml.
+DCAT_AP_PLUS_IMPORT = "dcatap_plus:v0.1.0rc5/schema/dcat_ap_plus"
+
 # Also used to render class_uri/slot_uri as CURIEs rather than raw IRIs, matching
 # how the rest of this schema family (dcat-ap-plus, chem-dcat-ap, HealthStudy-DCAT-AP)
 # writes them.
@@ -970,7 +980,7 @@ def main() -> None:
         "prefixes": dict(PREFIXES),
         "default_prefix": "health_dcat_ap_plus",
         "default_range": "string",
-        "imports": ["linkml:types", "dcatap_plus:latest/schema/dcat_ap_plus"],
+        "imports": ["linkml:types", DCAT_AP_PLUS_IMPORT],
         "classes": classes,
         "slots": slots,
     }

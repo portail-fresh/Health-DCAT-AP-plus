@@ -18,6 +18,7 @@ check (no importmap at all, through w3id) is ResHealth-DCAT-AP's
 scripts/check_schema_resolves.py.
 """
 
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -29,6 +30,7 @@ from linkml.generators.yamlgen import YAMLGenerator
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
+import port_healthdcat_ap_shacl_to_linkml as port  # noqa: E402
 import publish_schema  # noqa: E402
 
 SOURCE_DIR = publish_schema.SOURCE_DIR
@@ -77,6 +79,20 @@ def test_no_bare_relative_imports_are_left_in_the_published_files(published):
     for name in (ROOT_FILE, f"{SIBLING}.yaml"):
         for imp in _load(published / name).get("imports") or []:
             assert ":" in imp, f"{name} still imports {imp!r} by bare name"
+
+
+def test_dcat_ap_plus_is_imported_at_one_pinned_release():
+    """Never `latest`: a new dcat-ap-plus release must change nothing here (or
+    for anyone importing this schema) until it is bumped on purpose -- rc5's
+    prefix rename broke generation the moment it became `latest`. The root
+    schema, the generated sibling and the port script that writes the sibling
+    must all name the same release."""
+    in_root = [i for i in _load(SOURCE_DIR / ROOT_FILE)["imports"] if i.startswith("dcatap_plus:")]
+    in_sibling = [i for i in _load(SOURCE_DIR / f"{SIBLING}.yaml")["imports"] if i.startswith("dcatap_plus:")]
+    assert len(in_root) == len(in_sibling) == 1
+    assert in_root == in_sibling == [port.DCAT_AP_PLUS_IMPORT]
+    release = in_root[0].split(":", 1)[1].split("/", 1)[0]
+    assert re.fullmatch(r"v\d+\.\d+\.\d+\S*", release), f"expected a release tag like v0.1.0rc5, got {release!r}"
 
 
 def test_committed_docs_schema_is_current():
