@@ -1396,8 +1396,8 @@ round-trip and the canonicalisation. The guard was checked against the
 pre-fix schema from git: it reports exactly the 11 IRIs above, in under a
 second.
 
-**Left alone, on purpose.** The published merged YAML still carries six
-mapping CURIEs — `OBI:` ×2, `IAO:` ×2, `NCIT:`, `epos:` — whose prefixes only
+**Left alone, on purpose.** The merged snapshot
+(`health_dcat_ap_plus.merged.yaml`) still carries six mapping CURIEs — `OBI:` ×2, `IAO:` ×2, `NCIT:`, `epos:` — whose prefixes only
 dcat-ap-plus declares. They are annotations (`exact_mappings`/
 `close_mappings`) that reach no generated SHACL, OWL, JSON-LD or Python, so
 declaring four more prefixes in three places seemed worse than the cosmetic
@@ -1427,3 +1427,91 @@ violations still allowlisted. The three standalone reproductions under
 `examples/issues_for_linkml/` were re-run on 1.12.1 and show the same
 verdicts; the only differences are the generated Turtle's ordering and
 blank-node labels (now RDFC-1.0's `_:c14n0`, …).
+
+### A twelfth finding: "Conflicting URIs" was our own published file, not a LinkML import-depth limit
+
+Until 2026-10-19 this document, `ROADMAP.md` and ResHealth-DCAT-AP's comments
+all said the same thing: LinkML's legacy `SchemaLoader` — the one behind
+`PythonGenerator`, `gen-yaml`, `gen-project` and `linkml-run-examples`, as
+opposed to `SchemaView` — fails with `Conflicting URIs (…) for item: Activity`
+once an import chain is two levels deep (ResHealth → this schema →
+dcat-ap-plus), so downstream generation needed a local importmap. That was an
+inference from the symptom, and it was wrong.
+
+**What was actually being served.** The w3id address
+`…/latest/schema/health_dcat_ap_plus.yaml` returned `gen-yaml`'s *merged*
+output (the LinkML project template's default for `docs/schema/`): 72
+classes — this file's 2, the ported file's 19 and all 51 of dcat-ap-plus's,
+copied in — and yet the same `imports:` list as the source. A schema
+importing it therefore defined each of those 51 classes twice: once
+physically in the file, once through the file's own import of dcat-ap-plus.
+The legacy loader's `merge_dicts` (`linkml/utils/mergeutils.py`) accepts a
+second definition of a name only if it is structurally identical to the
+first, ignoring provenance fields; none of the 51 copies is. `gen-yaml` has
+rewritten them: `exact_mappings` added to 49, slot names mangled in 32
+(`title` becomes `Activity_title`), `class_uri` changed in 2 and `slot_usage`
+in 1. So it raises. `SchemaView` does not complain about such duplicates,
+which is why the permalink always passed the canary and only the generators
+failed.
+
+**How it was established, not assumed.** A local HTTP server stood in for
+w3id, and each variant of the published file was loaded from ResHealth-DCAT-AP
+with no importmap through eight generators:
+
+| published file | `SchemaView` | Pydantic, SHACL, OWL, JSON Schema | Python, `gen-yaml`, JSON-LD context |
+|---|---|---|---|
+| merged output (as it was) | ✓ | ✓ | ✗ `Conflicting URIs … Activity` |
+| source, sibling imported by bare name | ✓ | ✓ | ✗ `FileNotFoundError` |
+| source, sibling as `./name` | ✓ | ✓ | ✗ on Windows; ✓ with POSIX path handling |
+| source, sibling as an absolute URL | ✓ | ✓ | ✓ |
+
+The same error also reproduces with three small schemas and no network:
+`gen-yaml` a schema that imports another, then import its output from a third
+→ `Conflicting URIs … for item: Thing`.
+
+**Two more quirks of that loader decided how to fix it.** Imports of imports
+are processed in the *root* schema's context (`SchemaLoader.resolve` gives
+every one of them the root's base directory), so a bare `healthdcat_ap_non_public`
+declared in this schema is looked up next to the *downstream* schema and
+raises `FileNotFoundError`. And `./name` — the form meant for exactly this —
+is rewritten by `resolve_merged_imports` with `pathlib`/`os.path`, which model
+file systems, not import names: on Windows it yields `…/latest\schema\name`
+and a 404; with POSIX path handling, an `http(s)://` importer's `//` collapses
+to `/` and the result is read as a CURIE with prefix `http`. So it only works
+for a CURIE-style importer, and only on POSIX. An absolute URL needs neither, so the
+published copy imports its sibling as
+`https://w3id.org/portail-fresh/Health-DCAT-AP-plus/latest/schema/healthdcat_ap_non_public`
+while the source keeps the bare name — local work never goes to the network
+for it.
+
+**The fix.** `scripts/publish_schema.py` (run by `just gen-doc`, hence by the
+Deploy docs workflow) publishes the source root with that one import
+rewritten, the sibling verbatim, and `gen-yaml`'s merged output as
+`health_dcat_ap_plus.merged.yaml` under a banner saying not to import it.
+w3id has redirect rules only for the two importable files, so the merged
+snapshot is reachable on GitHub Pages directly
+(`https://portail-fresh.github.io/Health-DCAT-AP-plus/schema/health_dcat_ap_plus.merged.yaml`),
+not through the permalink. `tests/test_published_schema.py` publishes into a
+scratch folder and imports it from a throwaway downstream schema with the
+legacy loader; fed the old merged file instead, the same test fails with the
+original `Conflicting URIs … Activity`.
+
+**Result.** Against the real w3id address, on Windows, ResHealth-DCAT-AP
+generates through all eight generators with no importmap. Python, Pydantic,
+OWL, JSON Schema, the JSON-LD context and the canonical SHACL are identical
+to what the importmap route produces (ignoring header lines that carry a date
+or a source path); `gen-yaml`'s output differs only in the sibling's entry in
+its `imports:` list. On Linux, both repos' CI (Python 3.10–3.14) is green, and
+ResHealth-DCAT-AP's `check_schema_resolves.py` now does the legacy-loader
+generation through w3id on every `just test`, so a regression in what is
+published shows up there.
+
+**What is left for LinkML**, none of it blocking and none of it reported yet
+(the tracker was searched on 2026-10-19; nothing matched): (a) the two
+nested-import quirks above are the legacy-loader twin of what
+[linkml/linkml#3499](https://github.com/linkml/linkml/issues/3499) fixed for
+`SchemaView` (PR #3855, in 1.12.1), and sit next to the still-open
+[#3560](https://github.com/linkml/linkml/issues/3560); (b) `gen-yaml`'s merged
+output keeps its `imports:` and so cannot be imported again — and it is what
+the project template publishes as `docs/schema/<name>.yaml`, so any
+template-based schema imported through its permalink would hit this.

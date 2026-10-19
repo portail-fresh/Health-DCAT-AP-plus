@@ -36,6 +36,41 @@ Only the `non-public` tier is ported so far; `public` and `restricted` use
 the same shape files (`--tier public` / `--tier restricted`) and should port
 the same way.
 
+## Importing this schema from another schema
+
+Specializations import it through its w3id permalink, the way
+[ResHealth-DCAT-AP](https://github.com/portail-fresh/ResHealth-DCAT-AP) does:
+
+```yaml
+prefixes:
+  healthdcatapplus: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/
+  dcatap_plus: https://w3id.org/nfdi-de/dcat-ap-plus/
+  # ... plus the other prefixes of this schema's own `prefixes:` block
+imports:
+  - linkml:types
+  - healthdcatapplus:latest/schema/health_dcat_ap_plus
+```
+
+That is all: no importmap and no sibling checkout, with either of LinkML's
+loaders (ResHealth-DCAT-AP's `scripts/check_schema_resolves.py` checks both on
+every test run). The importing schema does have to redeclare `dcatap_plus` and the other prefixes listed here, because LinkML
+expands a nested import's CURIE with the *importing* schema's prefix map and
+does not carry an imported schema's prefixes into generated output — see
+[the eleventh finding](docs/architecture-verification.md) for why.
+
+What the permalink serves (`docs/schema/`, written by
+`scripts/publish_schema.py`, which `just gen-doc` runs):
+
+* `health_dcat_ap_plus.yaml` — **import this one.** A copy of the source
+  schema; the only difference is that its sibling import is an absolute URL.
+* `healthdcat_ap_non_public.yaml` — the generated sibling it imports.
+* `health_dcat_ap_plus.merged.yaml` — `gen-yaml`'s output: the whole model,
+  dcat-ap-plus included, in a single file, for reading. **Do not import it.**
+  It still lists its imports, so every dcat-ap-plus class would be defined
+  twice and LinkML's legacy loader fails with "Conflicting URIs". Served by
+  [GitHub Pages](https://portail-fresh.github.io/Health-DCAT-AP-plus/schema/health_dcat_ap_plus.merged.yaml)
+  only; w3id has no rule for it.
+
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md) for what's done, what's still open, and
