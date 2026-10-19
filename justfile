@@ -351,11 +351,13 @@ set allow-duplicate-recipes
 # name in an imported file is not possible until a known issue in just is fixed,
 # https://github.com/casey/just/issues/2540 - So we need to override them here.
 
-# _gen-yaml only copies health_dcat_ap_plus.yaml itself to distrib_schema_path
-# -- but it imports healthdcat_ap_non_public via a bare, same-directory
-# relative name, so a schema loader resolving the *published* copy (e.g. via
-# the w3id permalink) needs that sibling file published right next to it too,
-# not just present in the source tree. Copy it here rather than teaching
-# _gen-yaml about every current/future sibling schema file individually.
-_add-artifacts:
-  cp {{source_schema_dir}}/healthdcat_ap_non_public.yaml {{distrib_schema_path}}/healthdcat_ap_non_public.yaml
+# The base recipe publishes gen-yaml's *merged* output as
+# docs/schema/health_dcat_ap_plus.yaml -- which is what the w3id permalink
+# serves, and which no other schema can import: it already contains a copy
+# of every dcat-ap-plus class but still imports dcat-ap-plus, so LinkML's
+# legacy loader finds each of them twice ("Conflicting URIs"). Publish the
+# source schema (plus its sibling) there instead, and keep the merged output
+# next to it as health_dcat_ap_plus.merged.yaml -- see
+# scripts/publish_schema.py for the full reasoning.
+_gen-yaml:
+  uv run python scripts/publish_schema.py
