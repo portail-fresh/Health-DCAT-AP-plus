@@ -46,11 +46,17 @@ repeat of that forensic record.
   funder roles via real ISO 19115 `CI_RoleCode` values). Confirmed
   empirically that its own new classes introduce zero new violations
   against any of the three shapes graphs.
-- **An upstream proposal drafted and posted** to dcat-ap-plus's own GitHub
-  Discussion: bring the generic PROV-O `Association`/`qualified_association`
-  pattern upstream (it's not health-specific). A maintainer has responded
-  positively; **currently waiting on further maintainer input** (see
-  "Blocked" below).
+- **An upstream proposal drafted, posted and approved in principle** in
+  dcat-ap-plus's own GitHub Discussion
+  ([#109](https://github.com/nfdi-de/dcat-ap-plus/discussions/109)): bring the
+  generic PROV-O `Association`/`qualified_association` pattern upstream (it's
+  not health-specific). Three maintainers have answered (2026-08-19 to
+  2026-10-14): StroemPhi found it reasonable, with no conflict; HendrikBorgelt
+  gave the go-ahead on 2026-10-13 (the others will mostly stay silent, so no
+  further approval is needed); and dalito, on 2026-10-14, called it "a real gap"
+  and "a candidate for being added to DCAT-AP+", with concrete changes for the
+  pull request (see "Problems that still need fixing"). Nothing is blocked on
+  them any more: the next move is ours.
 - **The `ClassifierMixin`/`rdf_type` finding, posted to dcat-ap-plus as
   [#110](https://github.com/nfdi-de/dcat-ap-plus/issues/110), traced one
   level further up to LinkML itself and filed as
@@ -199,6 +205,26 @@ repeat of that forensic record.
 
 ## Problems that still need fixing
 
+- **The `Association`/`qualified_association` pull request to dcat-ap-plus is
+  ours to open** (go-ahead 2026-10-13; not started). What the maintainers asked
+  for, and how it differs from what is built here. dalito (2026-10-14) suggests:
+  the role as a node, `ActivityRole` with `class_uri: prov:Role` and
+  `ClassifierMixin` (the name `Role` is taken by DCAT-AP's `dcat:Role`), so that
+  SKOS profiles write `{id: <CI_RoleCode IRI>}` and OWL/BFO profiles such as
+  ChemDCAT-AP type the same node; `Attribution` kept as DCAT-AP defines it;
+  constraints in `slot_usage` (a global `agent` slot ranged `AgenticEntity`
+  clashes with the `Agent` range of `Attribution`), with agents referenced
+  rather than inlined; the role recommended, not required; and
+  `qualified_association` on `Activity`/`Association` in `domain_agnostic_core`,
+  which would make `AssociatedDataGeneratingActivity` unnecessary. Here the role
+  is a bare `uriorcurie` with `values_from` (ISO 19115 `CI_RoleCode`, bound in
+  ResHealth-DCAT-AP's `ResearchAssociation`), `Association` lives in this repo's
+  own schema and `AssociatedDataGeneratingActivity` carries the slot, so
+  following the suggestions changes both repos. StroemPhi also wants the PROV-O
+  and BFO role patterns compared before the pattern spreads (the paper
+  doi:10.1038/s41597-025-04580-1), and is open to alternatives to `values_from`
+  for controlled values (LinkML's binding feature is, in his words, still not
+  really implemented).
 - **Two LinkML bugs are worked around in the merged shapes, not fixed.**
   `scripts/gen_merged_shacl.py`'s `GENERATOR_WORKAROUNDS` drop the
   `ClassifierMixin`/`rdf_type` property shapes
@@ -239,11 +265,6 @@ repeat of that forensic record.
 
 ## Blocked, waiting on external input
 
-- **The dcat-ap-plus Discussion** (Association/`qualified_association`
-  proposal): posted, one maintainer response so far, more input requested
-  from other maintainers. Nothing to do here until they respond — revisit
-  the `ResearchAssociation`/`values_from` downstream design (sketched, not
-  built) once it moves.
 - **[linkml/linkml#3931](https://github.com/linkml/linkml/issues/3931)**
   (the `ClassifierMixin`/`rdf_type` finding) and
   **[linkml/linkml#3932](https://github.com/linkml/linkml/issues/3932)**
