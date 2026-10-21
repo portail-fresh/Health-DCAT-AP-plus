@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/titles/">
+        <link rel="canonical" href="https://portail-fresh.github.io/Health-DCAT-AP-plus/elements/temporal_entity_frequency/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>Slot: titles - Health-DCAT-AP-plus</title>
+        <title>Slot: temporal_entity_frequency - Health-DCAT-AP-plus</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#slot-titles" class="md-skip">
+        <a href="#slot-temporal_entity_frequency" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Slot: titles
+              Slot: temporal_entity_frequency
             
           </span>
         </div>
@@ -501,9 +501,9 @@
   
 
 
-<h1 id="slot-titles">Slot: titles</h1>
+<h1 id="slot-temporal_entity_frequency">Slot: temporal_entity_frequency</h1>
 <div>
-<p>URI: <a href="http://www.w3.org/ns/csvw#titles">csvw:titles</a></p>
+<p>URI: <a href="http://data.europa.eu/m8g/frequency">cv:frequency</a></p>
 <!-- no inheritance hierarchy -->
 <h2 id="applicable-classes">Applicable Classes</h2>
 <table>
@@ -516,9 +516,9 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="../Column/">Column</a></td>
+<td><a href="../TemporalEntity/">TemporalEntity</a></td>
 <td></td>
-<td>no</td>
+<td>yes</td>
 </tr>
 </tbody>
 </table>
@@ -534,15 +534,15 @@
 <tbody>
 <tr>
 <td>Range</td>
-<td><a href="../String/">String</a></td>
+<td><a href="../Frequency/">Frequency</a></td>
 </tr>
 <tr>
 <td>Domain Of</td>
-<td><a href="../Column/">Column</a></td>
+<td><a href="../TemporalEntity/">TemporalEntity</a></td>
 </tr>
 <tr>
 <td>Slot URI</td>
-<td><a href="http://www.w3.org/ns/csvw#titles">csvw:titles</a></td>
+<td><a href="http://data.europa.eu/m8g/frequency">cv:frequency</a></td>
 </tr>
 <tr>
 <td>### Cardinality and Requirements</td>
@@ -558,10 +558,6 @@
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>Required</td>
-<td>Yes</td>
-</tr>
 <tr>
 <td>Multivalued</td>
 <td>Yes</td>
@@ -584,24 +580,23 @@
 <tbody>
 <tr>
 <td>self</td>
-<td>csvw:titles</td>
+<td>cv:frequency</td>
 </tr>
 <tr>
 <td>native</td>
-<td>health_dcat_ap_plus:titles</td>
+<td>health_dcat_ap_plus:temporal_entity_frequency</td>
 </tr>
 </tbody>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">titles</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temporal_entity_frequency</span>
 <span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/portail-fresh/Health-DCAT-AP-plus</span>
 <span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csvw:titles</span>
+<span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cv:frequency</span>
 <span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Column</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TemporalEntity</span>
+<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Frequency</span>
 <span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 </details>

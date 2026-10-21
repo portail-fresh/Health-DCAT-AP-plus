@@ -2,9 +2,9 @@
 # Ported from HealthDCAT-AP's non-public SHACL shapes by
 # scripts/port_healthdcat_ap_shacl_to_linkml.py -- re-run that script to
 # regenerate after editing it or after HealthDCAT-AP publishes a new release.
-# Source: repos\healthdcat-ap\public\releases\release-7\html\shacl
-# healthdcat-ap commit: e90053e73b3c5252706efa16afd4da424875e1b1
-# Generated: 2026-10-19
+# Source: repos/healthdcat-ap/public/releases/release-8/html/shacl/HealthDCAT-AP_validator/config/rdf-validator/ehds
+# healthdcat-ap commit: cd7841fcb98bedbc567364e27ae0d8740fde84cd
+# Generated: 2026-10-21
 id: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public
 name: healthdcat_ap_non_public
 title: HealthDCAT-AP (non-public tier), ported from SHACL
@@ -76,15 +76,12 @@ classes:
   Column:
     class_uri: csvw:Column
     slots:
+    - column_name
+    - column_title
     - datatype
     - description
-    - name
     - property_url
-    - titles
     slot_usage:
-      name:
-        required: true
-        multivalued: true
       description:
         required: true
         multivalued: true
@@ -112,6 +109,7 @@ classes:
     - has_structured_data
     - has_variables
     - hdab
+    - hdab_coordinator
     - health_category
     - health_theme
     - max_typical_age
@@ -184,19 +182,19 @@ classes:
           not strictly enforced.
       health_category:
         values_from:
-        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories
+        - https://hdeu-dcat.data.health.europa.eu/resource/authority/healthcategories
         range: uriorcurie
       has_coding_system:
         values_from:
-        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system
+        - https://hdeu-dcat.data.health.europa.eu/resource/authority/coding-system
         range: uriorcurie
       conforms_to:
         values_from:
-        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard
+        - https://hdeu-dcat.data.health.europa.eu/resource/authority/standard
         range: uriorcurie
       health_theme:
         values_from:
-        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme
+        - https://hdeu-dcat.data.health.europa.eu/resource/authority/health-theme
         range: uriorcurie
       qualified_attribution:
         range: DatasetAttribution
@@ -270,20 +268,24 @@ classes:
     class_uri: csvw:TableGroup
     slots:
     - table
+    - title
+    slot_usage:
+      title:
+        required: true
+        multivalued: true
   TemporalEntity:
     class_uri: time:TemporalEntity
     slots:
     - description
-    - frequency
+    - temporal_entity_frequency
     slot_usage:
       description:
         required: true
         multivalued: true
-      frequency:
-        range: uriorcurie
-        multivalued: true
+      temporal_entity_frequency:
         values_from:
         - http://publications.europa.eu/resource/authority/frequency
+        range: uriorcurie
   HealthLicenseDocument:
     is_a: LicenseDocument
     class_uri: dcterms:LicenseDocument
@@ -363,8 +365,11 @@ classes:
     - attribution_agent
     - attribution_had_role
 slots:
-  titles:
-    slot_uri: csvw:titles
+  column_name:
+    slot_uri: csvw:name
+    required: true
+  column_title:
+    slot_uri: csvw:title
     required: true
     multivalued: true
   datatype:
@@ -399,6 +404,9 @@ slots:
     slot_uri: healthdcatap:hdab
     range: HealthAgent
     required: true
+  hdab_coordinator:
+    slot_uri: healthdcatap:hdabCoordinator
+    range: HealthAgent
   custodian:
     slot_uri: geodcatap:custodian
     range: HealthAgent
@@ -485,6 +493,10 @@ slots:
     slot_uri: csvw:table
     range: Table
     required: true
+    multivalued: true
+  temporal_entity_frequency:
+    slot_uri: cv:frequency
+    range: Frequency
     multivalued: true
   attribution_agent:
     slot_uri: prov:agent

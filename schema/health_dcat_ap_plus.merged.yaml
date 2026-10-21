@@ -1099,11 +1099,10 @@ slots:
     mappings:
     - dcterms:accrualPeriodicity
     slot_uri: dcterms:accrualPeriodicity
-    owner: TemporalEntity
+    owner: DatasetSeries
     domain_of:
     - Dataset
     - DatasetSeries
-    - TemporalEntity
     range: string
   geographical_coverage:
     name: geographical_coverage
@@ -1544,10 +1543,9 @@ slots:
     mappings:
     - foaf:name
     slot_uri: foaf:name
-    owner: Column
+    owner: Agent
     domain_of:
     - Agent
-    - Column
     range: string
   notation:
     name: notation
@@ -1980,7 +1978,7 @@ slots:
     mappings:
     - dcterms:title
     slot_uri: dcterms:title
-    owner: Table
+    owner: TableGroup
     domain_of:
     - Activity
     - AgenticEntity
@@ -2020,6 +2018,7 @@ slots:
     - Surrounding
     - TimeInstant
     - Table
+    - TableGroup
     range: string
   type:
     name: type
@@ -2092,13 +2091,25 @@ slots:
     - Dataset
     - EvaluatedEntity
     range: string
-  titles:
-    name: titles
-    definition_uri: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/titles
+  column_name:
+    name: column_name
+    definition_uri: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/column_name
     from_schema: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public
     mappings:
-    - csvw:titles
-    slot_uri: csvw:titles
+    - csvw:name
+    slot_uri: csvw:name
+    owner: Column
+    domain_of:
+    - Column
+    range: string
+    required: true
+  column_title:
+    name: column_title
+    definition_uri: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/column_title
+    from_schema: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public
+    mappings:
+    - csvw:title
+    slot_uri: csvw:title
     owner: Column
     domain_of:
     - Column
@@ -2216,6 +2227,19 @@ slots:
     - HealthDataset
     range: HealthAgent
     required: true
+    inlined: true
+    inlined_as_list: true
+  hdab_coordinator:
+    name: hdab_coordinator
+    definition_uri: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/hdab_coordinator
+    from_schema: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public
+    mappings:
+    - healthdcatap:hdabCoordinator
+    slot_uri: healthdcatap:hdabCoordinator
+    owner: HealthDataset
+    domain_of:
+    - HealthDataset
+    range: HealthAgent
     inlined: true
     inlined_as_list: true
   custodian:
@@ -2516,6 +2540,20 @@ slots:
     - TableGroup
     range: Table
     required: true
+    multivalued: true
+    inlined: true
+    inlined_as_list: true
+  temporal_entity_frequency:
+    name: temporal_entity_frequency
+    definition_uri: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/temporal_entity_frequency
+    from_schema: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public
+    mappings:
+    - cv:frequency
+    slot_uri: cv:frequency
+    owner: TemporalEntity
+    domain_of:
+    - TemporalEntity
+    range: Frequency
     multivalued: true
     inlined: true
     inlined_as_list: true
@@ -6230,26 +6268,6 @@ slots:
     required: false
     multivalued: true
     inlined_as_list: true
-  Column_name:
-    name: Column_name
-    definition_uri: https://w3id.org/nfdi-de/dcat-ap-plus/name
-    description: This slot is described in more detail within the class in which it
-      is used.
-    from_schema: https://w3id.org/nfdi-de/dcat-ap-plus
-    mappings:
-    - foaf:name
-    is_a: name
-    domain: Column
-    slot_uri: foaf:name
-    alias: name
-    owner: Column
-    domain_of:
-    - Column
-    is_usage_slot: true
-    usage_slot_name: name
-    range: string
-    required: true
-    multivalued: true
   Column_description:
     name: Column_description
     definition_uri: https://w3id.org/nfdi-de/dcat-ap-plus/description
@@ -6643,7 +6661,7 @@ slots:
     - healthdcatap:healthCategory
     is_a: health_category
     values_from:
-    - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories
+    - https://hdeu-dcat.data.health.europa.eu/resource/authority/healthcategories
     domain: HealthDataset
     slot_uri: healthdcatap:healthCategory
     alias: health_category
@@ -6663,7 +6681,7 @@ slots:
     - healthdcatap:hasCodingSystem
     is_a: has_coding_system
     values_from:
-    - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system
+    - https://hdeu-dcat.data.health.europa.eu/resource/authority/coding-system
     domain: HealthDataset
     slot_uri: healthdcatap:hasCodingSystem
     alias: has_coding_system
@@ -6684,7 +6702,7 @@ slots:
     - dcterms:conformsTo
     is_a: Dataset_conforms_to
     values_from:
-    - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard
+    - https://hdeu-dcat.data.health.europa.eu/resource/authority/standard
     domain: HealthDataset
     slot_uri: dcterms:conformsTo
     alias: conforms_to
@@ -6705,7 +6723,7 @@ slots:
     - healthdcatap:healthTheme
     is_a: health_theme
     values_from:
-    - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme
+    - https://hdeu-dcat.data.health.europa.eu/resource/authority/health-theme
     domain: HealthDataset
     slot_uri: healthdcatap:healthTheme
     alias: health_theme
@@ -6932,6 +6950,26 @@ slots:
     usage_slot_name: keyword
     range: string
     multivalued: true
+  TableGroup_title:
+    name: TableGroup_title
+    definition_uri: https://w3id.org/nfdi-de/dcat-ap-plus/title
+    description: This slot is described in more detail within the class in which it
+      is used.
+    from_schema: https://w3id.org/nfdi-de/dcat-ap-plus
+    mappings:
+    - dcterms:title
+    is_a: title
+    domain: TableGroup
+    slot_uri: dcterms:title
+    alias: title
+    owner: TableGroup
+    domain_of:
+    - TableGroup
+    is_usage_slot: true
+    usage_slot_name: title
+    range: string
+    required: true
+    multivalued: true
   TemporalEntity_description:
     name: TemporalEntity_description
     definition_uri: https://w3id.org/nfdi-de/dcat-ap-plus/description
@@ -6952,25 +6990,23 @@ slots:
     range: string
     required: true
     multivalued: true
-  TemporalEntity_frequency:
-    name: TemporalEntity_frequency
-    definition_uri: https://w3id.org/nfdi-de/dcat-ap-plus/frequency
-    description: This slot is described in more detail within the class in which it
-      is used.
-    from_schema: https://w3id.org/nfdi-de/dcat-ap-plus
+  TemporalEntity_temporal_entity_frequency:
+    name: TemporalEntity_temporal_entity_frequency
+    definition_uri: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/temporal_entity_frequency
+    from_schema: https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public
     mappings:
-    - dcterms:accrualPeriodicity
-    is_a: frequency
+    - cv:frequency
+    is_a: temporal_entity_frequency
     values_from:
     - http://publications.europa.eu/resource/authority/frequency
     domain: TemporalEntity
-    slot_uri: dcterms:accrualPeriodicity
-    alias: frequency
+    slot_uri: cv:frequency
+    alias: temporal_entity_frequency
     owner: TemporalEntity
     domain_of:
     - TemporalEntity
     is_usage_slot: true
-    usage_slot_name: frequency
+    usage_slot_name: temporal_entity_frequency
     range: uriorcurie
     multivalued: true
   HealthLicenseDocument_type:
@@ -9524,16 +9560,12 @@ classes:
     exact_mappings:
     - csvw:Column
     slots:
+    - column_name
+    - column_title
     - datatype
     - Column_description
-    - Column_name
     - property_url
-    - titles
     slot_usage:
-      name:
-        name: name
-        required: true
-        multivalued: true
       description:
         name: description
         required: true
@@ -9593,6 +9625,7 @@ classes:
     - has_structured_data
     - has_variables
     - hdab
+    - hdab_coordinator
     - HealthDataset_health_category
     - HealthDataset_health_theme
     - max_typical_age
@@ -9700,22 +9733,22 @@ classes:
       health_category:
         name: health_category
         values_from:
-        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories
+        - https://hdeu-dcat.data.health.europa.eu/resource/authority/healthcategories
         range: uriorcurie
       has_coding_system:
         name: has_coding_system
         values_from:
-        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system
+        - https://hdeu-dcat.data.health.europa.eu/resource/authority/coding-system
         range: uriorcurie
       conforms_to:
         name: conforms_to
         values_from:
-        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard
+        - https://hdeu-dcat.data.health.europa.eu/resource/authority/standard
         range: uriorcurie
       health_theme:
         name: health_theme
         values_from:
-        - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme
+        - https://hdeu-dcat.data.health.europa.eu/resource/authority/health-theme
         range: uriorcurie
       qualified_attribution:
         name: qualified_attribution
@@ -9874,6 +9907,12 @@ classes:
     - csvw:TableGroup
     slots:
     - table
+    - TableGroup_title
+    slot_usage:
+      title:
+        name: title
+        required: true
+        multivalued: true
     class_uri: csvw:TableGroup
   TemporalEntity:
     name: TemporalEntity
@@ -9883,18 +9922,17 @@ classes:
     - time:TemporalEntity
     slots:
     - TemporalEntity_description
-    - TemporalEntity_frequency
+    - TemporalEntity_temporal_entity_frequency
     slot_usage:
       description:
         name: description
         required: true
         multivalued: true
-      frequency:
-        name: frequency
+      temporal_entity_frequency:
+        name: temporal_entity_frequency
         values_from:
         - http://publications.europa.eu/resource/authority/frequency
         range: uriorcurie
-        multivalued: true
     class_uri: time:TemporalEntity
   HealthLicenseDocument:
     name: HealthLicenseDocument
@@ -10046,5 +10084,5 @@ classes:
     class_uri: prov:Attribution
 metamodel_version: 1.12.0
 source_file: health_dcat_ap_plus.yaml
-source_file_date: '2026-10-19T12:13:26'
+source_file_date: '2026-10-21T10:14:39'
 source_file_size: 11741
