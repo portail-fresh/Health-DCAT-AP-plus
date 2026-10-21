@@ -214,8 +214,8 @@ repeat of that forensic record.
   class_uri/slot_uri sharing behind them.
 - **HealthDCAT-AP itself is still moving** (open upstream issues, read on
   2026-10-21 at https://code.europa.eu/healthdataeu/healthdcat-ap/-/issues).
-  What each would change here: #43 (the shape without `sh:path`; our loader's
-  workaround stays until it is fixed), #51 (a permanent namespace for
+  What each would change here: #43 (the shape without `sh:path`; our loader
+  keeps it as a node shape until it is fixed), #51 (a permanent namespace for
   `healthdcatap:`, a breaking change for every slot URI of the ported
   schema), #55 / #56 / #4 / #31 (CSVW: a `csvw:TableSchema` level between table
   and column, the range of `csvw:url` / `csvw:propertyUrl`, mandatory table

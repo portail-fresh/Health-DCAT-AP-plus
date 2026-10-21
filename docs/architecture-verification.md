@@ -1585,7 +1585,7 @@ would therefore have been dumped to RDF on predicates the official shapes
 don't ask for. Nothing noticed because no fixture populated either: the
 fixture had `has_structured_data: true` but never `has_variables`, and the
 official shape for that conditional is the one the pathless-`sh:property`
-workaround drops anyway. This is the same family as the `cv:contactPoint` /
+workaround dropped at the time (it is kept now, see the fifteenth finding). This is the same family as the `cv:contactPoint` /
 `contact_point` collision found on 2026-08-21 (`PROPERTY_RENAME`), which had
 been handled by hand for that one predicate. Two changes close it for good:
 the port script now **raises** when a shape lands on a slot whose URI is not the
@@ -1741,10 +1741,11 @@ the class_uri/slot_uri sharing named in the test file), against the merged
 shapes 2 → 0 violations, against the official shapes 0 → 0, with seven warnings
 for recommended properties the fixture does not fill.
 
-**Left as it was.** The conditional rule "if `hasStructuredData` is true,
-`hasVariables` is required" is the one upstream shape that cannot be loaded
-(#43); it stays unenforced by every check here, though the hosted validator
-enforces it. The vocabulary catalogue given to the tests is the terms the data
+**Left as it was.** (Corrected the same day, fifteenth finding: the conditional
+rule "if `hasStructuredData` is true, `hasVariables` is required" — the one
+upstream shape that cannot be loaded as published, #43 — was unenforced here
+when this was written, though the official and the hosted validators enforce it;
+it is kept as a node shape now.) The vocabulary catalogue given to the tests is the terms the data
 references plus one hop of `skos:inScheme`, not the 457,000 triples the
 validator preloads. That reduction has cost before: the audit found that the
 release-7 official example "failed" with one violation and two warnings in the
@@ -1762,3 +1763,70 @@ country and continent tables) therefore errs on the side of fewer, not other,
 results. Not reported upstream yet, and needing an owner's go-ahead: the two
 legacy-loader gaps of the twelfth finding and the `dpv-pd#` discrepancy of the
 thirteenth.
+
+### A fifteenth finding: the hosted Sciensano validator is a different validator, and how ours compares
+
+The question after the fourteenth: does our merged-shapes check give the same
+results as the hosted validator at
+https://healthdcat-validator.sciensano.be/shacl/dcat/upload? Answered on
+2026-10-21 by submitting ten synthetic documents to its release-8 non-public
+type and diffing the reports (with the maintainer's go-ahead: it uploads data to
+an external service).
+
+**What the hosted validator is.** Not the official EHDS validator. It is an ITB
+instance (TopBraid SHACL on Jena, according to the Test Bed's own guide; it
+merges shapes into the input before validating, by default) with its own
+configuration: domain `dcat`, types named
+`healthdcatap-<tier>.release-<n>-dataset-focus` ("Dataset & distributions"), and
+a `dcatap.v3.0.1-dataset-focus` type — read from its public `api/info`. The
+official repository's configuration (`…/ehds/config.properties`) has other type
+names, and the hosted configuration's shape files are published nowhere I could
+find. So "the hosted validator" and "the official one" are two things, and they
+differ in ways the probes show.
+
+**Method.** Ten probes (the official example, our published example, a bare
+`a dcat:Dataset`, and mutations of the official example: no `dct:title`, the
+release-7 vocabulary host, `hasStructuredData` without `hasVariables`, `PUBLIC`
+access rights, external terms untyped, personal data in `dpv/pd#`, a literal
+activity type), each posted to `POST /shacl/dcat/api/validate` with the type
+`healthdcatap-nonpublic.release-8-dataset-focus`, the API's defaults for
+`loadImports` and `mergeModelsBeforeValidation`, and `reportSyntax: text/turtle`.
+The reports were compared with pyshacl on the official shapes (with their
+imports) and on our merged shapes, with the vocabulary terms supplied as the
+official validator supplies them. Counts below are `sh:result` entries.
+
+**What agrees.** Rule by rule, nearly everything: what each mutation *adds* to
+the unmutated example's result is the same set on both sides for the missing
+title (`title` MinCount), `PUBLIC` access rights (`accessRights` Class +
+HasValue), personal data in the wrong namespace (`hasPersonalData` Class ×2 +
+Node ×2) and a literal activity type (`wasGeneratedBy` Node). For a bare dataset
+the 17 violations have identical signatures. The hosted validator also accepts
+`dcat:byteSize` typed `xsd:nonNegativeInteger`, as the release-8 specification
+and the vendored shapes do.
+
+**What differs, and why.**
+
+| | hosted | ours | cause |
+|---|---|---|---|
+| HealthDCAT-AP's own example | **12 violations**, 1 warning | 0, 3 warnings | the hosted type loads no vocabulary catalogue: every vocabulary term fails `sh:class skos:Concept` (theme, type, healthCategory, healthTheme, availability ×4, status ×4). The official example is rejected by it. |
+| bare dataset, warnings | 33 | 28 | the five extra are `dcat:contactPoint`, `dcat:distribution`, `dcat:keyword`, `dct:spatial`, `dct:temporal`: the recommended constraints that HealthDCAT-AP's own copy of DCAT-AP's `shapes_recommended.ttl` comments out because its dataset shape makes them mandatory. The hosted validator imports DCAT-AP's original files (3.0.1 by the `byteSize` evidence: 3.0.0 says `xsd:decimal`, 3.0.1 `xsd:nonNegativeInteger`; inference, not proof). |
+| agent `dct:type` warnings (×8 on our example), `bbox`/`centroid` | none | reported | Apparently "Dataset & distributions" (inferred from the type's label and from these results): the hosted configuration does not apply the agent and location shapes that have their own `sh:targetClass`, only what the dataset and distribution shapes reach. |
+| untyped external terms | 16 added | 17 added | same detection, reported at a different level: the hosted engine reports a failed nested `sh:node` once on the dataset's `hdab`/`custodian`/`publisher` (×4), pyshacl reports the inner `frequency` Class result (×8); and our environment types `dct:Standard` terms from the catalogue. |
+| literal activity type | 13 | 1 official / 11 merged | our merged shapes add their own `prov:Activity` shape (widened to accept a `skos:Concept`), which also objects to a literal. Pass/fail verdicts agree; counts on already-invalid data do not. |
+| `hasStructuredData` true without `hasVariables` | **+1 (`Or`)** | **0** | **a real gap on our side**: the rule sits in a malformed upstream shape (#43) that pyshacl cannot load, and the loader dropped it. |
+
+**The gap is closed.** `load_official_shapes_graph()` now keeps that shape as a
+node shape of its own with the target of the shape that held it (it keeps its
+own message and severity) instead of dropping it. The same probe now gives one
+`Or` violation on both the official and the merged shapes, the unmutated example
+none, and `test_structured_data_without_variables_is_a_violation` pins it.
+
+**What this does not settle.** The hosted type's own result for valid data is
+not a standard to match: it rejects the official example, because of its
+environment rather than its rules (the UI offers no way to load the vocabularies;
+whether Sciensano's production setup differs from the API's defaults I could not
+see). So the comparison of record is rule by rule, as above. The official
+engine on the official configuration has not been run: that needs the ITB
+validator image (Docker), not downloaded here. Worth telling Sciensano: their
+release-8 type reports 12 errors on HealthDCAT-AP's own example. Not done: that
+is theirs to hear, not ours to file.

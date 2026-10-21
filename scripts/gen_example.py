@@ -25,7 +25,8 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from gen_merged_shacl import serialize_canonical  # noqa: E402
-from test_shacl_validation import ELI, _build_test_dataset_graph  # noqa: E402
+from test_shacl_validation import _build_test_dataset_graph  # noqa: E402
+from validation_support import ELI  # noqa: E402
 
 OUTPUT_PATH = REPO_ROOT / "examples" / "HealthDataset-full-example.ttl"
 

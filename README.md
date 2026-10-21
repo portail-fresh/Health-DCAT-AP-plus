@@ -117,9 +117,10 @@ the vocabulary terms your data refers to as data (the `tests/` do, with
 `scripts/validation_support.py`) and type the terms whose shape checks a class
 (`<term> a dct:Frequency`), as HealthDCAT-AP's own example does. Not in it, on
 purpose: release 8's `graph-guard.ttl` (the graph must contain a dataset), and
-the vocabularies themselves. Not enforceable by any check here: "if
-`hasStructuredData` is true, `hasVariables` is required" (a malformed upstream
-shape, healthdataeu/healthdcat-ap#43).
+the vocabularies themselves. The rule "if `hasStructuredData` is true,
+`hasVariables` is required" sits in a malformed upstream shape
+(healthdataeu/healthdcat-ap#43) that pyshacl cannot load; it is kept as a node
+shape of its own, so it is enforced like the official validator does.
 `examples/HealthDataset-validation-check.ipynb` walks through it. How the file is
 built, and why: `scripts/gen_merged_shacl.py` and
 [the fourteenth finding](docs/architecture-verification.md).

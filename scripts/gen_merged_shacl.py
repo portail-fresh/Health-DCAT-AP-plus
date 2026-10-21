@@ -69,7 +69,7 @@ HealthDCAT-AP's own shapes are Copyright (c) 2025 European Union, published
 under CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/) -- confirmed
 in the release-8 spec's License section and the repository's LICENSE file.
 This script includes them (with one small, already-documented upstream bug fix
--- one malformed sh:property triple with no sh:path dropped, still open
+-- one malformed sh:property with no sh:path turned into a node shape, still open
 upstream as healthdataeu/healthdcat-ap#43) inside the merged output, with that
 attribution in the generated file's header -- see LICENSE_HEADER.
 """
@@ -212,20 +212,28 @@ def load_official_shapes_graph() -> Graph:
     # hasStructuredData/hasVariables sh:or is used directly as an sh:property
     # value, with no sh:path -- not a well-formed SHACL PropertyShape, and
     # strict processors (pyshacl included) reject the whole file because of it.
-    # Not our file to fix -- worked around by dropping just that one triple so
-    # the rest can be checked; the conditional constraint it carried ("if
-    # hasStructuredData is true, hasVariables is required") goes unenforced here
-    # (the hosted validator does enforce it). If this assertion ever fires, the
-    # upstream file changed shape -- re-diagnose before trusting the workaround.
-    removed = [(s, p, o) for s, p, o in g.triples((None, SH.property, None)) if (o, SH.path, None) not in g]
-    assert len(removed) == 1, (
+    # The official validator (TopBraid) reads it as what it plainly means, a
+    # constraint on the dataset itself: "if hasStructuredData is true,
+    # hasVariables is required". Not our file to fix, but the rule can be kept:
+    # the malformed shape becomes a node shape of its own with the targets of
+    # the shape that held it (it keeps its own sh:message and sh:severity, which
+    # is why it is not merged into the owner). Dropping it instead -- as this
+    # function did until 2026-10-21 -- left the rule unenforced, and the hosted
+    # Sciensano validator, which does report it, then disagreed with us. If this
+    # assertion ever fires, the upstream file changed shape (fixed, or another
+    # malformed shape added) -- re-diagnose before trusting the repair.
+    pathless = [(s, o) for s, _, o in g.triples((None, SH.property, None)) if (o, SH.path, None) not in g]
+    assert len(pathless) == 1, (
         f"expected exactly 1 malformed sh:property (Dataset_Shape's "
         f"hasStructuredData/hasVariables sh:or missing sh:path) in "
-        f"non-public-shapes.ttl, found {len(removed)} -- upstream shapes "
-        "changed, re-diagnose before trusting this workaround"
+        f"non-public-shapes.ttl, found {len(pathless)} -- upstream shapes "
+        "changed, re-diagnose before trusting this repair"
     )
-    for triple in removed:
-        g.remove(triple)
+    for owner, malformed in pathless:
+        g.remove((owner, SH.property, malformed))
+        g.add((malformed, RDF.type, SH.NodeShape))
+        for target in list(g.objects(owner, SH.targetClass)):
+            g.add((malformed, SH.targetClass, target))
     return g
 
 
@@ -370,7 +378,7 @@ LICENSE_HEADER = """\
 #      shapes.ttl, shapes_recommended.ttl, range.ttl) that those files
 #      owl:import and that HealthDCAT-AP's validator loads from its own copy.
 #      Included with one small upstream bug fix applied (one malformed
-#      sh:property triple with no sh:path removed) -- see
+#      sh:property with no sh:path made a node shape of its own) -- see
 #      scripts/gen_merged_shacl.py. Not included: release 8's graph-guard.ttl.
 #
 #   2. This schema's own generated SHACL (open, not closed) for everything the

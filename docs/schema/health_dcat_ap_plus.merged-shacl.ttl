@@ -16,7 +16,7 @@
 #      shapes.ttl, shapes_recommended.ttl, range.ttl) that those files
 #      owl:import and that HealthDCAT-AP's validator loads from its own copy.
 #      Included with one small upstream bug fix applied (one malformed
-#      sh:property triple with no sh:path removed) -- see
+#      sh:property with no sh:path made a node shape of its own) -- see
 #      scripts/gen_merged_shacl.py. Not included: release 8's graph-guard.ttl.
 #
 #   2. This schema's own generated SHACL (open, not closed) for everything the
@@ -3080,12 +3080,14 @@ prov:Entity a sh:NodeShape ;
             sh:path dct:type ] ;
     sh:targetClass prov:Entity .
 
-[] sh:message "If healthdcatap:hasStructuredData is true, the dataset must include at least one healthdcatap:hasVariables." ;
+[] a sh:NodeShape ;
+    sh:message "If healthdcatap:hasStructuredData is true, the dataset must include at least one healthdcatap:hasVariables." ;
     sh:or ( [ sh:property [ sh:minCount 1 ;
                         sh:path healthdcatap:hasVariables ],
                     [ sh:hasValue true ;
                         sh:path healthdcatap:hasStructuredData ] ] [ sh:property [ sh:hasValue false ;
                         sh:path healthdcatap:hasStructuredData ] ] [ sh:property [ sh:maxCount 0 ;
                         sh:path healthdcatap:hasStructuredData ] ] ) ;
-    sh:severity sh:Violation .
+    sh:severity sh:Violation ;
+    sh:targetClass dcat:Dataset .
 

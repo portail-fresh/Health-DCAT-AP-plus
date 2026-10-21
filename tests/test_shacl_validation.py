@@ -39,7 +39,7 @@ from linkml_merge_toolkit.shacl_merge import targeted_classes
 from linkml_runtime import SchemaView
 from linkml_runtime.dumpers import rdflib_dumper
 from rdflib import FOAF, SKOS, Graph, Literal, Namespace, URIRef
-from rdflib.namespace import DCTERMS
+from rdflib.namespace import DCTERMS, RDF
 
 import health_dcat_ap_plus.datamodel.health_dcat_ap_plus as dm
 
@@ -372,6 +372,26 @@ def test_official_shapes_include_the_imported_dcat_ap_shapes():
         if (ps, sh.minCount, None) in shapes
     }
     assert DCTERMS.title in required and DCTERMS.description in required
+
+
+@needs_official_clone
+@pytest.mark.parametrize("shapes", ["official", "merged"])
+def test_structured_data_without_variables_is_a_violation(shapes):
+    """HealthDCAT-AP's rule "if hasStructuredData is true, hasVariables is
+    required" sits in a property shape with no sh:path (healthdataeu/healthdcat-ap#43)
+    that pyshacl cannot load. It is kept as a node shape of its own
+    (gen_merged_shacl.load_official_shapes_graph) because the official validator
+    enforces it, and so does the hosted Sciensano one -- this is the probe on
+    which the two once disagreed with us (the example with its variables removed
+    got no violation here, one `Or` there)."""
+    document = Graph().parse(str(OFFICIAL_EXAMPLE_PATH), format="turtle")
+    health = Namespace("http://healthdataportal.eu/ns/health#")
+    for dataset in list(document.subjects(RDF.type, DCAT.Dataset)):
+        document.remove((dataset, health.hasVariables, None))
+    shapes_graph = _official_shapes_graph() if shapes == "official" else _merged_shapes_graph()
+    results = _validate(_with_official_environment(document), shapes_graph)
+    assert ("Violation", "OrConstraintComponent", "(none)") in results
+    assert results - {("Violation", "OrConstraintComponent", "(none)")} == KNOWN_OFFICIAL_EXAMPLE_WARNINGS
 
 
 @needs_official_clone
