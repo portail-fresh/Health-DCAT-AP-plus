@@ -17,24 +17,51 @@ when building `chem-dcat-ap`. **Do not hand-edit the generated file** —
 re-run the script instead (see its own docstring for the method, known
 limitations, and how classes/slots are named).
 
-To regenerate after `repos/healthdcat-ap` or `repos/dcat-ap-plus` are updated
-(shallow clones, gitignored — re-clone with `git clone --depth 1
-https://github.com/nfdi-de/dcat-ap-plus.git repos/dcat-ap-plus` and `git
-clone --depth 1 https://code.europa.eu/healthdataeu/healthdcat-ap.git
-repos/healthdcat-ap`):
+The schema is ported from **HealthDCAT-AP release 8** (commit `cd7841f`, the
+upstream `main` of 2026-09-18; release 7 is deprecated upstream). To
+regenerate after `repos/healthdcat-ap` or `repos/dcat-ap-plus` are updated
+(shallow clones, gitignored). `repos/healthdcat-ap` is fetched at the pinned
+commit, not `main`, because upstream edits old release folders in place and
+moves files between releases (release 8 removed the flat copies of the shapes
+that release 7 had); CI does the same, and `tests/test_ported_schema.py`
+fails if the commit in CI and the one recorded in the generated schema's
+header disagree, or if a local clone is at another commit:
+
+```
+git clone --depth 1 --branch v0.1.0rc5 https://github.com/nfdi-de/dcat-ap-plus.git repos/dcat-ap-plus
+git init repos/healthdcat-ap
+git -C repos/healthdcat-ap fetch --depth 1 https://code.europa.eu/healthdataeu/healthdcat-ap.git cd7841fcb98bedbc567364e27ae0d8740fde84cd
+git -C repos/healthdcat-ap checkout --detach FETCH_HEAD
+```
 
 ```
 .venv/Scripts/python scripts/port_healthdcat_ap_shacl_to_linkml.py \
-  repos/healthdcat-ap/public/releases/release-7/html/shacl \
+  repos/healthdcat-ap/public/releases/release-8/html/shacl/HealthDCAT-AP_validator/config/rdf-validator/ehds \
   repos/dcat-ap-plus/src/dcat_ap_plus/schema/dcat_ap_plus.yaml \
   src/health_dcat_ap_plus/schema/healthdcat_ap_non_public.yaml \
   --tier non-public \
   --healthdcat-ap-repo repos/healthdcat-ap
 ```
 
+(On Windows, mind the 260-character path limit: the deepest file in the
+release 8 tree is 137 characters below the clone, so with the repository at
+`…\Documents\python_projects\rdf_processing_home\` the full path is 250. Keep the
+repository close to the drive root, or `git config --global core.longpaths
+true` and enable Windows' long-path support.)
+
 Only the `non-public` tier is ported so far; `public` and `restricted` use
 the same shape files (`--tier public` / `--tier restricted`) and should port
 the same way.
+
+To move to a newer release: fetch its commit into `repos/healthdcat-ap`, adapt
+`TIER_FILES` in the port script and `HEALTHDCATAP_RELEASE` /
+`REAL_SHAPE_FILES` in `scripts/gen_merged_shacl.py` if the folder layout moved
+again, re-run the port script (it stops with an error if a shape's predicate
+would land on a slot of another predicate), then `just gen-python`, `python
+scripts/gen_example.py`, `just gen-shacl` and `just gen-doc`, change the SHA in
+`.github/workflows/main.yaml`, and run `just test`. Diff the generated schema
+against the previous one before committing: that diff is the list of what the
+release changed.
 
 dcat-ap-plus is imported at a **pinned release** (currently `v0.1.0rc5`), not
 `latest`, so a new release changes nothing — here or for anyone importing this

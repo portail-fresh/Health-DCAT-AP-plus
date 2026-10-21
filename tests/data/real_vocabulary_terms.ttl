@@ -27,7 +27,8 @@
 
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dpv: <https://w3id.org/dpv#> .
-@prefix pd: <https://w3id.org/dpv/pd#> .
+@prefix dpvpd: <https://w3id.org/dpv/dpv-pd#> .
+@prefix dct: <http://purl.org/dc/terms/> .
 
 dpv:LegalObligation
     a skos:Concept, dpv:LegalBasis .
@@ -35,5 +36,21 @@ dpv:LegalObligation
 dpv:ScientificResearch
     a skos:Concept, dpv:Purpose .
 
-pd:MedicalHealth
-    a skos:Concept, dpv:PersonalData, dpv:SpecialCategoryPersonalData .
+# Not DPV's own triples, unlike the two above: HealthDCAT-AP release 8 requires
+# dpv:hasPersonalData values to match ^https://w3id.org/dpv/dpv-pd#.+ and its
+# own example types such terms inline as `dpvpd:Age a dpv:PersonalData`, which
+# is all this does for the fixture's term. DPV 2.3 itself defines its
+# personal-data categories under https://w3id.org/dpv/pd# (checked 2026-10-21),
+# e.g. pd:MedicalHealth, so this IRI is the official profile's convention, not a
+# DPV term -- see the fixture's own comment.
+dpvpd:MedicalHealth
+    a dpv:PersonalData .
+
+# Also not a DPV triple: the EU Publications Office frequency catalogue
+# (frequencies.rdf in the official validator's catalogue) declares its terms
+# as skos:Concept only, while the official shape for cv:frequency checks
+# sh:class dct:Frequency. The official example types the terms it uses inline
+# (`<.../frequency/DAILY> a dct:Frequency`, at its end); the fixture's
+# opening hours use DAILY, so it is typed the same way here.
+<http://publications.europa.eu/resource/authority/frequency/DAILY>
+    a dct:Frequency .

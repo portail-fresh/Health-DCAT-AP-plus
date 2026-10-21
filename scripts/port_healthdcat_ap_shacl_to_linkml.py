@@ -98,8 +98,23 @@ CLASS_RENAME = {
 # not dcat:contactPoint -- not a hypothetical. Renamed here, same fix as
 # attribution_had_role's own collision with dcat-ap-plus's pre-existing
 # had_role.
+#
+# csvw:name, csvw:title and cv:frequency are the same accident again: the
+# snake_case fallback gives "name", "title" and "frequency", which are
+# dcat-ap-plus's foaf:name, dcterms:title and dcterms:accrualPeriodicity
+# slots, so a CSVW Column's name and title and an opening-hours
+# TemporalEntity's frequency were ported onto the wrong predicates (csvw:name
+# and cv:frequency since release 7; csvw:title once release 8 renamed
+# csvw:titles to it). No fixture populated hasVariables or opening hours, so
+# nothing noticed; found while porting release 8 by diffing the output.
+# build_linkml now raises when a name resolves to a slot of a different
+# predicate, so the next collision stops generation instead of producing a
+# quietly wrong schema.
 PROPERTY_RENAME = {
     "http://data.europa.eu/m8g/contactPoint": "agent_contact_point",
+    "http://data.europa.eu/m8g/frequency": "temporal_entity_frequency",
+    "http://www.w3.org/ns/csvw#name": "column_name",
+    "http://www.w3.org/ns/csvw#title": "column_title",
 }
 
 XSD_TYPE_NAME = {
@@ -115,11 +130,30 @@ XSD_TYPE_NAME = {
     XSD.hexBinary: "hexBinary",
 }
 
+# Release 8 keeps the shape files only inside the official validator's config
+# tree (release 7 also had flat copies in html/shacl/), one sub-folder per
+# kind of file; `shacl_dir` below is that tree's `ehds` folder and every path
+# here is relative to it. Not listed: shapes/graph-guard.ttl (a SPARQL check
+# that the graph holds at least one dcat:Dataset -- no classes or properties
+# to port) and the owl:imports manifests in imports/.
 TIER_FILES = {
-    "non-public": ["non-public-shapes.ttl", "non-public-shapes_recommended.ttl", "range.ttl"],
-    "public": ["public-shapes.ttl", "public-shapes_recommended.ttl", "range.ttl"],
-    "restricted": ["restricted-shapes.ttl", "restricted-shapes_recommended.ttl", "range.ttl"],
+    "non-public": [
+        "shapes/non-public-shapes.ttl",
+        "recommended/non-public-shapes_recommended.ttl",
+        "ranges/range.ttl",
+    ],
+    "public": [
+        "shapes/public-shapes.ttl",
+        "recommended/public-shapes_recommended.ttl",
+        "ranges/range.ttl",
+    ],
+    "restricted": [
+        "shapes/restricted-shapes.ttl",
+        "recommended/restricted-shapes_recommended.ttl",
+        "ranges/range.ttl",
+    ],
 }
+VOCABULARY_SHAPES_FILE = "controlled-vocabularies/mdr-vocabularies.shape.ttl"
 
 # The dcat-ap-plus release the generated schema imports, pinned rather than
 # `latest`: a new dcat-ap-plus release then changes nothing here (or for
@@ -202,23 +236,6 @@ def local_name(uri: str) -> str:
     return uri
 
 
-# range.ttl and mdr-vocabularies.shape.ttl declare `@prefix dcatap:
-# <http://data.europa.eu/r5r>` -- missing the trailing slash that
-# non-public-shapes.ttl/non-public-shapes_recommended.ttl (and dcat-ap-plus's
-# own schema: `dcatap: http://data.europa.eu/r5r/`) both have. Confirmed by
-# reading all four files' own @prefix lines, not assumed -- a real
-# inconsistency within HealthDCAT-AP's own release, not something this port
-# introduces. Per the Turtle spec this makes every dcatap:X term in those two
-# files expand to a malformed, concatenated URI (e.g. dcatap:availability ->
-# .../r5ravailability instead of .../r5r/availability), silently failing to
-# match any real dcat-ap-plus slot. The correct namespace is unambiguous (3
-# of 4 sources agree), so this is corrected before parsing rather than left
-# to silently produce garbage slot names -- worth reporting upstream, but
-# also safe to fix locally since it's not a judgment call.
-_KNOWN_UPSTREAM_PREFIX_FIXES = {
-    "@prefix dcatap: <http://data.europa.eu/r5r> .": "@prefix dcatap: <http://data.europa.eu/r5r/> .",
-}
-
 # Properties where the "recovered narrowing" logic below (range_name is
 # None but existing.range in rename) is real and correct -- the value
 # really is checked against a real, independently-shaped profile class --
@@ -240,13 +257,6 @@ _KNOWN_UPSTREAM_PREFIX_FIXES = {
 # exact same recovery mechanism correctly keeps cv:contactPoint inlined,
 # which genuinely is a compositional sub-object, not an independent one).
 _FORCE_NON_INLINED_ON_RECOVERED_RANGE = {"source"}
-
-
-def parse_turtle_with_known_fixes(g: rdflib.Graph, path: Path) -> None:
-    text = path.read_text(encoding="utf-8")
-    for bad, good in _KNOWN_UPSTREAM_PREFIX_FIXES.items():
-        text = text.replace(bad, good)
-    g.parse(data=text, format="turtle")
 
 
 def to_snake_case(name: str) -> str:
@@ -272,6 +282,22 @@ def load_base_schema(schema_path: str):
         if uri:
             uri_to_class[uri] = class_name
     return sv, uri_to_slot, uri_to_class
+
+
+def predicate_clash(prop_name: str, class_name: str, slot_uri: str | None, path_uri: str | None) -> str | None:
+    """A property shape may only be ported onto a slot of the same predicate.
+
+    Slots are looked up by NAME (property_name_for's snake_case fallback, then
+    build_linkml's base_slot), so a shape whose predicate merely shares its
+    local name with an unrelated dcat-ap-plus slot (csvw:title / dcterms:title,
+    csvw:name / foaf:name) would otherwise take that slot over and silently
+    emit the wrong predicate. Returns a description of the clash, if any."""
+    if slot_uri and path_uri and slot_uri != path_uri:
+        return (
+            f"{class_name}: the shape's predicate <{path_uri}> resolved to the slot {prop_name!r}, which is "
+            f"<{slot_uri}>"
+        )
+    return None
 
 
 def class_name_for(uri: URIRef, uri_to_class: dict[str, str]) -> str:
@@ -521,10 +547,13 @@ def parse_vocabulary_restrictions(vocab_graph):
             node = vocab_graph.value(prop, SH.node)
             vocabs = vocabs_for(node) if node is not None else []
             if not vocabs:
-                skipped.append(
-                    f"{local_name(str(target))} {local_name(str(path))}: no resolvable "
-                    "vocabulary (direct sh:hasValue constraint or unhandled composite)"
+                pattern = vocab_graph.value(node, SH.pattern) if node is not None else None
+                reason = (
+                    f"a value pattern ({pattern}), not a vocabulary -- not representable as values_from"
+                    if pattern is not None
+                    else "no resolvable vocabulary (direct sh:hasValue constraint or unhandled composite)"
                 )
+                skipped.append(f"{local_name(str(target))} {local_name(str(path))}: {reason}")
                 continue
             severity = vocab_graph.value(prop, SH.severity)
             recommended_only = severity is not None and str(severity).endswith("Warning")
@@ -592,6 +621,8 @@ def build_linkml(
 
     classes: dict[str, dict] = {}
     slots: dict[str, dict] = {}
+    new_slot_path_uris: dict[str, str | None] = {}
+    clashes: list[str] = []
 
     touched_classes = sorted({c for c, _ in facts} | set(shape_target))
     for class_name in touched_classes:
@@ -649,6 +680,9 @@ def build_linkml(
 
             existing = base_slot(prop_name, class_name)
             if existing is not None:
+                clash = predicate_clash(prop_name, class_name, base_sv.get_uri(prop_name, expand=True), fact.path_uri)
+                if clash:
+                    clashes.append(clash)
                 usage: dict = {}
                 recovered_range = False
                 if range_name is None and existing.range in rename:
@@ -688,7 +722,12 @@ def build_linkml(
                 if prop_name not in inherited_names:
                     own_slots.append(prop_name)
             else:
-                if prop_name not in slots:
+                if prop_name in slots:
+                    clash = predicate_clash(prop_name, class_name, new_slot_path_uris[prop_name], fact.path_uri)
+                    if clash:
+                        clashes.append(clash)
+                else:
+                    new_slot_path_uris[prop_name] = fact.path_uri
                     slot_def: dict = {}
                     if fact.path_uri:
                         slot_def["slot_uri"] = to_curie(fact.path_uri)
@@ -708,6 +747,11 @@ def build_linkml(
 
         classes[final_name] = cls
 
+    if clashes:
+        raise ValueError(
+            "A shape's predicate was ported onto a slot of a different predicate -- give each its own name "
+            "in PROPERTY_RENAME:\n  " + "\n  ".join(sorted(set(clashes)))
+        )
     return classes, slots
 
 
@@ -718,7 +762,11 @@ def git_commit(repo_dir: Path) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("shacl_dir", help="Directory with <tier>-shapes.ttl, <tier>-shapes_recommended.ttl, range.ttl")
+    parser.add_argument(
+        "shacl_dir",
+        help="The official validator's `ehds` folder (…/html/shacl/HealthDCAT-AP_validator/config/rdf-validator/ehds), "
+        "holding the shapes/, recommended/, ranges/ and controlled-vocabularies/ sub-folders",
+    )
     parser.add_argument("base_schema", help="Path to dcat_ap_plus.yaml (or equivalent base LinkML schema)")
     parser.add_argument("output", help="Path to write the generated LinkML YAML schema fragment to")
     parser.add_argument("--tier", choices=sorted(TIER_FILES), default="non-public")
@@ -728,7 +776,7 @@ def main() -> None:
     shacl_dir = Path(args.shacl_dir)
     graph = rdflib.Graph()
     for fname in TIER_FILES[args.tier]:
-        parse_turtle_with_known_fixes(graph, shacl_dir / fname)
+        graph.parse(shacl_dir / fname, format="turtle")
 
     # Parsed into its own graph, not merged into `graph` above: its
     # *Restriction/*ShapeCV shapes would otherwise also get walked by
@@ -738,7 +786,7 @@ def main() -> None:
     # sh:or list, not sh:datatype/sh:class) that parse_shapes() isn't built
     # to interpret.
     vocab_graph = rdflib.Graph()
-    parse_turtle_with_known_fixes(vocab_graph, shacl_dir / "mdr-vocabularies.shape.ttl")
+    vocab_graph.parse(shacl_dir / VOCABULARY_SHAPES_FILE, format="turtle")
 
     base_sv, uri_to_slot, uri_to_class = load_base_schema(args.base_schema)
     facts, shape_target, shape_parents, skipped, class_like_range_uris = parse_shapes(graph, uri_to_slot, uri_to_class, base_sv)
@@ -960,7 +1008,7 @@ def main() -> None:
         f"# Ported from HealthDCAT-AP's {args.tier} SHACL shapes by",
         "# scripts/port_healthdcat_ap_shacl_to_linkml.py -- re-run that script to",
         "# regenerate after editing it or after HealthDCAT-AP publishes a new release.",
-        f"# Source: {shacl_dir}",
+        f"# Source: {shacl_dir.as_posix()}",
     ]
     if source_commit:
         header_lines.append(f"# healthdcat-ap commit: {source_commit}")

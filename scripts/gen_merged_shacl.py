@@ -52,12 +52,13 @@ Requires the sibling HealthDCAT-AP shapes clone (see README.md).
 
 HealthDCAT-AP's own real shapes are Copyright (c) 2025 European Union,
 published under CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/) --
-confirmed directly in the release-7 spec's own License section, not
-assumed. This script includes them (with two small, already-documented
-upstream bug fixes -- a missing trailing slash in the dcatap: prefix, and
-one malformed sh:property triple with no sh:path dropped) inside the merged
-output below, with that attribution preserved in the generated file's own
-header -- see LICENSE_HEADER.
+confirmed directly in the release-8 spec's own License section and the
+repository's LICENSE file, not assumed. This script includes them (with
+one small, already-documented upstream bug fix -- one malformed
+sh:property triple with no sh:path dropped, still open upstream as
+healthdataeu/healthdcat-ap#43) inside the merged output below, with that
+attribution preserved in the generated file's own header -- see
+LICENSE_HEADER.
 """
 from __future__ import annotations
 
@@ -70,28 +71,45 @@ from rdflib import Graph, Namespace, URIRef
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SCHEMA_PATH = REPO_ROOT / "src" / "health_dcat_ap_plus" / "schema" / "health_dcat_ap_plus.yaml"
+# The one place that says which HealthDCAT-AP release the shapes (and the
+# validator's vocabulary catalogue) are read from: tests/ and ResHealth-DCAT-AP
+# take these constants from here rather than spelling the paths out again, so
+# the next release is a change to this block and to the port script's
+# TIER_FILES. Release 8 ships the shape files only inside the official
+# validator's config tree (`ehds`), one sub-folder per kind of file; release 7
+# also had flat copies in html/shacl/. The clone is pinned by commit in CI
+# (.github/workflows/main.yaml) and recorded in the generated schema's header.
+HEALTHDCATAP_RELEASE = "release-8"
 HEALTHDCATAP_SHACL_DIR = (
-    REPO_ROOT / "repos" / "healthdcat-ap" / "public" / "releases" / "release-7" / "html" / "shacl"
+    REPO_ROOT
+    / "repos"
+    / "healthdcat-ap"
+    / "public"
+    / "releases"
+    / HEALTHDCATAP_RELEASE
+    / "html"
+    / "shacl"
+    / "HealthDCAT-AP_validator"
+    / "config"
+    / "rdf-validator"
+    / "ehds"
 )
+# The validator's preloaded vocabulary catalogue (health-theme.rdf, ...).
+OFFICIAL_VOCABULARY_CATALOGUE_DIR = HEALTHDCATAP_SHACL_DIR / "catalogue"
 OUTPUT_PATH = REPO_ROOT / "docs" / "schema" / "health_dcat_ap_plus.merged-shacl.ttl"
 
 SH = Namespace("http://www.w3.org/ns/shacl#")
 FOAF = Namespace("http://xmlns.com/foaf/0.1/")
 
-# Same real upstream typo fix and malformed-triple workaround as
-# tests/test_shacl_validation.py's own _real_healthdcat_ap_shapes_graph --
-# duplicated deliberately (scripts/ and tests/ aren't set up as a shared
-# importable package here) rather than coupling the generation pipeline to
-# the test suite's own layout. Keep both in sync if the upstream fix ever
-# needs updating.
-_BROKEN_DCATAP_PREFIX = "@prefix dcatap: <http://data.europa.eu/r5r> ."
-_FIXED_DCATAP_PREFIX = "@prefix dcatap: <http://data.europa.eu/r5r/> ."
-_REAL_SHAPE_FILES = [
-    "non-public-shapes.ttl",
-    "non-public-shapes_recommended.ttl",
-    "range.ttl",
-    "mdr-vocabularies.shape.ttl",
-    "deprecateduris.ttl",
+# The non-public tier's official shape files, relative to HEALTHDCATAP_SHACL_DIR.
+# Not listed: shapes/graph-guard.ttl (release 8's SPARQL check that the graph
+# holds a dcat:Dataset) and imports/*.ttl (owl:imports manifests).
+REAL_SHAPE_FILES = [
+    "shapes/non-public-shapes.ttl",
+    "recommended/non-public-shapes_recommended.ttl",
+    "ranges/range.ttl",
+    "controlled-vocabularies/mdr-vocabularies.shape.ttl",
+    "deprecated/deprecateduris.ttl",
 ]
 
 # Classes whose real-world instances are always externally-authored
@@ -134,16 +152,14 @@ def load_real_shapes_graph() -> Graph:
     """Load HealthDCAT-AP's own real, official upstream SHACL shapes (non-public tier)."""
     require_sibling_shacl_checkout()
     g = Graph()
-    for fname in _REAL_SHAPE_FILES:
-        text = (HEALTHDCATAP_SHACL_DIR / fname).read_text(encoding="utf-8")
-        if _BROKEN_DCATAP_PREFIX in text:
-            text = text.replace(_BROKEN_DCATAP_PREFIX, _FIXED_DCATAP_PREFIX)
-        g.parse(data=text, format="turtle")
+    for fname in REAL_SHAPE_FILES:
+        g.parse(HEALTHDCATAP_SHACL_DIR / fname, format="turtle")
 
-    # Real bug in HealthDCAT-AP's own non-public-shapes.ttl -- see
-    # tests/test_shacl_validation.py's own comment on this same fix for the
-    # full diagnosis (Dataset_Shape's hasStructuredData/hasVariables sh:or
-    # used directly as an sh:property value, with no sh:path).
+    # Real bug in HealthDCAT-AP's own non-public-shapes.ttl, still there in
+    # release 8 (healthdataeu/healthdcat-ap#43): Dataset_Shape's
+    # hasStructuredData/hasVariables sh:or is used directly as an sh:property
+    # value, with no sh:path -- not a well-formed SHACL PropertyShape, and
+    # strict processors (pyshacl included) reject the whole file because of it.
     removed = [(s, p, o) for s, p, o in g.triples((None, SH.property, None)) if (o, SH.path, None) not in g]
     assert len(removed) == 1, (
         f"expected exactly 1 malformed sh:property in non-public-shapes.ttl, "
@@ -193,16 +209,15 @@ LICENSE_HEADER = """\
 #
 # This file combines two things:
 #
-#   1. HealthDCAT-AP's own real, official upstream SHACL shapes (release 7,
+#   1. HealthDCAT-AP's own real, official upstream SHACL shapes (release 8,
 #      non-public tier: deprecateduris.ttl, range.ttl,
 #      mdr-vocabularies.shape.ttl, non-public-shapes.ttl,
 #      non-public-shapes_recommended.ttl), Copyright (c) 2025 European
 #      Union, published under CC-BY 4.0
 #      (https://creativecommons.org/licenses/by/4.0/) -- see
 #      https://code.europa.eu/healthdataeu/healthdcat-ap. Included here
-#      with two small upstream bug fixes applied (a missing trailing slash
-#      in the dcatap: prefix declaration; one malformed sh:property triple
-#      with no sh:path removed) -- see scripts/gen_merged_shacl.py for both.
+#      with one small upstream bug fix applied (one malformed sh:property
+#      triple with no sh:path removed) -- see scripts/gen_merged_shacl.py.
 #
 #   2. This schema's own generated SHACL for everything the real shapes
 #      above don't cover -- the Activity/Association/Attribution/Entity

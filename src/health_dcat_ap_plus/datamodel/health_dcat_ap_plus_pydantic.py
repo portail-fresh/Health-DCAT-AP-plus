@@ -245,7 +245,7 @@ class Agent(ConfiguredBaseModel):
                                  'required': False,
                                  'slot_uri': 'dcterms:type'}}})
 
-    name: list[str] = Field(default=..., description="""A name of the agent.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent', 'Column'], 'slot_uri': 'foaf:name'} })
+    name: list[str] = Field(default=..., description="""A name of the agent.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent'], 'slot_uri': 'foaf:name'} })
     type: Optional[Concept] = Field(default=None, description="""The nature of the agent.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent', 'ClassifierMixin', 'Dataset', 'LicenseDocument'],
          'recommended': True,
          'slot_uri': 'dcterms:type'} })
@@ -541,7 +541,8 @@ class Catalogue(ConfiguredBaseModel):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
 
 
@@ -748,7 +749,8 @@ class CatalogueRecord(ConfiguredBaseModel):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
 
 
@@ -909,7 +911,8 @@ class Activity(ClassifierMixin):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'notes': ['not in DCAT-AP'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[list[str]] = Field(default=None, description="""The slot to provide a description for the Activity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
@@ -1086,7 +1089,8 @@ class AgenticEntity(ClassifierMixin):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -1228,7 +1232,8 @@ class DataGeneratingActivity(Activity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'notes': ['not in DCAT-AP'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[list[str]] = Field(default=None, description="""The slot to provide a description for the Activity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
@@ -1405,7 +1410,8 @@ class DataAnalysis(DataGeneratingActivity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'notes': ['not in DCAT-AP'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[list[str]] = Field(default=None, description="""The slot to provide a description for the Activity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
@@ -1762,7 +1768,8 @@ class DataService(ConfiguredBaseModel):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
 
 
@@ -2148,7 +2155,7 @@ class Dataset(ConfiguredBaseModel):
          'slot_uri': 'dcterms:description'} })
     documentation: Optional[list[Document]] = Field(default=None, description="""A page or document about this Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset', 'Distribution'],
          'slot_uri': 'foaf:page'} })
-    frequency: Optional[Frequency] = Field(default=None, description="""The frequency at which the Dataset is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries', 'TemporalEntity'],
+    frequency: Optional[Frequency] = Field(default=None, description="""The frequency at which the Dataset is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries'],
          'slot_uri': 'dcterms:accrualPeriodicity'} })
     geographical_coverage: Optional[list[Location]] = Field(default=None, description="""A geographic region that is covered by the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries'],
          'slot_uri': 'dcterms:spatial'} })
@@ -2226,7 +2233,8 @@ class Dataset(ConfiguredBaseModel):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     type: Optional[list[Concept]] = Field(default=None, description="""A type of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent', 'ClassifierMixin', 'Dataset', 'LicenseDocument'],
          'slot_uri': 'dcterms:type'} })
@@ -2328,7 +2336,7 @@ class AnalysisDataset(Dataset):
          'slot_uri': 'dcterms:description'} })
     documentation: Optional[list[Document]] = Field(default=None, description="""A page or document about this Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset', 'Distribution'],
          'slot_uri': 'foaf:page'} })
-    frequency: Optional[Frequency] = Field(default=None, description="""The frequency at which the Dataset is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries', 'TemporalEntity'],
+    frequency: Optional[Frequency] = Field(default=None, description="""The frequency at which the Dataset is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries'],
          'slot_uri': 'dcterms:accrualPeriodicity'} })
     geographical_coverage: Optional[list[Location]] = Field(default=None, description="""A geographic region that is covered by the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries'],
          'slot_uri': 'dcterms:spatial'} })
@@ -2406,7 +2414,8 @@ class AnalysisDataset(Dataset):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     type: Optional[list[Concept]] = Field(default=None, description="""A type of the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent', 'ClassifierMixin', 'Dataset', 'LicenseDocument'],
          'slot_uri': 'dcterms:type'} })
@@ -2584,7 +2593,7 @@ class DatasetSeries(ConfiguredBaseModel):
                        'HealthPublisherAgent',
                        'TemporalEntity'],
          'slot_uri': 'dcterms:description'} })
-    frequency: Optional[Frequency] = Field(default=None, description="""The frequency at which the Dataset Series is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries', 'TemporalEntity'],
+    frequency: Optional[Frequency] = Field(default=None, description="""The frequency at which the Dataset Series is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries'],
          'slot_uri': 'dcterms:accrualPeriodicity'} })
     geographical_coverage: Optional[list[Location]] = Field(default=None, description="""A geographic region that is covered by the Dataset Series.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries'],
          'slot_uri': 'dcterms:spatial'} })
@@ -2637,7 +2646,8 @@ class DatasetSeries(ConfiguredBaseModel):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
 
 
@@ -2701,7 +2711,8 @@ class DefinedTerm(ConfiguredBaseModel):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'schema:name'} })
     from_CV: Optional[str] = Field(default=None, description="""The URL of the controlled vocabulary.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DefinedTerm'], 'slot_uri': 'schema:inDefinedTermSet'} })
 
@@ -2787,7 +2798,8 @@ class Device(AgenticEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -3203,7 +3215,8 @@ class Distribution(ConfiguredBaseModel):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
 
 
@@ -3280,7 +3293,8 @@ class Entity(ClassifierMixin):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""The slot to provide a description for the Entity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -3428,7 +3442,8 @@ class EvaluatedActivity(Activity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'notes': ['not in DCAT-AP'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[list[str]] = Field(default=None, description="""The slot to provide a description for the Activity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
@@ -3589,7 +3604,8 @@ class EvaluatedEntity(Entity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""The slot to provide a description for the EvaluatedEntity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -3723,7 +3739,8 @@ class AnalysisSourceData(EvaluatedEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""The slot to provide a description for the EvaluatedEntity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -3904,7 +3921,8 @@ class Plan(ClassifierMixin):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4004,7 +4022,8 @@ class QualitativeAttribute(ClassifierMixin):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4108,7 +4127,8 @@ class QuantitativeAttribute(ClassifierMixin):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4281,7 +4301,8 @@ class Software(AgenticEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4391,7 +4412,8 @@ class SupportiveEntity(ConfiguredBaseModel):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4479,7 +4501,8 @@ class Attribution(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4567,7 +4590,8 @@ class ChecksumAlgorithm(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4664,7 +4688,8 @@ class Concept(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4759,7 +4784,8 @@ class ConceptScheme(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4861,7 +4887,8 @@ class Document(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -4949,7 +4976,8 @@ class Frequency(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5037,7 +5065,8 @@ class Geometry(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5136,7 +5165,8 @@ class Identifier(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5238,7 +5268,8 @@ class LegalResource(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5353,7 +5384,8 @@ class LicenseDocument(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5441,7 +5473,8 @@ class LinguisticSystem(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5529,7 +5562,8 @@ class MediaType(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5617,7 +5651,8 @@ class MediaTypeOrExtent(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5742,7 +5777,8 @@ class PeriodOfTime(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5830,7 +5866,8 @@ class Policy(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -5918,7 +5955,8 @@ class ProvenanceStatement(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6020,7 +6058,8 @@ class Resource(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6108,7 +6147,8 @@ class RightsStatement(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6196,7 +6236,8 @@ class Role(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6284,7 +6325,8 @@ class Standard(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6374,7 +6416,8 @@ class Surrounding(ClassifierMixin):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6468,7 +6511,8 @@ class TimeInstant(SupportiveEntity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6667,7 +6711,8 @@ class HealthCatalogue(Catalogue):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
 
 
@@ -6676,11 +6721,10 @@ class Column(ConfiguredBaseModel):
          'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
          'slot_usage': {'description': {'multivalued': True,
                                         'name': 'description',
-                                        'required': True},
-                        'name': {'multivalued': True,
-                                 'name': 'name',
-                                 'required': True}}})
+                                        'required': True}}})
 
+    column_name: str = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['Column'], 'slot_uri': 'csvw:name'} })
+    column_title: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['Column'], 'slot_uri': 'csvw:title'} })
     datatype: str = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['Column'], 'slot_uri': 'csvw:datatype'} })
     description: list[str] = Field(default=..., description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -6722,9 +6766,7 @@ class Column(ConfiguredBaseModel):
                        'HealthPublisherAgent',
                        'TemporalEntity'],
          'slot_uri': 'dcterms:description'} })
-    name: list[str] = Field(default=..., description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent', 'Column'], 'slot_uri': 'foaf:name'} })
     property_url: Optional[str] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['Column'], 'slot_uri': 'csvw:propertyUrl'} })
-    titles: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['Column'], 'slot_uri': 'csvw:titles'} })
 
 
 class ContactPoint(ConfiguredBaseModel):
@@ -6751,7 +6793,7 @@ class HealthDataset(Dataset):
                                                    'required': True},
                         'conforms_to': {'name': 'conforms_to',
                                         'range': 'uriorcurie',
-                                        'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard']},
+                                        'values_from': ['https://hdeu-dcat.data.health.europa.eu/resource/authority/standard']},
                         'contact_point': {'name': 'contact_point',
                                           'range': 'HealthKind',
                                           'required': True},
@@ -6776,17 +6818,17 @@ class HealthDataset(Dataset):
                                                                   'http://sws.geonames.org']},
                         'has_coding_system': {'name': 'has_coding_system',
                                               'range': 'uriorcurie',
-                                              'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system']},
+                                              'values_from': ['https://hdeu-dcat.data.health.europa.eu/resource/authority/coding-system']},
                         'has_quality_annotation': {'inlined_as_list': True,
                                                    'multivalued': True,
                                                    'name': 'has_quality_annotation',
                                                    'range': 'QualityCertificate'},
                         'health_category': {'name': 'health_category',
                                             'range': 'uriorcurie',
-                                            'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories']},
+                                            'values_from': ['https://hdeu-dcat.data.health.europa.eu/resource/authority/healthcategories']},
                         'health_theme': {'name': 'health_theme',
                                          'range': 'uriorcurie',
-                                         'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme']},
+                                         'values_from': ['https://hdeu-dcat.data.health.europa.eu/resource/authority/health-theme']},
                         'identifier': {'name': 'identifier', 'required': True},
                         'keyword': {'name': 'keyword', 'required': True},
                         'language': {'name': 'language',
@@ -6824,7 +6866,7 @@ class HealthDataset(Dataset):
     has_code_values: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasCodeValues'} })
     has_coding_system: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
          'slot_uri': 'healthdcatap:hasCodingSystem',
-         'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system']} })
+         'values_from': ['https://hdeu-dcat.data.health.europa.eu/resource/authority/coding-system']} })
     has_legal_basis: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasLegalBasis'} })
     has_personal_data: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasPersonalData'} })
     has_purpose: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'dpv:hasPurpose'} })
@@ -6832,12 +6874,13 @@ class HealthDataset(Dataset):
     has_structured_data: bool = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasStructuredData'} })
     has_variables: Optional[list[TableGroup]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hasVariables'} })
     hdab: HealthAgent = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hdab'} })
+    hdab_coordinator: Optional[HealthAgent] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:hdabCoordinator'} })
     health_category: list[str] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
          'slot_uri': 'healthdcatap:healthCategory',
-         'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories']} })
+         'values_from': ['https://hdeu-dcat.data.health.europa.eu/resource/authority/healthcategories']} })
     health_theme: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'],
          'slot_uri': 'healthdcatap:healthTheme',
-         'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme']} })
+         'values_from': ['https://hdeu-dcat.data.health.europa.eu/resource/authority/health-theme']} })
     max_typical_age: Optional[int] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:maxTypicalAge'} })
     min_typical_age: Optional[int] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:minTypicalAge'} })
     number_of_records: Optional[int] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['HealthDataset'], 'slot_uri': 'healthdcatap:numberOfRecords'} })
@@ -6856,7 +6899,7 @@ class HealthDataset(Dataset):
          'slot_uri': 'dcatap:applicableLegislation'} })
     conforms_to: Optional[list[str]] = Field(default=None, description="""An implementing rule or other specification.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset'],
          'slot_uri': 'dcterms:conformsTo',
-         'values_from': ['https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard']} })
+         'values_from': ['https://hdeu-dcat.data.health.europa.eu/resource/authority/standard']} })
     contact_point: list[HealthKind] = Field(default=..., description="""Contact information that can be used for sending comments about the Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset', 'DatasetSeries'],
          'recommended': True,
          'slot_uri': 'dcat:contactPoint'} })
@@ -6904,7 +6947,7 @@ class HealthDataset(Dataset):
          'slot_uri': 'dcterms:description'} })
     documentation: Optional[list[Document]] = Field(default=None, description="""A page or document about this Dataset.""", json_schema_extra = { "linkml_meta": {'domain_of': ['DataService', 'Dataset', 'Distribution'],
          'slot_uri': 'foaf:page'} })
-    frequency: Optional[list[str]] = Field(default=None, description="""The frequency at which the Dataset is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries', 'TemporalEntity'],
+    frequency: Optional[list[str]] = Field(default=None, description="""The frequency at which the Dataset is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries'],
          'slot_uri': 'dcterms:accrualPeriodicity',
          'values_from': ['http://publications.europa.eu/resource/authority/frequency']} })
     geographical_coverage: Optional[list[str]] = Field(default=None, description="""A geographic region that is covered by the Dataset.""", json_schema_extra = { "linkml_meta": {'comments': ["Recommended alignment (HealthDCAT-AP's own SHACL marks this "
@@ -6991,7 +7034,8 @@ class HealthDataset(Dataset):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     type: list[str] = Field(default=..., description="""A type of the Dataset.""", json_schema_extra = { "linkml_meta": {'comments': ["Recommended alignment (HealthDCAT-AP's own SHACL marks this "
                       'sh:Warning, not sh:Violation) -- not strictly enforced.'],
@@ -7084,7 +7128,7 @@ class HealthDatasetSeries(DatasetSeries):
                        'HealthPublisherAgent',
                        'TemporalEntity'],
          'slot_uri': 'dcterms:description'} })
-    frequency: Optional[Frequency] = Field(default=None, description="""The frequency at which the Dataset Series is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries', 'TemporalEntity'],
+    frequency: Optional[Frequency] = Field(default=None, description="""The frequency at which the Dataset Series is updated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries'],
          'slot_uri': 'dcterms:accrualPeriodicity'} })
     geographical_coverage: Optional[list[Location]] = Field(default=None, description="""A geographic region that is covered by the Dataset Series.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Catalogue', 'Dataset', 'DatasetSeries'],
          'slot_uri': 'dcterms:spatial'} })
@@ -7137,7 +7181,8 @@ class HealthDatasetSeries(DatasetSeries):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
 
 
@@ -7285,7 +7330,8 @@ class HealthDistribution(Distribution):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
 
 
@@ -7295,7 +7341,7 @@ class HealthAgent(Agent):
 
     agent_contact_point: ContactPoint = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['HealthAgent', 'HealthPublisherAgent'],
          'slot_uri': 'cv:contactPoint'} })
-    name: list[str] = Field(default=..., description="""A name of the agent.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent', 'Column'], 'slot_uri': 'foaf:name'} })
+    name: list[str] = Field(default=..., description="""A name of the agent.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent'], 'slot_uri': 'foaf:name'} })
     type: Optional[Concept] = Field(default=None, description="""The nature of the agent.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent', 'ClassifierMixin', 'Dataset', 'LicenseDocument'],
          'recommended': True,
          'slot_uri': 'dcterms:type'} })
@@ -7347,7 +7393,7 @@ class HealthPublisherAgent(Agent):
                        'HealthPublisherAgent',
                        'TemporalEntity'],
          'slot_uri': 'dcterms:description'} })
-    name: list[str] = Field(default=..., description="""A name of the agent.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent', 'Column'], 'slot_uri': 'foaf:name'} })
+    name: list[str] = Field(default=..., description="""A name of the agent.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent'], 'slot_uri': 'foaf:name'} })
     type: Optional[Concept] = Field(default=None, description="""The nature of the agent.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Agent', 'ClassifierMixin', 'Dataset', 'LicenseDocument'],
          'recommended': True,
          'slot_uri': 'dcterms:type'} })
@@ -7408,16 +7454,60 @@ class Table(ConfiguredBaseModel):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     url: Optional[str] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['Table'], 'slot_uri': 'csvw:url'} })
 
 
 class TableGroup(ConfiguredBaseModel):
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'csvw:TableGroup',
-         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public'})
+         'from_schema': 'https://w3id.org/portail-fresh/Health-DCAT-AP-plus/healthdcat_ap_non_public',
+         'slot_usage': {'title': {'multivalued': True,
+                                  'name': 'title',
+                                  'required': True}}})
 
     table: list[Table] = Field(default=..., json_schema_extra = { "linkml_meta": {'domain_of': ['TableGroup'], 'slot_uri': 'csvw:table'} })
+    title: list[str] = Field(default=..., description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
+                       'AgenticEntity',
+                       'Any',
+                       'Attribution',
+                       'Catalogue',
+                       'CatalogueRecord',
+                       'ChecksumAlgorithm',
+                       'Concept',
+                       'ConceptScheme',
+                       'DataService',
+                       'Dataset',
+                       'DatasetSeries',
+                       'DefinedTerm',
+                       'Distribution',
+                       'Document',
+                       'Entity',
+                       'Frequency',
+                       'Geometry',
+                       'Identifier',
+                       'LegalResource',
+                       'LicenseDocument',
+                       'LinguisticSystem',
+                       'MediaType',
+                       'MediaTypeOrExtent',
+                       'PeriodOfTime',
+                       'Plan',
+                       'Policy',
+                       'ProvenanceStatement',
+                       'QualitativeAttribute',
+                       'QuantitativeAttribute',
+                       'Resource',
+                       'RightsStatement',
+                       'Role',
+                       'Standard',
+                       'SupportiveEntity',
+                       'Surrounding',
+                       'TimeInstant',
+                       'Table',
+                       'TableGroup'],
+         'slot_uri': 'dcterms:title'} })
 
 
 class TemporalEntity(ConfiguredBaseModel):
@@ -7426,10 +7516,9 @@ class TemporalEntity(ConfiguredBaseModel):
          'slot_usage': {'description': {'multivalued': True,
                                         'name': 'description',
                                         'required': True},
-                        'frequency': {'multivalued': True,
-                                      'name': 'frequency',
-                                      'range': 'uriorcurie',
-                                      'values_from': ['http://publications.europa.eu/resource/authority/frequency']}}})
+                        'temporal_entity_frequency': {'name': 'temporal_entity_frequency',
+                                                      'range': 'uriorcurie',
+                                                      'values_from': ['http://publications.europa.eu/resource/authority/frequency']}}})
 
     description: list[str] = Field(default=..., description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -7471,8 +7560,8 @@ class TemporalEntity(ConfiguredBaseModel):
                        'HealthPublisherAgent',
                        'TemporalEntity'],
          'slot_uri': 'dcterms:description'} })
-    frequency: Optional[list[str]] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Dataset', 'DatasetSeries', 'TemporalEntity'],
-         'slot_uri': 'dcterms:accrualPeriodicity',
+    temporal_entity_frequency: Optional[list[str]] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['TemporalEntity'],
+         'slot_uri': 'cv:frequency',
          'values_from': ['http://publications.europa.eu/resource/authority/frequency']} })
 
 
@@ -7538,7 +7627,8 @@ class HealthLicenseDocument(LicenseDocument):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -7705,7 +7795,8 @@ class HealthDataService(DataService):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
 
 
@@ -7846,7 +7937,8 @@ class DatasetAttribution(Attribution):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -7938,7 +8030,8 @@ Deliberately left with NO values_from here -- moved down to the specializing rep
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[str] = Field(default=None, description="""This slot is described in more detail within the class in which it is used.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',
                        'AgenticEntity',
@@ -8059,7 +8152,8 @@ class AssociatedDataGeneratingActivity(DataGeneratingActivity):
                        'SupportiveEntity',
                        'Surrounding',
                        'TimeInstant',
-                       'Table'],
+                       'Table',
+                       'TableGroup'],
          'notes': ['not in DCAT-AP'],
          'slot_uri': 'dcterms:title'} })
     description: Optional[list[str]] = Field(default=None, description="""The slot to provide a description for the Activity.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Activity',

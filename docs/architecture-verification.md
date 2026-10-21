@@ -1519,3 +1519,100 @@ nested-import quirks above are the legacy-loader twin of what
 output keeps its `imports:` and so cannot be imported again — and it is what
 the project template publishes as `docs/schema/<name>.yaml`, so any
 template-based schema imported through its permalink would hit this.
+
+### A thirteenth finding: moving to HealthDCAT-AP release 8 — and three slots that were never on the right predicate
+
+HealthDCAT-AP release 7 now carries a deprecation banner upstream pointing to the
+latest version, and release 8 (commit `cd7841f`, 2026-09-18) is the newest
+release in the repository, so on 2026-10-21 the port, the tests and the
+fixtures moved to it. The previous
+two sections' "release 7" statements are left as written: they are the record of
+what was true when they were made.
+
+**What release 8 changed for the non-public tier** (diffed file by file against
+the release-7 clone, then confirmed against the upstream issue tracker, where
+each change has an issue):
+
+| change | effect on this repo |
+|---|---|
+| shape files exist only in the validator's config tree (`…/ehds/{shapes,recommended,ranges,controlled-vocabularies,…}/`); the flat copies release 7 had in `html/shacl/` are gone | `TIER_FILES` (port script) and `REAL_SHAPE_FILES` (`scripts/gen_merged_shacl.py`) now name sub-folder paths; tests and ResHealth-DCAT-AP take the folder from `gen_merged_shacl.py` instead of spelling it out a third and fourth time |
+| `dcatap:` prefix fixed in `range.ttl`, `mdr-vocabularies.shape.ttl`, `deprecateduris.ttl` (issue #45) | the prefix workaround in the port script, the merge script and the tests is gone |
+| `Dataset_Shape`'s `sh:property` without `sh:path` (issue #43) | **still there**, one occurrence: the workaround and its "exactly one" assertion stay |
+| new `healthdcatap:hdabCoordinator` (0..1, `HealthAgent` shape; `sh:class foaf:Agent` in `range.ttl`, as `geodcatap:custodian` now also has, issue #46) | new slot `hdab_coordinator` on `HealthDataset` |
+| CSVW: `csvw:titles` → `csvw:title` (#20), `csvw:name` exactly one (#34), mandatory `dct:title` on the table group, table shape renamed `:CSVWTable_Shape` (#47) | `column_title`, `column_name` (single-valued), `title` on `TableGroup` |
+| `dpv:hasPersonalData` values must match `^https://w3id\.org/dpv/dpv-pd#.+` (new `:PersonalDataRestriction`) | a pattern, not a vocabulary: not representable as `values_from`, so the port reports it as skipped; the official shapes inside the merged file enforce it |
+| six controlled vocabularies moved from `hdeu-dcat.acceptance.data.health.europa.eu` to `hdeu-dcat.data.health.europa.eu` | every `values_from` of the generated schema, the fixture, the example |
+| coding system `ICD-O-3` replaced by `ICD-O` | the fixture's `has_coding_system` |
+| new `shapes/graph-guard.ttl` (SPARQL: the graph must contain a `dcat:Dataset`) | **not loaded**, here or in the port: it carries nothing to port and whether the merged shapes should include it belongs with the merge questions |
+
+No property of the non-public tier was removed (the CSVW ones were renamed or
+tightened); `non-public-shapes_recommended.ttl` and `imports.ttl` are
+byte-identical. The port yields 68 shape-derived facts → 19
+classes, 39 new slots and 21 `values_from` bindings.
+
+**Three slots that had been on the wrong predicate since release 7.** The port
+finds the slot for a shape's `sh:path` by URI where it can and otherwise by the
+snake_case local name — and then reuses any dcat-ap-plus slot of that name
+without asking what its URI is. Diffing release 8's output against release 7's
+showed `csvw:title` collapsing onto dcat-ap-plus's `title` (`dcterms:title`);
+once the port was made to check, two more turned up that release 7 already had:
+
+| shape predicate | silently became | now |
+|---|---|---|
+| `csvw:title` (release 8; was `csvw:titles`, a new slot) | `dcterms:title` | `column_title` |
+| `csvw:name` on `csvw:Column` | `foaf:name` | `column_name` |
+| `cv:frequency` on the opening-hours `time:TemporalEntity` | `dcterms:accrualPeriodicity` | `temporal_entity_frequency` |
+
+A CSVW column's name and title, and a contact point's opening-hours frequency,
+would therefore have been dumped to RDF on predicates the official shapes
+don't ask for. Nothing noticed because no fixture populated either: the
+fixture had `has_structured_data: true` but never `has_variables`, and the
+official shape for that conditional is the one the pathless-`sh:property`
+workaround drops anyway. This is the same family as the `cv:contactPoint` /
+`contact_point` collision found on 2026-08-21 (`PROPERTY_RENAME`), which had
+been handled by hand for that one predicate. Two changes close it for good:
+the port script now **raises** when a shape lands on a slot whose URI is not the
+shape's own (`predicate_clash`, listing every clash at once, so the next
+release's collision stops generation instead of producing a quietly wrong
+schema), and the fixture now carries `hdab_coordinator`, a `has_variables`
+table group with two columns, and opening hours on the HDAB's contact point, so
+HealthDCAT-AP's own shapes check these predicates on every `just test`.
+`tests/test_ported_schema.py` additionally pins the three slot URIs without
+needing the clone. Checked by mutation, not assumed: pointing `column_name` back
+at `foaf:name` in the generated schema makes both official-shapes tests fail
+(`MinCount` on `name`, `Node` on `column`), so the fixture does exercise it. (The
+wrong URIs of the other two were read off the generated schema, not off a failing
+run.)
+
+**A discrepancy in release 8 itself, not reported yet.** The new personal-data
+rule and the official example use `https://w3id.org/dpv/dpv-pd#…`
+(`dpvpd:Age`). DPV 2.3, fetched on 2026-10-21 from `https://w3id.org/dpv/dpv-pd`,
+defines its personal-data categories under `https://w3id.org/dpv/pd#…`
+(`pd:Age`, `pd:MedicalHealth`) and nowhere uses `dpv-pd#`. So a real DPV term
+fails release 8's own shape, and a conforming one is not a DPV term. The
+fixture had used the real `pd:MedicalHealth`; it now follows the official
+shapes and example (`dpv-pd#MedicalHealth`, typed `a dpv:PersonalData` in
+`tests/data/real_vocabulary_terms.ttl` the way the official example types
+`dpvpd:Age`), with the reasoning written next to it. A candidate issue for the
+HealthDCAT-AP tracker; filing it is the maintainers' call, not something this
+repo did.
+
+**Reading the issue tracker** (https://code.europa.eu/healthdataeu/healthdcat-ap/-/issues,
+55 issues on 2026-10-21) also showed how unfinished the target still is, which
+is why the clone is now pinned by commit rather than `main`: #51 (the
+`healthdcatap:` namespace is a placeholder and will change), #55 / #56 / #4 /
+#31 (the CSVW part: a missing `csvw:TableSchema` level, the range of
+`csvw:url`, mandatory table name), #37 (`trustedDataHolder` may return), #53
+(the activity's `dct:type`, used by shapes and example, is not documented) and
+#50 (the shapes import DCAT-AP **3.0.0**, not 3.0.1, which is also the version
+dcat-ap-plus's DCAT-AP lineage is based on). ROADMAP.md lists what each would
+change here.
+
+**Result.** `KNOWN_OWN_SHAPES_VIOLATIONS` (14), `KNOWN_MERGED_SHAPES_VIOLATIONS`
+(2) and `KNOWN_REAL_SHAPES_VIOLATIONS` (empty) are unchanged by the move: the
+`HealthDataset` portion of the fixture still conforms to HealthDCAT-AP's own
+shape files, now release 8's, including the CSVW, `hdabCoordinator` and
+opening-hours constraints it never exercised before. What that statement
+covers is exactly what it covered: the five shape files loaded as a set, not
+the DCAT-AP 3.0.0 shapes they `owl:import` — the question the 2026-10-21 audit
+raised, and the next piece of work.

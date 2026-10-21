@@ -39,7 +39,7 @@ import yaml
 from linkml.generators.shaclgen import ShaclGenerator
 from linkml_runtime import SchemaView
 from linkml_runtime.dumpers import rdflib_dumper
-from rdflib import SKOS, Graph, Namespace, URIRef
+from rdflib import SKOS, Graph, URIRef
 
 import health_dcat_ap_plus.datamodel.health_dcat_ap_plus as dm
 
@@ -52,26 +52,24 @@ SCHEMA_PATH = (
 FIXTURE_PATH = (
     Path(__file__).parent / "data" / "problem" / "valid" / "HealthDataset-shacl-full.yaml"
 )
-HEALTHDCATAP_SHACL_DIR = (
-    REPO_ROOT / "repos" / "healthdcat-ap" / "public" / "releases" / "release-7" / "html" / "shacl"
-)
+# Where the official shapes and the validator's vocabulary catalogue live (and
+# which release that is) is decided once, in scripts/gen_merged_shacl.py.
+HEALTHDCATAP_SHACL_DIR = gen_merged_shacl.HEALTHDCATAP_SHACL_DIR
 # Sciensano's real hosted validator (https://healthdcat-validator.sciensano.be)
 # is an ITB instance whose exact config is checked directly into the official
-# repo at this path -- config.properties there sets `validator.shaclFile.*`
-# to precisely the 5 files _REAL_SHAPE_FILES below already loads (confirmed
-# directly, not assumed: same filenames, just different subdirectories under
-# this same release-7 tree), plus `validator.preloadOwlImports = true` and a
-# ~37-entry owlImportMapping that merges real, populated vocabulary RDF/OWL
-# graphs into every validation's data graph -- including HealthDCAT-AP's own
-# health-theme/healthcategories/coding-system tables, which turned out to
-# have real content in this checked-in cache even where the live
-# "acceptance"-environment server (see tests/data/real_vocabulary_terms.ttl's
-# old comment, now corrected) currently returns empty RDF.
-OFFICIAL_VOCABULARY_CATALOGUE_DIR = (
-    HEALTHDCATAP_SHACL_DIR / "HealthDCAT-AP_validator" / "config" / "rdf-validator" / "ehds" / "catalogue"
-)
+# repo, in the same `ehds` folder as the shapes -- config.properties there sets
+# `validator.shaclFile.*` to the files gen_merged_shacl.REAL_SHAPE_FILES
+# loads (plus release 8's graph-guard.ttl), plus
+# `validator.preloadOwlImports = true` and an owlImportMapping that merges
+# real, populated vocabulary RDF/OWL graphs into every validation's data graph
+# -- including HealthDCAT-AP's own health-theme/healthcategories/coding-system
+# tables, which turned out to have real content in this checked-in cache even
+# where the live "acceptance"-environment server (see
+# tests/data/real_vocabulary_terms.ttl's old comment, now corrected) returned
+# empty RDF. Release 8 moved those vocabularies' base URL from that acceptance
+# environment to the production one (hdeu-dcat.data.health.europa.eu).
+OFFICIAL_VOCABULARY_CATALOGUE_DIR = gen_merged_shacl.OFFICIAL_VOCABULARY_CATALOGUE_DIR
 
-SH = Namespace("http://www.w3.org/ns/shacl#")
 
 Signature = Tuple[str, str, str]
 
@@ -179,65 +177,15 @@ def test_dumped_instance_rdf_has_no_unexpanded_iris():
     _assert_no_unexpanded_iris(_build_test_dataset_graph(), "the dumped example instance graph")
 
 
-# Real upstream typo (confirmed via grep across every copy of these files in
-# the release-7 tree): deprecateduris.ttl, range.ttl and
-# mdr-vocabularies.shape.ttl all declare `dcatap: <http://data.europa.eu/r5r>`
-# (missing the trailing slash), while non-public-shapes*.ttl -- and every
-# copy of all three files under the vendored HealthDCAT-AP_validator/ tree --
-# correctly declare `<http://data.europa.eu/r5r/>`. Same fix already applied
-# in scripts/port_healthdcat_ap_shacl_to_linkml.py's
-# _KNOWN_UPSTREAM_PREFIX_FIXES.
-_BROKEN_DCATAP_PREFIX = "@prefix dcatap: <http://data.europa.eu/r5r> ."
-_FIXED_DCATAP_PREFIX = "@prefix dcatap: <http://data.europa.eu/r5r/> ."
-
-_REAL_SHAPE_FILES = [
-    "non-public-shapes.ttl",
-    "non-public-shapes_recommended.ttl",
-    "range.ttl",
-    "mdr-vocabularies.shape.ttl",
-    "deprecateduris.ttl",
-]
-
-
 def _real_healthdcat_ap_shapes_graph() -> Graph:
-    """Load HealthDCAT-AP's own real, official upstream SHACL shapes (non-public tier).
-
-    imports.ttl / mdr_imports.ttl are deliberately not included -- read
-    directly, they contain only owl:imports metadata triples, no sh:
-    shapes at all.
+    """HealthDCAT-AP's own real, official upstream SHACL shapes (non-public
+    tier), exactly as the merge script loads them -- including its one
+    workaround for the malformed sh:property that is still in release 8
+    (healthdataeu/healthdcat-ap#43; the conditional constraint it carried goes
+    unenforced here, and the loader's assertion fires if the upstream file
+    changes shape, so re-diagnose before trusting the workaround then).
     """
-    g = Graph()
-    for fname in _REAL_SHAPE_FILES:
-        text = (HEALTHDCATAP_SHACL_DIR / fname).read_text(encoding="utf-8")
-        if _BROKEN_DCATAP_PREFIX in text:
-            text = text.replace(_BROKEN_DCATAP_PREFIX, _FIXED_DCATAP_PREFIX)
-        g.parse(data=text, format="turtle")
-
-    # Real bug in HealthDCAT-AP's own non-public-shapes.ttl: Dataset_Shape's
-    # "if hasStructuredData is true, must have hasVariables" conditional is
-    # built as a bare sh:or used directly as an sh:property value, with no
-    # sh:path -- not a well-formed SHACL PropertyShape (a PropertyShape used
-    # as an sh:property value MUST declare exactly one sh:path). Strict
-    # processors (pyshacl included, in advanced mode) reject the *entire*
-    # shapes file because of this one shape. Not our file to fix -- worked
-    # around by dropping just that one triple so the rest of the real shapes
-    # can still be checked; the conditional constraint it carried goes
-    # unenforced by this test. If this assertion ever fires, the upstream
-    # file changed shape -- re-diagnose before trusting the workaround.
-    removed = [
-        (s, p, o)
-        for s, p, o in g.triples((None, SH.property, None))
-        if (o, SH.path, None) not in g
-    ]
-    assert len(removed) == 1, (
-        f"expected exactly 1 malformed sh:property (Dataset_Shape's "
-        f"hasStructuredData/hasVariables sh:or missing sh:path) in "
-        f"non-public-shapes.ttl, found {len(removed)} -- upstream shapes "
-        "changed, re-diagnose before trusting this workaround"
-    )
-    for triple in removed:
-        g.remove(triple)
-    return g
+    return gen_merged_shacl.load_real_shapes_graph()
 
 
 # Health-specific + generic MDR authority tables actually referenced by

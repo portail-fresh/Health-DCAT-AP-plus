@@ -44,6 +44,7 @@ OUTPUT_PATH = REPO_ROOT / "examples" / "HealthDataset-full-example.ttl"
 
 DCT = Namespace("http://purl.org/dc/terms/")
 ELI = Namespace("http://data.europa.eu/eli/ontology#")
+DPV = Namespace("https://w3id.org/dpv#")
 
 # (external term URI, real class it's a member of) -- see this module's
 # own docstring for how each entry was confirmed, not assumed.
@@ -51,15 +52,19 @@ EXTERNAL_TERM_STUBS: list[tuple[str, URIRef]] = [
     ("http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC", DCT.RightsStatement),
     ("http://publications.europa.eu/resource/authority/language/ENG", DCT.LinguisticSystem),
     ("http://publications.europa.eu/resource/authority/frequency/ANNUAL", DCT.Frequency),
+    ("http://publications.europa.eu/resource/authority/frequency/DAILY", DCT.Frequency),
     ("http://data.europa.eu/eli/reg/2025/327/oj", ELI.LegalResource),
     (
-        "https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard/FHIR",
+        "https://hdeu-dcat.data.health.europa.eu/resource/authority/standard/FHIR",
         DCT.Standard,
     ),
     (
-        "https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD-O-3",
+        "https://hdeu-dcat.data.health.europa.eu/resource/authority/coding-system/ICD-O",
         DCT.Standard,
     ),
+    # Typed inline the way the official release-8 example types dpvpd:Age -- see
+    # the fixture YAML's comment on has_personal_data for why this IRI is not DPV's own.
+    ("https://w3id.org/dpv/dpv-pd#MedicalHealth", DPV.PersonalData),
 ]
 
 HEADER = """\

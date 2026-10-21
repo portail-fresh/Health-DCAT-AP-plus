@@ -88,6 +88,23 @@ hdab:
   agent_contact_point:
     email:
       - "hdab@example.org"
+    # cv:openingHours / cv:frequency (the TemporalEntity shape), which no
+    # fixture populated before release 8's port: its frequency slot had
+    # silently been ported onto dcterms:accrualPeriodicity instead of
+    # cv:frequency, and only the official shapes could say so.
+    opening_hours:
+      - description:
+          - Every working day from 09:00 to 17:00 CET.
+        temporal_entity_frequency:
+          - http://publications.europa.eu/resource/authority/frequency/DAILY
+# New in HealthDCAT-AP release 8: an optional second HDAB, same HealthAgent
+# shape (exactly one cv:contactPoint) as hdab and custodian.
+hdab_coordinator:
+  name:
+    - National Health Data Access Body Coordinator
+  agent_contact_point:
+    email:
+      - "hdab-coordinator@example.org"
 custodian:
   name:
     - Regional Cancer Registry Authority
@@ -107,21 +124,33 @@ custodian:
 # neoplasms, including site-specific cancers and childhood cancers") is
 # the real code there -- bare CANCER doesn't exist.
 health_category:
-  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/healthcategories/PHDR
+  - https://hdeu-dcat.data.health.europa.eu/resource/authority/healthcategories/PHDR
 health_theme:
-  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/health-theme/CANCER_DISEASE
-# All three DPV terms below checked directly against DPV's real turtle
-# source, not assumed -- see tests/data/real_vocabulary_terms.ttl for the
-# exact confirmed triples. LegalObligation was already correct. The other
-# two were invented, plausible-sounding but non-existent terms (dpv-pd's
-# real prefix is pd:, not dpv-pd:, and neither MedicalHealthInsurance nor
-# MedicalResearchPurpose exist anywhere in DPV) -- replaced with the
-# closest genuinely real terms: pd:MedicalHealth (a dpv:PersonalData,
-# dpv:SpecialCategoryPersonalData) and dpv:ScientificResearch (a dpv:Purpose).
+  - https://hdeu-dcat.data.health.europa.eu/resource/authority/health-theme/CANCER_DISEASE
+# The legal basis and the purpose are real DPV terms, checked directly
+# against DPV's real turtle source, not assumed -- see
+# tests/data/real_vocabulary_terms.ttl for the exact confirmed triples
+# (dpv:LegalObligation and dpv:ScientificResearch; the two earlier
+# plausible-sounding terms, MedicalHealthInsurance and MedicalResearchPurpose,
+# don't exist anywhere in DPV).
+#
+# The personal-data term is NOT a DPV-defined IRI, on purpose. DPV defines its
+# personal-data categories in https://w3id.org/dpv/pd# (this fixture used
+# pd:MedicalHealth, a real dpv:PersonalData, until release 8). HealthDCAT-AP
+# release 8 added a rule that every dpv:hasPersonalData value must match
+# ^https://w3id.org/dpv/dpv-pd#.+ (:PersonalDataRestriction in its
+# mdr-vocabularies.shape.ttl), and its own example writes
+# dpvpd:Age with dpvpd: = https://w3id.org/dpv/dpv-pd# -- a namespace DPV 2.3
+# does not define any term in (checked 2026-10-21 by fetching
+# https://w3id.org/dpv/dpv-pd: it serves the pd# vocabulary). So a real DPV
+# IRI fails the official shape and a conforming one is not a DPV term; the
+# fixture follows the official shapes and example. Worth raising with
+# HealthDCAT-AP; until then the test snapshot types this term as a
+# dpv:PersonalData the way the official example does.
 has_legal_basis:
   - https://w3id.org/dpv#LegalObligation
 has_personal_data:
-  - https://w3id.org/dpv/pd#MedicalHealth
+  - https://w3id.org/dpv/dpv-pd#MedicalHealth
 has_purpose:
   - https://w3id.org/dpv#ScientificResearch
 # Deliberately kept local (example.org), not swapped for an external
@@ -144,13 +173,44 @@ has_purpose:
 has_quality_annotation:
   - id: https://example.org/quality-certificate/iso-27001
 has_structured_data: true
+# The CSVW variables description (TableGroup -> Table -> Column). No earlier
+# fixture populated it, so the port had silently put a Column's csvw:name and
+# csvw:title on foaf:name and dcterms:title (dcat-ap-plus slots of the same
+# local name); populating it here makes the official shapes check the real
+# predicates. Release 8: csvw:title (was csvw:titles), exactly one csvw:name,
+# and a mandatory dct:title on the TableGroup.
+has_variables:
+  - title:
+      - Cancer registry variables dictionary
+    table:
+      - title:
+          - Variable inventory for the cancer registry
+        keyword:
+          - cancer
+          - variables
+        url: https://example.org/dataset/cancer-registry-2024/variables.csv
+        column:
+          - column_name: patientId
+            column_title:
+              - Patient identifier
+            datatype: string
+            description:
+              - Pseudonymised identifier of the registered patient.
+          - column_name: tumourStage
+            column_title:
+              - Tumour stage
+            datatype: string
+            description:
+              - Stage of the tumour at diagnosis.
+            property_url: https://example.org/vocab/tumourStage
 has_code_values:
-  - ICD-O-3
-# ICD_O_3 (underscored) doesn't exist in the real coding-system vocabulary
-# -- confirmed directly against the real cached catalogue (see comment
-# above); the real code is hyphenated, ICD-O-3, matching has_code_values.
+  - ICD-O
+# ICD_O_3 (underscored) never existed in the real coding-system vocabulary --
+# confirmed directly against the real cached catalogue (see comment above).
+# Release 7's code was the hyphenated ICD-O-3; release 8 replaced it with
+# ICD-O (checked against its coding-system.rdf), matching has_code_values.
 has_coding_system:
-  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/coding-system/ICD-O-3
+  - https://hdeu-dcat.data.health.europa.eu/resource/authority/coding-system/ICD-O
 # Switched from a local, instance-specific schema URI to a real member of
 # HealthDCAT-AP's own standard vocabulary -- confirmed directly against the
 # real cached catalogue (standard.rdf): FHIR is a real skos:Concept +
@@ -158,7 +218,7 @@ has_coding_system:
 # registry plausibly does conform to FHIR as its exchange format, so this
 # is a real fix, not just a substitution for validation's sake.
 conforms_to:
-  - https://hdeu-dcat.acceptance.data.health.europa.eu/resource/authority/standard/FHIR
+  - https://hdeu-dcat.data.health.europa.eu/resource/authority/standard/FHIR
 max_typical_age: 99
 min_typical_age: 0
 number_of_records: 45000

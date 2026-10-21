@@ -161,6 +161,23 @@ repeat of that forensic record.
   workflows no longer clone this repo. `tests/test_published_schema.py` here
   and ResHealth-DCAT-AP's `check_schema_resolves.py` keep it that way. Full
   narrative: `docs/architecture-verification.md`, "A twelfth finding".
+- **Moved from HealthDCAT-AP release 7 to release 8** (2026-10-21; release 7
+  is deprecated upstream, release 8 is commit `cd7841f` of 2026-09-18). The
+  port now reads release 8's folder layout, the clone is pinned by commit in
+  CI and checked against the generated schema's header, and the fixture,
+  the vendored official example and the vocabulary URLs follow the release
+  (the six controlled vocabularies moved from the acceptance to the
+  production host). New in the schema: `hdab_coordinator`, a mandatory
+  `title` on the CSVW table group, one `column_name` per column,
+  `column_title` (was `titles`). The move also exposed three slots that had
+  silently been ported onto the wrong predicate since release 7 (a CSVW
+  column's name and title, an opening-hours `cv:frequency`), because their
+  local names equal dcat-ap-plus slots; the port script now stops when that
+  happens, and the fixture populates both so the official shapes check them.
+  Full narrative: `docs/architecture-verification.md`, "A thirteenth
+  finding". Not part of this step, deliberately: how the official shapes are
+  merged with ours (still the per-class selection the audit of 2026-10-21
+  questioned).
 
 ## Problems that still need fixing
 
@@ -176,6 +193,21 @@ repeat of that forensic record.
   [linkml/linkml#3932](https://github.com/linkml/linkml/issues/3932)) —
   both diagnosed, reproduced standalone, and now filed; neither fixable
   from here, both waiting on upstream response.
+- **HealthDCAT-AP itself is still moving** (open upstream issues, read on
+  2026-10-21 at https://code.europa.eu/healthdataeu/healthdcat-ap/-/issues).
+  What each would change here: #43 (the shape without `sh:path`; our loader's
+  workaround stays until it is fixed), #51 (a permanent namespace for
+  `healthdcatap:`, a breaking change for every slot URI of the ported
+  schema), #55 / #56 / #4 / #31 (CSVW: a `csvw:TableSchema` level between table
+  and column, the range of `csvw:url` / `csvw:propertyUrl`, mandatory table
+  name; the ported `Table`/`Column` classes would follow), #37
+  (`trustedDataHolder` may come back), #53 (`dct:type` on `prov:Activity` is
+  used by shapes and example but not documented), #50 (the shapes import
+  DCAT-AP 3.0.0, not 3.0.1). One discrepancy found while moving to release 8
+  is not reported yet: its `dpv:hasPersonalData` rule and example use
+  `https://w3id.org/dpv/dpv-pd#…`, while DPV 2.3 defines its personal-data
+  categories under `https://w3id.org/dpv/pd#…` (see the fixture's comment);
+  a candidate issue for the HealthDCAT-AP tracker, not filed.
 - **`public`/`restricted` HealthDCAT-AP tiers are unported.** Only
   `non-public` exists today. The port script's own README says the other
   two "should port the same way" — never actually run.

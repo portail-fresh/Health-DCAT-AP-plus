@@ -2357,13 +2357,24 @@ class Column(YAMLRoot):
     class_name: ClassVar[str] = "Column"
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.Column
 
+    column_name: str = None
+    column_title: Union[str, list[str]] = None
     datatype: str = None
     description: Union[str, list[str]] = None
-    name: Union[str, list[str]] = None
-    titles: Union[str, list[str]] = None
     property_url: Optional[Union[str, URIorCURIE]] = None
 
     def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.column_name):
+            self.MissingRequiredField("column_name")
+        if not isinstance(self.column_name, str):
+            self.column_name = str(self.column_name)
+
+        if self._is_empty(self.column_title):
+            self.MissingRequiredField("column_title")
+        if not isinstance(self.column_title, list):
+            self.column_title = [self.column_title] if self.column_title is not None else []
+        self.column_title = [v if isinstance(v, str) else str(v) for v in self.column_title]
+
         if self._is_empty(self.datatype):
             self.MissingRequiredField("datatype")
         if not isinstance(self.datatype, str):
@@ -2374,18 +2385,6 @@ class Column(YAMLRoot):
         if not isinstance(self.description, list):
             self.description = [self.description] if self.description is not None else []
         self.description = [v if isinstance(v, str) else str(v) for v in self.description]
-
-        if self._is_empty(self.name):
-            self.MissingRequiredField("name")
-        if not isinstance(self.name, list):
-            self.name = [self.name] if self.name is not None else []
-        self.name = [v if isinstance(v, str) else str(v) for v in self.name]
-
-        if self._is_empty(self.titles):
-            self.MissingRequiredField("titles")
-        if not isinstance(self.titles, list):
-            self.titles = [self.titles] if self.titles is not None else []
-        self.titles = [v if isinstance(v, str) else str(v) for v in self.titles]
 
         if self.property_url is not None and not isinstance(self.property_url, URIorCURIE):
             self.property_url = URIorCURIE(self.property_url)
@@ -2463,6 +2462,7 @@ class HealthDataset(Dataset):
     has_purpose: Optional[Union[Union[str, PurposeId], list[Union[str, PurposeId]]]] = empty_list()
     has_quality_annotation: Optional[Union[list[Union[str, QualityCertificateId]], dict[Union[str, QualityCertificateId], Union[dict, "QualityCertificate"]]]] = empty_dict()
     has_variables: Optional[Union[Union[dict, "TableGroup"], list[Union[dict, "TableGroup"]]]] = empty_list()
+    hdab_coordinator: Optional[Union[dict, "HealthAgent"]] = None
     health_theme: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
     max_typical_age: Optional[Union[int, NonNegativeInteger]] = None
     min_typical_age: Optional[Union[int, NonNegativeInteger]] = None
@@ -2584,9 +2584,10 @@ class HealthDataset(Dataset):
 
         self._normalize_inlined_as_list(slot_name="has_quality_annotation", slot_type=QualityCertificate, key_name="id", keyed=True)
 
-        if not isinstance(self.has_variables, list):
-            self.has_variables = [self.has_variables] if self.has_variables is not None else []
-        self.has_variables = [v if isinstance(v, TableGroup) else TableGroup(**as_dict(v)) for v in self.has_variables]
+        self._normalize_inlined_as_list(slot_name="has_variables", slot_type=TableGroup, key_name="title", keyed=False)
+
+        if self.hdab_coordinator is not None and not isinstance(self.hdab_coordinator, HealthAgent):
+            self.hdab_coordinator = HealthAgent(**as_dict(self.hdab_coordinator))
 
         if not isinstance(self.health_theme, list):
             self.health_theme = [self.health_theme] if self.health_theme is not None else []
@@ -2807,7 +2808,7 @@ class Table(YAMLRoot):
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.column):
             self.MissingRequiredField("column")
-        self._normalize_inlined_as_list(slot_name="column", slot_type=Column, key_name="datatype", keyed=False)
+        self._normalize_inlined_as_list(slot_name="column", slot_type=Column, key_name="column_name", keyed=False)
 
         if self._is_empty(self.title):
             self.MissingRequiredField("title")
@@ -2835,11 +2836,18 @@ class TableGroup(YAMLRoot):
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.TableGroup
 
     table: Union[Union[dict, Table], list[Union[dict, Table]]] = None
+    title: Union[str, list[str]] = None
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.table):
             self.MissingRequiredField("table")
         self._normalize_inlined_as_list(slot_name="table", slot_type=Table, key_name="title", keyed=False)
+
+        if self._is_empty(self.title):
+            self.MissingRequiredField("title")
+        if not isinstance(self.title, list):
+            self.title = [self.title] if self.title is not None else []
+        self.title = [v if isinstance(v, str) else str(v) for v in self.title]
 
         super().__post_init__(**kwargs)
 
@@ -2854,7 +2862,7 @@ class TemporalEntity(YAMLRoot):
     class_model_uri: ClassVar[URIRef] = HEALTH_DCAT_AP_PLUS.TemporalEntity
 
     description: Union[str, list[str]] = None
-    frequency: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
+    temporal_entity_frequency: Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]] = empty_list()
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.description):
@@ -2863,9 +2871,9 @@ class TemporalEntity(YAMLRoot):
             self.description = [self.description] if self.description is not None else []
         self.description = [v if isinstance(v, str) else str(v) for v in self.description]
 
-        if not isinstance(self.frequency, list):
-            self.frequency = [self.frequency] if self.frequency is not None else []
-        self.frequency = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.frequency]
+        if not isinstance(self.temporal_entity_frequency, list):
+            self.temporal_entity_frequency = [self.temporal_entity_frequency] if self.temporal_entity_frequency is not None else []
+        self.temporal_entity_frequency = [v if isinstance(v, URIorCURIE) else URIorCURIE(v) for v in self.temporal_entity_frequency]
 
         super().__post_init__(**kwargs)
 
@@ -3477,8 +3485,11 @@ slots.version_notes = Slot(uri=ADMS.versionNotes, name="version_notes", curie=AD
 slots.was_generated_by = Slot(uri=PROV.wasGeneratedBy, name="was_generated_by", curie=PROV.curie('wasGeneratedBy'),
                    model_uri=HEALTH_DCAT_AP_PLUS.was_generated_by, domain=None, range=Optional[str])
 
-slots.titles = Slot(uri=CSVW.titles, name="titles", curie=CSVW.curie('titles'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.titles, domain=None, range=Union[str, list[str]])
+slots.column_name = Slot(uri=CSVW.name, name="column_name", curie=CSVW.curie('name'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.column_name, domain=None, range=str)
+
+slots.column_title = Slot(uri=CSVW.title, name="column_title", curie=CSVW.curie('title'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.column_title, domain=None, range=Union[str, list[str]])
 
 slots.datatype = Slot(uri=CSVW.datatype, name="datatype", curie=CSVW.curie('datatype'),
                    model_uri=HEALTH_DCAT_AP_PLUS.datatype, domain=None, range=str)
@@ -3506,6 +3517,9 @@ slots.has_purpose = Slot(uri=DPV.hasPurpose, name="has_purpose", curie=DPV.curie
 
 slots.hdab = Slot(uri=HEALTHDCATAP.hdab, name="hdab", curie=HEALTHDCATAP.curie('hdab'),
                    model_uri=HEALTH_DCAT_AP_PLUS.hdab, domain=None, range=Union[dict, HealthAgent])
+
+slots.hdab_coordinator = Slot(uri=HEALTHDCATAP.hdabCoordinator, name="hdab_coordinator", curie=HEALTHDCATAP.curie('hdabCoordinator'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.hdab_coordinator, domain=None, range=Optional[Union[dict, HealthAgent]])
 
 slots.custodian = Slot(uri=GEODCATAP.custodian, name="custodian", curie=GEODCATAP.curie('custodian'),
                    model_uri=HEALTH_DCAT_AP_PLUS.custodian, domain=None, range=Optional[Union[dict, HealthAgent]])
@@ -3578,6 +3592,9 @@ slots.column = Slot(uri=CSVW.column, name="column", curie=CSVW.curie('column'),
 
 slots.table = Slot(uri=CSVW.table, name="table", curie=CSVW.curie('table'),
                    model_uri=HEALTH_DCAT_AP_PLUS.table, domain=None, range=Union[Union[dict, Table], list[Union[dict, Table]]])
+
+slots.temporal_entity_frequency = Slot(uri=CV.frequency, name="temporal_entity_frequency", curie=CV.curie('frequency'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.temporal_entity_frequency, domain=None, range=Optional[Union[Union[dict, Frequency], list[Union[dict, Frequency]]]])
 
 slots.attribution_agent = Slot(uri=PROV.agent, name="attribution_agent", curie=PROV.curie('agent'),
                    model_uri=HEALTH_DCAT_AP_PLUS.attribution_agent, domain=None, range=Union[dict, Agent])
@@ -4104,9 +4121,6 @@ slots.HealthCatalogue_publisher = Slot(uri=DCTERMS.publisher, name="HealthCatalo
 slots.HealthCatalogue_geographical_coverage = Slot(uri=DCTERMS.spatial, name="HealthCatalogue_geographical_coverage", curie=DCTERMS.curie('spatial'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthCatalogue_geographical_coverage, domain=HealthCatalogue, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
 
-slots.Column_name = Slot(uri=FOAF.name, name="Column_name", curie=FOAF.curie('name'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.Column_name, domain=Column, range=Union[str, list[str]])
-
 slots.Column_description = Slot(uri=DCTERMS.description, name="Column_description", curie=DCTERMS.curie('description'),
                    model_uri=HEALTH_DCAT_AP_PLUS.Column_description, domain=Column, range=Union[str, list[str]])
 
@@ -4200,11 +4214,14 @@ slots.Table_title = Slot(uri=DCTERMS.title, name="Table_title", curie=DCTERMS.cu
 slots.Table_keyword = Slot(uri=DCAT.keyword, name="Table_keyword", curie=DCAT.curie('keyword'),
                    model_uri=HEALTH_DCAT_AP_PLUS.Table_keyword, domain=Table, range=Optional[Union[str, list[str]]])
 
+slots.TableGroup_title = Slot(uri=DCTERMS.title, name="TableGroup_title", curie=DCTERMS.curie('title'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.TableGroup_title, domain=TableGroup, range=Union[str, list[str]])
+
 slots.TemporalEntity_description = Slot(uri=DCTERMS.description, name="TemporalEntity_description", curie=DCTERMS.curie('description'),
                    model_uri=HEALTH_DCAT_AP_PLUS.TemporalEntity_description, domain=TemporalEntity, range=Union[str, list[str]])
 
-slots.TemporalEntity_frequency = Slot(uri=DCTERMS.accrualPeriodicity, name="TemporalEntity_frequency", curie=DCTERMS.curie('accrualPeriodicity'),
-                   model_uri=HEALTH_DCAT_AP_PLUS.TemporalEntity_frequency, domain=TemporalEntity, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
+slots.TemporalEntity_temporal_entity_frequency = Slot(uri=CV.frequency, name="TemporalEntity_temporal_entity_frequency", curie=CV.curie('frequency'),
+                   model_uri=HEALTH_DCAT_AP_PLUS.TemporalEntity_temporal_entity_frequency, domain=TemporalEntity, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
 
 slots.HealthLicenseDocument_type = Slot(uri=DCTERMS.type, name="HealthLicenseDocument_type", curie=DCTERMS.curie('type'),
                    model_uri=HEALTH_DCAT_AP_PLUS.HealthLicenseDocument_type, domain=HealthLicenseDocument, range=Optional[Union[Union[str, URIorCURIE], list[Union[str, URIorCURIE]]]])
