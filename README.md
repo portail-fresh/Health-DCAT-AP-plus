@@ -106,6 +106,24 @@ What the permalink serves (`docs/schema/`, written by
   [GitHub Pages](https://portail-fresh.github.io/Health-DCAT-AP-plus/schema/health_dcat_ap_plus.merged.yaml)
   only; w3id has no rule for it.
 
+## Validating data
+
+[`docs/schema/health_dcat_ap_plus.merged-shacl.ttl`](docs/schema/health_dcat_ap_plus.merged-shacl.ttl)
+is the one SHACL shapes graph for data in this model: what HealthDCAT-AP's own
+validator checks (its tier files **and** the DCAT-AP 3.0.0 shapes they import)
+plus this schema's generated shapes for the rest (the PROV-O side), with the
+overlap resolved. Use it as is with pyshacl; like the official validator, give it
+the vocabulary terms your data refers to as data (the `tests/` do, with
+`scripts/validation_support.py`) and type the terms whose shape checks a class
+(`<term> a dct:Frequency`), as HealthDCAT-AP's own example does. Not in it, on
+purpose: release 8's `graph-guard.ttl` (the graph must contain a dataset), and
+the vocabularies themselves. Not enforceable by any check here: "if
+`hasStructuredData` is true, `hasVariables` is required" (a malformed upstream
+shape, healthdataeu/healthdcat-ap#43).
+`examples/HealthDataset-validation-check.ipynb` walks through it. How the file is
+built, and why: `scripts/gen_merged_shacl.py` and
+[the fourteenth finding](docs/architecture-verification.md).
+
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md) for what's done, what's still open, and

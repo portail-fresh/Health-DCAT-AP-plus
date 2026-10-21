@@ -179,20 +179,39 @@ repeat of that forensic record.
   merged with ours (still the per-class selection the audit of 2026-10-21
   questioned).
 
+- **The merged shapes now check what the official validator checks**
+  (2026-10-21, after an audit that found they did not). They were the five
+  HealthDCAT-AP files plus our own shapes for the classes those files don't
+  target; the validator also loads the DCAT-AP 3.0.0 shapes the files
+  `owl:import`. `gen_merged_shacl.py` now follows those imports through the
+  validator's own `owlImportMapping`, generates our shapes open instead of
+  closed, derives the classes to leave to the official shapes instead of
+  listing `foaf:Agent` and `skos:Concept` by hand, applies the two LinkML
+  workarounds above and lets a `prov:Activity`'s `dct:type` be a `skos:Concept`
+  as HealthDCAT-AP's own example has it, and writes the file with
+  deterministic blank nodes. HealthDCAT-AP's own example now has to give the
+  same result against the official and the merged shapes (three warnings, no
+  violation), the published example and the fixture validate with warnings
+  only, and the fixture's `dct:source` is a described dataset because DCAT-AP's
+  shape wants one. Not part of the merge, on purpose: `graph-guard.ttl`.
+  ResHealth-DCAT-AP uses the same function. Narrative:
+  `docs/architecture-verification.md`, "A fourteenth finding".
+
 ## Problems that still need fixing
 
-- **Known, deliberate SHACL violations** (`KNOWN_MERGED_SHAPES_VIOLATIONS`,
-  2 entries, mirrored in both repos — down from 3; `title` turned out
-  fixable after all, see "What's done" above). Both remaining are
-  genuinely outside our own control, not unexplored: real LinkML
-  `ShaclGenerator`-level bugs, not dcat-ap-plus's to fix either (the
-  `ClassifierMixin`/`rdf_type` predicate collision, filed as
-  [linkml/linkml#3931](https://github.com/linkml/linkml/issues/3931);
-  `QualitativeAttribute`'s required field bleeding onto every `prov:Entity`
-  node via a shared `class_uri`, filed as
-  [linkml/linkml#3932](https://github.com/linkml/linkml/issues/3932)) —
-  both diagnosed, reproduced standalone, and now filed; neither fixable
-  from here, both waiting on upstream response.
+- **Two LinkML bugs are worked around in the merged shapes, not fixed.**
+  `scripts/gen_merged_shacl.py`'s `GENERATOR_WORKAROUNDS` drop the
+  `ClassifierMixin`/`rdf_type` property shapes
+  ([linkml/linkml#3931](https://github.com/linkml/linkml/issues/3931)) and the
+  required `prov:value` that `QualitativeAttribute` puts on every `prov:Entity`
+  through a shared `class_uri`
+  ([linkml/linkml#3932](https://github.com/linkml/linkml/issues/3932)). Each
+  workaround raises when it finds nothing left to change, so a fix upstream
+  shows up as a failing build that says what to delete. The merged-shapes
+  allowlist is empty since 2026-10-21 (it had 2 entries, `type` and `value`,
+  which these two workarounds now remove); `KNOWN_OWN_SHAPES_VIOLATIONS` (our
+  generated shapes alone) keeps the five that show the same bugs and the
+  class_uri/slot_uri sharing behind them.
 - **HealthDCAT-AP itself is still moving** (open upstream issues, read on
   2026-10-21 at https://code.europa.eu/healthdataeu/healthdcat-ap/-/issues).
   What each would change here: #43 (the shape without `sh:path`; our loader's
@@ -229,8 +248,8 @@ repeat of that forensic record.
   (the `ClassifierMixin`/`rdf_type` finding) and
   **[linkml/linkml#3932](https://github.com/linkml/linkml/issues/3932)**
   (the `value`/`QualitativeAttribute` finding): both filed, both waiting
-  on maintainer response. `KNOWN_MERGED_SHAPES_VIOLATIONS`' `type` and
-  `value` entries stay in the allowlist until either gets fixed upstream.
+  on maintainer response. The workarounds for them in
+  `scripts/gen_merged_shacl.py` stay until either gets fixed upstream.
   #3932 also still references closed issue
   [nfdi-de/dcat-ap-plus#15](https://github.com/nfdi-de/dcat-ap-plus/issues/15)
   and the design-patterns.md "three distinct node shapes" claim, which is
@@ -268,7 +287,8 @@ inherent to Health-DCAT-AP-plus itself. In order (step 1 is done — see
    investigation did turn up are two smaller,
    genuine gaps in the same legacy loader, neither blocking and **neither
    reported yet** (checked the tracker 2026-10-19; reproductions in
-   `docs/architecture-verification.md`, "A twelfth finding"):
+   `docs/architecture-verification.md`, "A twelfth finding", and as a script in
+   `examples/issues_for_linkml/legacy-loader-gaps-repro.py`):
    (a) imports declared by a schema that was itself loaded over HTTP or by
    CURIE are resolved against the *root* schema (a bare name fails with
    `FileNotFoundError`) or mangled by `pathlib` (`./name` → backslashes on

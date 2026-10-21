@@ -8,67 +8,36 @@
 # Regenerate with `.venv/Scripts/python scripts/gen_example.py` (see that
 # script's own docstring) after changing the fixture or schema.
 #
-# Every external vocabulary/ontology term below was checked directly
-# against its own real source, not assumed -- see the fixture YAML's own
-# comments and tests/data/real_vocabulary_terms.ttl for exactly what was
-# verified and how. applicable_legislation points at the real ELI for
-# Regulation (EU) 2025/327, the EHDS Regulation itself.
+# A self-contained document in HealthDCAT-AP's own style (release 8):
+#   * the dataset's dct:source is a second dataset described in the same
+#     graph, because DCAT-AP's shape wants a dct:source value to be a
+#     dcat:Dataset (and so to satisfy the dataset shapes itself);
+#   * every external term whose shape checks a plain class is typed inline
+#     (`<term> a dct:Frequency .` and so on, at the end of the file), as the
+#     official example does -- the official validator's vocabulary catalogue
+#     does not supply those types. Terms checked through skos:inScheme are
+#     not typed, as in the official example.
 #
-# This exact file was manually pasted into Sciensano's own official
-# HealthDCAT-AP validator (https://healthdcat-validator.sciensano.be) on
-# 2026-08-26 as a real-world cross-check, not just our own pyshacl run --
-# see tests/test_shacl_validation.py's KNOWN_REAL_SHAPES_VIOLATIONS comment
-# for what that surfaced: five term references below were invented/wrong,
-# not just unverifiable (healthcategories/ONCOLOGY, health-theme/CANCER,
-# coding-system/ICD_O_3, dataset-type/EXPLOITABLE, and conformsTo's own
-# local schema URI, replaced with a real standard-vocabulary member,
-# .../authority/standard/FHIR), and all five are now fixed to real
-# vocabulary codes (or, for conformsTo, a real vocabulary member entirely).
+# Every external vocabulary/ontology term below was checked against its own
+# real source, not assumed -- see the fixture YAML's comments and
+# tests/data/real_vocabulary_terms.ttl for what was verified and how.
+# applicable_legislation points at the real ELI for Regulation (EU) 2025/327,
+# the EHDS Regulation itself. The personal-data term is not a DPV IRI: see the
+# fixture's comment on has_personal_data.
 #
-# dct:source is a bare URI reference (not nested/inlined) -- confirmed
-# directly against examples/reference/example-healthdcat-dataset.ttl
-# (HealthDCAT-AP's own official worked example) and the release-7 spec's
-# own usage note ("the source Dataset must be fully described" separately,
-# not embedded here). Getting this far needed a real port-script fix
-# (scripts/port_healthdcat_ap_shacl_to_linkml.py's
-# _FORCE_NON_INLINED_ON_RECOVERED_RANGE) plus a real gap fix in
-# linkml-merge-toolkit's post_init_shielding module's own shield-map
-# computation (https://github.com/portail-fresh/linkml-merge-toolkit).
-#
-# dqv:hasQualityAnnotation's own value is now a real, correctly-typed
-# QualityCertificate object (see below), not a bare reference either --
-# the earlier "single-slot stub classes always collapse" diagnosis was
-# imprecise; the real, narrower cause was specifically that
-# has_quality_annotation never had inlined_as_list: true set on it at
-# all. Fixed the same way as qualified_attribution already was, in
-# port_healthdcat_ap_shacl_to_linkml.py.
-#
-# The bare `<term> a <Class> .` triples at the end of this file (before the
-# blank-node stub resources) mirror HealthDCAT-AP's own official worked
-# example's convention exactly -- see scripts/gen_example.py's own
-# docstring for which terms get one and why.
-#
-# dct:title (and every other plain-string/date/boolean-ranged property in
-# this file) used to trip a spurious DatatypeConstraintComponent violation,
-# misdiagnosed for months as an rdflib/pyshacl untyped-literal interop
-# quirk -- the real cause was this schema's own prefixes: block missing an
-# xsd: redeclaration (a workaround for a separate, already-known LinkML
-# gen-shacl/gen-owl prefix-propagation gap), which made every sh:datatype
-# constraint generated from a builtin XSD-backed range come out as the
-# *unexpanded CURIE string* "xsd:string" used directly as a URIRef. Fixed
-# by adding xsd: to health_dcat_ap_plus.yaml's own prefixes: block.
-#
-# See examples/HealthDataset-validation-check.ipynb, next to this file, for
-# a runnable walkthrough of exactly how this file gets validated (the same
-# check tests/test_shacl_validation.py::test_dataset_conforms_to_merged_shacl
-# runs in CI) and what the two remaining, deliberate known violations are.
+# Validated against the merged shapes graph by
+# tests/test_shacl_validation.py::test_published_example_conforms_to_merged_shacl
+# (walked through in examples/HealthDataset-validation-check.ipynb): no
+# violation, and warnings only for recommended properties this example leaves
+# out. See the "thirteenth" and "fourteenth" findings of
+# docs/architecture-verification.md.
 
 @prefix adms: <http://www.w3.org/ns/adms#> .
 @prefix csvw: <http://www.w3.org/ns/csvw#> .
 @prefix cv: <http://data.europa.eu/m8g/> .
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix dcatap: <http://data.europa.eu/r5r/> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
 @prefix dpv: <https://w3id.org/dpv#> .
 @prefix dqv: <http://www.w3.org/ns/dqv#> .
 @prefix eli: <http://data.europa.eu/eli/ontology#> .
@@ -94,16 +63,16 @@
     healthdcatap:hasCodingSystem <https://hdeu-dcat.data.health.europa.eu/resource/authority/coding-system/ICD-O> ;
     healthdcatap:hasStructuredData true ;
     healthdcatap:hasVariables [ a csvw:TableGroup ;
-            dcterms:title "Cancer registry variables dictionary" ;
+            dct:title "Cancer registry variables dictionary" ;
             csvw:table [ a csvw:Table ;
-                    dcterms:title "Variable inventory for the cancer registry" ;
+                    dct:title "Variable inventory for the cancer registry" ;
                     csvw:column [ a csvw:Column ;
-                            dcterms:description "Pseudonymised identifier of the registered patient." ;
+                            dct:description "Pseudonymised identifier of the registered patient." ;
                             csvw:datatype "string" ;
                             csvw:name "patientId" ;
                             csvw:title "Patient identifier" ],
                         [ a csvw:Column ;
-                            dcterms:description "Stage of the tumour at diagnosis." ;
+                            dct:description "Stage of the tumour at diagnosis." ;
                             csvw:datatype "string" ;
                             csvw:name "tumourStage" ;
                             csvw:propertyUrl <https://example.org/vocab/tumourStage> ;
@@ -116,7 +85,7 @@
                     cv:email "hdab@example.org" ;
                     cv:openingHours [ a time:TemporalEntity ;
                             cv:frequency <http://publications.europa.eu/resource/authority/frequency/DAILY> ;
-                            dcterms:description "Every working day from 09:00 to 17:00 CET." ] ] ;
+                            dct:description "Every working day from 09:00 to 17:00 CET." ] ] ;
             foaf:name "National Health Data Access Body" ] ;
     healthdcatap:hdabCoordinator [ a foaf:Agent ;
             cv:contactPoint [ a cv:ContactPoint ;
@@ -129,27 +98,27 @@
     healthdcatap:numberOfRecords "45000"^^xsd:nonNegativeInteger ;
     healthdcatap:numberOfUniqueIndividuals "42000"^^xsd:nonNegativeInteger ;
     healthdcatap:populationCoverage "National" ;
-    healthdcatap:retentionPeriod [ a dcterms:PeriodOfTime ;
+    healthdcatap:retentionPeriod [ a dct:PeriodOfTime ;
             dcat:endDate "2044-01-01"^^xsd:date ;
             dcat:startDate "2024-01-01"^^xsd:date ] ;
-    dcterms:accessRights <http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC> ;
-    dcterms:accrualPeriodicity <http://publications.europa.eu/resource/authority/frequency/ANNUAL> ;
-    dcterms:conformsTo <https://hdeu-dcat.data.health.europa.eu/resource/authority/standard/FHIR> ;
-    dcterms:description "Annual registry of new cancer diagnoses, regional coverage." ;
-    dcterms:identifier "https://example.org/dataset/cancer-registry-2024" ;
-    dcterms:isReferencedBy <https://example.org/publications/cancer-registry-report-2024> ;
-    dcterms:language <http://publications.europa.eu/resource/authority/language/ENG> ;
-    dcterms:provenance [ a dcterms:ProvenanceStatement ;
-            dcterms:title "Collected under regional ethics approval REC-2023-114." ] ;
-    dcterms:relation <https://example.org/dataset/cancer-mortality-2024> ;
-    dcterms:source <https://example.org/dataset/hospital-case-reports-2024> ;
-    dcterms:subject <https://example.org/activity/diagnostic-reporting-process>,
+    dct:accessRights <http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC> ;
+    dct:accrualPeriodicity <http://publications.europa.eu/resource/authority/frequency/ANNUAL> ;
+    dct:conformsTo <https://hdeu-dcat.data.health.europa.eu/resource/authority/standard/FHIR> ;
+    dct:description "Annual registry of new cancer diagnoses, regional coverage." ;
+    dct:identifier "https://example.org/dataset/cancer-registry-2024" ;
+    dct:isReferencedBy <https://example.org/publications/cancer-registry-report-2024> ;
+    dct:language <http://publications.europa.eu/resource/authority/language/ENG> ;
+    dct:provenance [ a dct:ProvenanceStatement ;
+            dct:title "Collected under regional ethics approval REC-2023-114." ] ;
+    dct:relation <https://example.org/dataset/cancer-mortality-2024> ;
+    dct:source <https://example.org/dataset/hospital-case-reports-2024> ;
+    dct:subject <https://example.org/activity/diagnostic-reporting-process>,
         <https://example.org/population/regional-cancer-patients-2024> ;
-    dcterms:temporal [ a dcterms:PeriodOfTime ;
+    dct:temporal [ a dct:PeriodOfTime ;
             dcat:endDate "2024-12-31"^^xsd:date ;
             dcat:startDate "2024-01-01"^^xsd:date ] ;
-    dcterms:title "Regional cancer incidence registry 2024" ;
-    dcterms:type <http://publications.europa.eu/resource/authority/dataset-type/STATISTICAL> ;
+    dct:title "Regional cancer incidence registry 2024" ;
+    dct:type <http://publications.europa.eu/resource/authority/dataset-type/STATISTICAL> ;
     adms:sample [ a dcat:Distribution ;
             dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2025/327/oj> ;
             dcat:accessURL <https://example.org/dataset/cancer-registry-2024/sample> ] ;
@@ -174,28 +143,129 @@
     dpv:hasPersonalData <https://w3id.org/dpv/dpv-pd#MedicalHealth> ;
     dpv:hasPurpose dpv:ScientificResearch .
 
-<http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC> a dcterms:RightsStatement .
+<https://example.org/dataset/hospital-case-reports-2024> a dcat:Dataset ;
+    geodcatap:custodian [ a foaf:Agent ;
+            cv:contactPoint [ a cv:ContactPoint ;
+                    cv:email "custodian@example.org" ] ;
+            foaf:name "Regional Cancer Registry Authority" ] ;
+    dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2025/327/oj> ;
+    healthdcatap:analytics [ a dcat:Distribution ;
+            dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2025/327/oj> ;
+            dcat:accessURL <https://example.org/dataset/cancer-registry-2024/analytics> ] ;
+    healthdcatap:hasCodeValues "ICD-O" ;
+    healthdcatap:hasCodingSystem <https://hdeu-dcat.data.health.europa.eu/resource/authority/coding-system/ICD-O> ;
+    healthdcatap:hasStructuredData true ;
+    healthdcatap:hasVariables [ a csvw:TableGroup ;
+            dct:title "Cancer registry variables dictionary" ;
+            csvw:table [ a csvw:Table ;
+                    dct:title "Variable inventory for the cancer registry" ;
+                    csvw:column [ a csvw:Column ;
+                            dct:description "Pseudonymised identifier of the registered patient." ;
+                            csvw:datatype "string" ;
+                            csvw:name "patientId" ;
+                            csvw:title "Patient identifier" ],
+                        [ a csvw:Column ;
+                            dct:description "Stage of the tumour at diagnosis." ;
+                            csvw:datatype "string" ;
+                            csvw:name "tumourStage" ;
+                            csvw:propertyUrl <https://example.org/vocab/tumourStage> ;
+                            csvw:title "Tumour stage" ] ;
+                    csvw:url <https://example.org/dataset/cancer-registry-2024/variables.csv> ;
+                    dcat:keyword "cancer",
+                        "variables" ] ] ;
+    healthdcatap:hdab [ a foaf:Agent ;
+            cv:contactPoint [ a cv:ContactPoint ;
+                    cv:email "hdab@example.org" ;
+                    cv:openingHours [ a time:TemporalEntity ;
+                            cv:frequency <http://publications.europa.eu/resource/authority/frequency/DAILY> ;
+                            dct:description "Every working day from 09:00 to 17:00 CET." ] ] ;
+            foaf:name "National Health Data Access Body" ] ;
+    healthdcatap:hdabCoordinator [ a foaf:Agent ;
+            cv:contactPoint [ a cv:ContactPoint ;
+                    cv:email "hdab-coordinator@example.org" ] ;
+            foaf:name "National Health Data Access Body Coordinator" ] ;
+    healthdcatap:healthCategory <https://hdeu-dcat.data.health.europa.eu/resource/authority/healthcategories/PHDR> ;
+    healthdcatap:healthTheme <https://hdeu-dcat.data.health.europa.eu/resource/authority/health-theme/CANCER_DISEASE> ;
+    healthdcatap:maxTypicalAge "99"^^xsd:nonNegativeInteger ;
+    healthdcatap:minTypicalAge "0"^^xsd:nonNegativeInteger ;
+    healthdcatap:numberOfRecords "45000"^^xsd:nonNegativeInteger ;
+    healthdcatap:numberOfUniqueIndividuals "42000"^^xsd:nonNegativeInteger ;
+    healthdcatap:populationCoverage "National" ;
+    healthdcatap:retentionPeriod [ a dct:PeriodOfTime ;
+            dcat:endDate "2044-01-01"^^xsd:date ;
+            dcat:startDate "2024-01-01"^^xsd:date ] ;
+    dct:accessRights <http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC> ;
+    dct:accrualPeriodicity <http://publications.europa.eu/resource/authority/frequency/ANNUAL> ;
+    dct:conformsTo <https://hdeu-dcat.data.health.europa.eu/resource/authority/standard/FHIR> ;
+    dct:description "The hospital case reports the registry's diagnoses are collected from." ;
+    dct:identifier "https://example.org/dataset/hospital-case-reports-2024" ;
+    dct:isReferencedBy <https://example.org/publications/cancer-registry-report-2024> ;
+    dct:language <http://publications.europa.eu/resource/authority/language/ENG> ;
+    dct:provenance [ a dct:ProvenanceStatement ;
+            dct:title "Collected under regional ethics approval REC-2023-114." ] ;
+    dct:relation <https://example.org/dataset/cancer-mortality-2024> ;
+    dct:subject <https://example.org/activity/diagnostic-reporting-process>,
+        <https://example.org/population/regional-cancer-patients-2024> ;
+    dct:temporal [ a dct:PeriodOfTime ;
+            dcat:endDate "2024-12-31"^^xsd:date ;
+            dcat:startDate "2024-01-01"^^xsd:date ] ;
+    dct:title "Hospital case reports 2024" ;
+    dct:type <http://publications.europa.eu/resource/authority/dataset-type/STATISTICAL> ;
+    adms:sample [ a dcat:Distribution ;
+            dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2025/327/oj> ;
+            dcat:accessURL <https://example.org/dataset/cancer-registry-2024/sample> ] ;
+    dcat:contactPoint [ a vcard:Kind ;
+            vcard:hasEmail <mailto:data-access@example.org> ] ;
+    dcat:distribution [ a dcat:Distribution ;
+            dcatap:applicableLegislation <http://data.europa.eu/eli/reg/2025/327/oj> ;
+            dcat:accessURL <https://example.org/dataset/cancer-registry-2024/download> ] ;
+    dcat:keyword "cancer",
+        "registry" ;
+    dcat:landingPage <https://example.org/dataset/cancer-registry-2024/landing> ;
+    dcat:temporalResolution "P1D"^^xsd:duration ;
+    dcat:theme <http://publications.europa.eu/resource/authority/data-theme/HEAL> ;
+    dqv:hasQualityAnnotation <https://example.org/quality-certificate/iso-27001> ;
+    prov:qualifiedAttribution [ a prov:Attribution ;
+            dcat:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#processor> ;
+            prov:agent [ a foaf:Agent ;
+                    foaf:name "National Cancer Registry Data Processor" ] ] ;
+    prov:wasGeneratedBy <https://example.org/activity/cancer-registry-collection-2024> ;
+    foaf:page <https://example.org/doc/methodology> ;
+    dpv:hasLegalBasis dpv:LegalObligation ;
+    dpv:hasPersonalData <https://w3id.org/dpv/dpv-pd#MedicalHealth> ;
+    dpv:hasPurpose dpv:ScientificResearch .
 
-<http://publications.europa.eu/resource/authority/frequency/ANNUAL> a dcterms:Frequency .
+<http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC> a dct:RightsStatement .
 
-<http://publications.europa.eu/resource/authority/frequency/DAILY> a dcterms:Frequency .
+<http://publications.europa.eu/resource/authority/frequency/ANNUAL> a dct:Frequency .
 
-<http://publications.europa.eu/resource/authority/language/ENG> a dcterms:LinguisticSystem .
+<http://publications.europa.eu/resource/authority/frequency/DAILY> a dct:Frequency .
+
+<http://publications.europa.eu/resource/authority/language/ENG> a dct:LinguisticSystem .
 
 <https://example.org/activity/cancer-registry-collection-2024> a prov:Activity ;
-    dcterms:title "Cancer registry data collection process" ;
+    dct:title "Cancer registry data collection process" ;
     prov:qualifiedAssociation [ a prov:Association ;
+            prov:agent <https://ror.org/03yrm5c26> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ],
+        [ a prov:Association ;
+            prov:agent <https://ror.org/03yrm5c26> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ],
+        [ a prov:Association ;
+            prov:agent <https://ror.org/00k4n6c32> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
+        [ a prov:Association ;
             prov:agent <https://ror.org/00k4n6c32> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#sponsor> ],
         [ a prov:Association ;
             prov:agent <https://orcid.org/0000-0002-1825-0097> ;
             prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ],
         [ a prov:Association ;
-            prov:agent <https://ror.org/03yrm5c26> ;
-            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#funder> ] .
+            prov:agent <https://orcid.org/0000-0002-1825-0097> ;
+            prov:hadRole <https://standards.iso.org/iso/19115/resources/Codelists/gml/CI_RoleCode.xml#principalInvestigator> ] .
 
 <https://example.org/activity/diagnostic-reporting-process> a prov:Activity ;
-    dcterms:title "Diagnostic reporting and coding process" .
+    dct:title "Diagnostic reporting and coding process" .
 
 <https://example.org/dataset/cancer-mortality-2024> a rdfs:Resource .
 
@@ -210,24 +280,28 @@
 <https://example.org/doc/methodology> a foaf:Document .
 
 <https://example.org/population/regional-cancer-patients-2024> a prov:Entity ;
-    dcterms:title "Regional cancer patient population, 2024 cohort" .
+    dct:title "Regional cancer patient population, 2024 cohort" .
 
 <https://example.org/publications/cancer-registry-report-2024> a rdfs:Resource .
 
 <https://example.org/quality-certificate/iso-27001> a dqv:QualityCertificate .
 
-<https://hdeu-dcat.data.health.europa.eu/resource/authority/coding-system/ICD-O> a dcterms:Standard .
+<https://hdeu-dcat.data.health.europa.eu/resource/authority/coding-system/ICD-O> a dct:Standard .
 
-<https://hdeu-dcat.data.health.europa.eu/resource/authority/standard/FHIR> a dcterms:Standard .
+<https://hdeu-dcat.data.health.europa.eu/resource/authority/standard/FHIR> a dct:Standard .
 
 <https://orcid.org/0000-0002-1825-0097> a prov:Agent ;
-    dcterms:title "Dr. Maria Santos" .
+    dct:title "Dr. Maria Santos" .
 
 <https://ror.org/00k4n6c32> a prov:Agent ;
-    dcterms:title "National Institute of Public Health" .
+    dct:title "National Institute of Public Health" .
 
 <https://ror.org/03yrm5c26> a prov:Agent ;
-    dcterms:title "European Health Research Council" .
+    dct:title "European Health Research Council" .
+
+dpv:LegalObligation a dpv:LegalBasis .
+
+dpv:ScientificResearch a dpv:Purpose .
 
 <https://w3id.org/dpv/dpv-pd#MedicalHealth> a dpv:PersonalData .
 

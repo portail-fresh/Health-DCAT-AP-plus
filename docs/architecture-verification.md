@@ -758,6 +758,13 @@ mutually exclusive value shape (object vs. scalar) on the *same*
 `class_uri`, which "layer a stricter shape on top" can't reconcile by
 itself.
 
+> **Corrected 2026-10-21 (fourteenth finding).** "A bare IRI can't satisfy
+> both" holds for an *untyped* IRI only. An IRI typed `a dct:RightsStatement`
+> satisfies the class check and the bare-IRI check at once — which is what
+> HealthDCAT-AP's own example does. The tests left the terms untyped, and the
+> conflicts counted below (and the allowlist entries standing for them) were
+> largely that artefact.
+
 **Investigated further, not treated as a one-off.** Querying every
 `(sh:targetClass, sh:path)` pair in our generated SHACL for more than one
 disagreeing value-shape combination turns up 26 such conflicts — 17 of
@@ -815,6 +822,10 @@ Given that, the options considered:
    (HealthDCAT-AP's own shapes are self-sufficient, never stacked with
    plain DCAT-AP's), costs nothing to implement, and is already backed by
    a passing test.
+
+> **Corrected 2026-10-21 (fourteenth finding).** HealthDCAT-AP's own shapes
+> are not self-sufficient: its files `owl:import` DCAT-AP 3.0.0's shapes and
+> its validator loads them into the shape graph.
 
 **Chosen: option 4.** This isn't a bug to fix — it's a correctly-surfaced
 structural fact about how HealthDCAT-AP relates to DCAT-AP, and the
@@ -1016,6 +1027,12 @@ unverifiable:
 All four confirmed against the real cached catalogue directly, not
 assumed. Fixing them, plus merging the real catalogue in as a validation
 aid, brought the real-shapes count from 20 down to 5.
+
+> **Corrected 2026-10-21 (fourteenth finding).** "Identical 5 shape files" was
+> incomplete: the validator also loads the DCAT-AP shapes those files
+> `owl:import`. And the hosted validator's release-7 type reports success for a
+> bare `<x> a dcat:Dataset`, so its "zero violations" on this example was not
+> evidence of conformance.
 
 ### A fifth invented reference, found the same way: `conformsTo`
 
@@ -1616,3 +1633,132 @@ opening-hours constraints it never exercised before. What that statement
 covers is exactly what it covered: the five shape files loaded as a set, not
 the DCAT-AP 3.0.0 shapes they `owl:import` — the question the 2026-10-21 audit
 raised, and the next piece of work.
+
+### A fourteenth finding: the merged shapes left out half of what the official validator checks
+
+An audit on 2026-10-21 (after the release-8 move above) asked what the merged
+shapes file actually is. It was a per-class *selection*: our generated shapes
+for the classes the five official files target were dropped, the five files
+added. Three statements in this repo said that was safe because the official
+shapes are "self-sufficient" and "never stacked with plain DCAT-AP's". They are
+not, and this section replaces them (the old passages carry a pointer here).
+
+**What the official validator loads** (read from its `config.properties` and the
+shape files, release 8, not from the hosted service):
+
+| what | how | where |
+|---|---|---|
+| the tier's shape files | listed in `validator.shaclFile.<tier>` | `shapes/`, `recommended/`, `ranges/`, `controlled-vocabularies/`, `deprecated/` |
+| **DCAT-AP 3.0.0's shapes** | `owl:imports` in `non-public-shapes.ttl`, `non-public-shapes_recommended.ttl` and `range.ttl`, resolved by `owlImportMapping.32/33/35` to local copies | `catalogue/shapes.ttl`, `shapes_recommended.ttl`, `range.ttl` |
+| `shapes/graph-guard.ttl` | first in the list; SPARQL: the graph must contain a `dcat:Dataset` | `shapes/` |
+| the vocabulary catalogue | `owlImportMapping.0–31,36`, preloaded into the data graph | `catalogue/*.rdf`, `*.ttl` |
+
+The five files are a *delta*: they reuse the IRIs of DCAT-AP's own shapes
+(`…/3.0.0/html/shacl/shapes.ttl#Dataset_Shape`, …) and add to them. Left out,
+the dataset's `dct:title` and `dct:description`, the `sh:class` checks on
+`dct:accessRights`, `dct:language`, `dct:source`, and the shapes for `Agent`,
+`Location`, `Identifier`, `CatalogRecord` and `Concept` are all missing: a bare
+`<x> a dcat:Dataset` gets 41 results from the five files and 45 with the base
+(measured on release 8). The previous merge, and the previous "official shapes"
+test, used the five files only, so neither was the official validator, whatever
+their names said, and "conforms to HealthDCAT-AP's shapes" meant "conforms to
+the part of them that HealthDCAT-AP wrote itself". Nor is the hosted validator
+an oracle for either: the audit's author submitted `<x> a dcat:Dataset` to it
+and its release-7 type reported 0 errors, 0 warnings (its release-8 type: 17
+errors and 33 warnings), so "Sciensano reported no violation" proves nothing
+for release 7.
+
+**What the merge is now** (`scripts/gen_merged_shacl.py`, module docstring):
+
+1. the official shapes as the validator assembles them — the five files plus
+   every shape file they `owl:import`, resolved through the validator's own
+   `owlImportMapping`, refusing to continue when an import has no mapping
+   (so a release that imports something new is a loud failure, not a quietly
+   weaker file);
+2. our generated shapes, **open** (`closed=False`; LinkML closes them by
+   default, and a closed shape for a class the official shapes only require as an
+   `sh:class` value rejects the official example's `hasBody`, `hasTarget`,
+   `label`, `motivatedBy`);
+3. minus every NodeShape of ours for a class the official shapes target — now
+   including `foaf:Agent`, `skos:Concept` and `skos:ConceptScheme`, which used to
+   be listed by hand and are derived since DCAT-AP's shapes are loaded — and for
+   the 13 classes of `EXTERNAL_VOCABULARY_STUB_CLASSES`, which are the remaining
+   judgment calls (terms authored in external vocabularies, whose real
+   language-tagged `dct:title`/`dct:description` fail our `xsd:string` datatype);
+4. with three `GENERATOR_WORKAROUNDS` applied to what is left, each of which
+   raises when it finds nothing to change (so the day LinkML fixes
+   [#3931](https://github.com/linkml/linkml/issues/3931) or
+   [#3932](https://github.com/linkml/linkml/issues/3932) it has to be deleted):
+   the `sh:path rdf:type` property shapes of `ClassifierMixin` are dropped,
+   the `sh:minCount` on `prov:value` of the `prov:Entity` shape is dropped, and
+   `prov:Activity`'s `dct:type` accepts `schema:DefinedTerm` **or**
+   `skos:Concept` — HealthDCAT-AP types the activity of `prov:wasGeneratedBy`
+   with a concept of its health-activity table, in its shapes and its own
+   example (documentation of that is open upstream, #53), and dcat-ap-plus
+   wants a `DefinedTerm`. That last one widens the class check; it does *not*
+   bind the activity to the health-activity table, which the official shapes
+   already do;
+5. plus the official graph. `graph-guard.ttl` is not included: it keeps the
+   hosted service from judging non-dataset documents, it is not a constraint on
+   dataset metadata, and a shapes graph applied to a fragment would fail it for
+   no reason. The vocabulary catalogue is data, supplied by the tests as the
+   validator supplies it.
+
+The output is written with deterministic blank-node labels (rdflib's
+`to_canonical_graph` does not finish on this graph's 700+ symmetric blank nodes,
+so `relabel_blank_nodes` numbers them by where they sit), which means
+regenerating an unchanged file is a no-op instead of a 1,500-line diff, and
+`test_committed_merged_shacl_is_current` can compare bytes.
+
+**Each ingredient is needed.** Removing one at a time from the final merge and
+running the fixture and the official example against it:
+
+| removed | new results |
+|---|---|
+| the `rdf:type` workaround | `ClassConstraint type` on both |
+| the `prov:value` workaround | `MinCount value` on the fixture |
+| the `Activity` `dct:type` widening | `ClassConstraint type` on the official example |
+| open shapes (closed instead) | `Closed` on `hasBody`, `hasTarget`, `label`, `motivatedBy` for the official example |
+| the external-vocabulary exclusion | `Datatype` on `title` and `description` for both |
+
+**What changed in the tests** (`tests/test_shacl_validation.py`). The "real
+shapes" test is now the official shapes *with their imports*; HealthDCAT-AP's own
+example is run against both the official and the merged shapes and must give the
+same three warnings (a country without bounding box or centroid, no `dct:source`)
+— the check that our additions never reject what the official validator
+accepts; the published `examples/HealthDataset-full-example.ttl` is validated
+too; the committed merged file is compared with a fresh build. The data side
+follows the official convention: external terms whose shape checks a plain class
+are typed inline (they used to be left untyped in the tests and typed only in the
+published example, which is why the "26 conflicts" recorded in the passages
+above looked like contradictions between two specs: an IRI typed
+`dct:RightsStatement` satisfies both the class check and the bare-IRI check,
+exactly what the official example does), and the dataset's `dct:source` is a
+fully described second dataset, since DCAT-AP's shape wants a `dcat:Dataset`
+there. Allowlists: against our own shapes alone 14 → 5 (the other nine were
+untyped terms and a bare `dct:source`; the five left are the generator bugs and
+the class_uri/slot_uri sharing named in the test file), against the merged
+shapes 2 → 0 violations, against the official shapes 0 → 0, with seven warnings
+for recommended properties the fixture does not fill.
+
+**Left as it was.** The conditional rule "if `hasStructuredData` is true,
+`hasVariables` is required" is the one upstream shape that cannot be loaded
+(#43); it stays unenforced by every check here, though the hosted validator
+enforces it. The vocabulary catalogue given to the tests is the terms the data
+references plus one hop of `skos:inScheme`, not the 457,000 triples the
+validator preloads. That reduction has cost before: the audit found that the
+release-7 official example "failed" with one violation and two warnings in the
+reduced environment of the time (no country table) and gave a single warning in
+the validator's full one. So the final merge was also run on release 8 against
+the full environment (every non-shape file of `owlImportMapping`: 476,528
+triples, ten seconds per run; `foaf`'s `index.rdf` does not parse with
+rdflib and is skipped): the official example and the fixture give the **same
+signatures against the official shapes as against the merged shapes** — the
+warnings listed above, plus one violation in both, on a `skos:ConceptScheme`
+(`…/authority/atu`) of the validator's own preloaded EU vocabularies that has no
+label, i.e. content of the catalogue, not of the data. The reduced catalogue
+used by the tests (terms the data references, one `skos:inScheme` hop, and the
+country and continent tables) therefore errs on the side of fewer, not other,
+results. Not reported upstream yet, and needing an owner's go-ahead: the two
+legacy-loader gaps of the twelfth finding and the `dpv-pd#` discrepancy of the
+thirteenth.
